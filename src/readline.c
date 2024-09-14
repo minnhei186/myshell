@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/14 13:19:02 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/14 13:46:29 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,21 +17,34 @@
 //	system("leaks -q myshell");
 //}
 
-void exe_command(t_prompt_info *info)
+void	exe_command(char *path,char **prompt,char **envp)
 {
+	execve(path,prompt,envp);
+}
 
-	execve(str, &str, NULL)
-}	
+char *make_path(char *command)
+{
+	char *path;
+	path=ft_strjoin("/bin/",command);
+	return path;
+}
 
 void	child_process(t_prompt_info *info)
 {
-	exe_command(info);
-	error_set("cannot_exe_command",0,info);
+	char **cmd_prompt;
+	char *cmd_path;
+	char **cmd_envp;
+
+	cmd_prompt=ft_split(info->str,' ');
+	cmd_path=make_path(cmd_prompt[0]);
+	cmd_envp=info->envp;
+
+	exe_command(cmd_path,cmd_prompt,cmd_envp);
+	error_set("cannot_exe_command", 0, info);
+	
 }
 
-	
-
-void	parent_process(t_prompt_info *info, pid)
+void	parent_process(t_prompt_info *info, int pid)
 {
 	int	recive_status;
 
@@ -49,9 +62,9 @@ void	extern_command(t_prompt_info *info)
 
 	pid = fork();
 	if (pid == -1)
-		error_warning("cannot_fork", 1, info);
+		error_set("cannot_fork", 1, info);
 	else if (pid == 0)
-		chaild_process(info);
+		child_process(info);
 	else
 		parent_process(info, pid);
 }
@@ -61,24 +74,26 @@ void	prompt_operation(t_prompt_info *info)
 	extern_command(info);
 }
 
-bool	shell_loop(t_prompt_info *info)
+int	shell_loop(t_prompt_info *info)
 {
-	info.str = readline("myshell:");
-	if (str == NULL)
+	info->str = readline("myshell:");
+	if (info->str == NULL)
 		return (FALSE);
-	if (*(info.str))
+	if (*(info->str))
 	{
-		add_history(*(info.str));
-		prompt_operation(&info);
+		add_history(info->str);
+		prompt_operation(info);
 	}
-	free(info.str);
-	info.str = NULL;
-	return TRUE
+	free(info->str);
+	info->str = NULL;
+	return TRUE;
 }
 
 int	main(int argc, char **argv, char **envp)
 {
 	t_prompt_info	info;
+	(void)argc;
+	(void)argv;
 
 	rl_outstream = stderr;
 	info_init(&info, envp);
