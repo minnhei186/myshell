@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/14 11:51:45 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/14 13:10:54 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,9 @@ typedef struct s_prompt_info
 
 //prompt_info_func
 void	info_init(t_prompt_info *info, char **envp);
+
+//error_utils
+void	error_set(char *err_msg, int error_type, t_prompt_info *info);
 
 
 

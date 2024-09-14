@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/14 11:55:49 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/14 13:19:02 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,33 +17,43 @@
 //	system("leaks -q myshell");
 //}
 
-int	child_process_do(char *str)
+void exe_command(t_prompt_info *info)
 {
-	if (execve(str, &str, NULL) == -1)
-		return (-1);
-	return (0);
+
+	execve(str, &str, NULL)
+}	
+
+void	child_process(t_prompt_info *info)
+{
+	exe_command(info);
+	error_set("cannot_exe_command",0,info);
 }
 
-void extern_command(t_prompt_info *info)
+	
+
+void	parent_process(t_prompt_info *info, pid)
+{
+	int	recive_status;
+
+	if (waitpid(pid, &recive_status, 0) == -1)
+	{
+		error_set("waitpid_error", 0, info);
+		return ;
+	}
+	info->status = recive_status;
+}
+
+void	extern_command(t_prompt_info *info)
 {
 	int	pid;
-	int	status;
 
-	status = EXIT_FAILURE;
 	pid = fork();
 	if (pid == -1)
-		return (status);
+		error_warning("cannot_fork", 1, info);
 	else if (pid == 0)
-	{
-		if (child_process_do(str) == -1)
-			return (-1);
-	}
+		chaild_process(info);
 	else
-	{
-		waitpid(pid, &status, 0);
-		return (status);
-	}
-	return (-1);
+		parent_process(info, pid);
 }
 
 void	prompt_operation(t_prompt_info *info)
