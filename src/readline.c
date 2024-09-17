@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/17 12:09:26 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/17 13:31:30 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,11 @@ void	extern_command(t_prompt_info *info)
 void	prompt_operation(t_prompt_info *info)
 {
 	t_token_info *token;
+	t_node_info *node;
+
 	token=tokenizer(info,info->str);
-	info->cmd_argv=token2argv(token);
+	node=parser(token);	
+	info->cmd_argv=token2argv(node->node_tk);
 	extern_command(info);
 }
 
