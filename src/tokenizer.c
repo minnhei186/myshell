@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 10:37:11 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/17 05:39:53 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/17 12:12:49 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 bool	is_meta(char c)
 {
-
 	if (c && ft_strchr("|&;()<> \t\n", c))
 		return (true);
 	return (false);
@@ -29,7 +28,7 @@ char	*space_skip(char *prompt)
 		else
 			return (prompt);
 	}
-	return prompt;
+	return (prompt);
 }
 
 bool	is_same_top(char *s, char *keyword)
@@ -42,7 +41,7 @@ bool	is_same_top(char *s, char *keyword)
 
 bool	is_operand(char *prompt)
 {
-	size_t		i;
+	size_t	i;
 	char	*operators[] = {"||", "&", "&&", ";", ";;", "(", ")", "|", "\n"};
 
 	i = 0;
@@ -59,7 +58,7 @@ char	*malloc_op(char *prompt)
 {
 	char	*op_str;
 	char	*operators[] = {"||", "&&", "&", ";;", ";", "(", ")", "|", "\n"};
-	size_t i;
+	size_t	i;
 
 	i = 0;
 	while (i < sizeof(operators) / sizeof(*operators))
@@ -81,7 +80,7 @@ t_token_info	*make_operand_token(char *prompt)
 	new_token = (t_token_info *)ft_calloc(1, sizeof(t_token_info));
 	new_token->word = op_str;
 	new_token->kind = OP;
-	new_token->next= NULL;
+	new_token->next = NULL;
 	return (new_token);
 }
 
@@ -120,8 +119,8 @@ t_token_info	*make_token(char *prompt, t_token_info *parent_tk)
 
 	if (is_operand(prompt))
 		token = make_operand_token(prompt);
-//	else if (is_reserved(prompt))
-//		token = make_reserved_token(prompt);
+	//	else if (is_reserved(prompt))
+	//		token = make_reserved_token(prompt);
 	else
 		token = make_word_token(prompt);
 	parent_tk->next = token;

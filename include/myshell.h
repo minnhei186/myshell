@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/17 05:33:14 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/17 12:06:54 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,9 @@
 
 typedef struct s_prompt_info
 {
-	char					*str;
-	char					**envp;
+	char *str; // prompt
+	char					**cmd_argv;
+	char **envp; //環境
 	int						status;
 
 }							t_prompt_info;
@@ -52,7 +53,7 @@ struct						s_token
 {
 	char					*word;
 	e_kind					kind;
-	t_token_info					*next;
+	t_token_info			*next;
 };
 
 // error_utils
@@ -66,6 +67,8 @@ void						info_init(t_prompt_info *info, char **envp);
 char						*path_get(char *command);
 
 // tokenizer
-t_token_info	*tokenizer(t_prompt_info *info,char *prompt);
+t_token_info				*tokenizer(t_prompt_info *info, char *prompt);
+// token_utils
+char						**token2argv(t_token_info *token);
 
 #endif

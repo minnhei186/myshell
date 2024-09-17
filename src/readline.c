@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/17 05:33:45 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/17 12:09:26 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ void	child_process(t_prompt_info *info)
 	char **cmd_prompt;
 	char *cmd_path;
 	char **cmd_envp;
-
-	cmd_prompt=ft_split(info->str,' ');
-	cmd_path=path_get(cmd_prompt[0]);
+	cmd_path=path_get(info->cmd_argv[0]);
+	cmd_prompt=info->cmd_argv;
+	cmd_envp=info->envp;
 	if(cmd_path==NULL)
 	{
 		error_set("not_exist_command",0,info);
@@ -79,8 +79,7 @@ void	prompt_operation(t_prompt_info *info)
 {
 	t_token_info *token;
 	token=tokenizer(info,info->str);
-	(void)token;
-	//info->prompt_argv=token2argv(token_info);
+	info->cmd_argv=token2argv(token);
 	extern_command(info);
 }
 
