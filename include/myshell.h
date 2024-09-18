@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/18 09:06:09 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/18 13:21:28 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,13 @@ typedef struct s_node		t_node_info;
 struct						s_node
 {
 	t_node_kind				kind;
-	t_node					*next;
+	t_node_info					*next;
 	// CMD
-	t_token					*args;
-	t_node					*redirects;
+	t_token_info				*node_token;
+	t_node_info				*redirects;
 	// REDIR
 	int						targetfd;
-	t_token					*filename;
+	t_token_info				*filename;
 	int						filefd;
 	int						stashed_targetfd;
 };

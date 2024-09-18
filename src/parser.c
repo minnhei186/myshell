@@ -6,59 +6,87 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 12:45:31 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/17 13:29:38 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/18 13:27:37 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myshell.h"
 
-t_token_info	*ft_tokendup(t_token_info *src_tk)
+t_token_info	*ft_tokendup(t_token_info *token)
 {
-	t_token_info	root_tk;
-	t_token_info	*cp_tk;
-	t_token_info	*branch_tk;
+	t_token_info	*cp_token;
 
-	cp_tk = &root_tk;
-	while (src_tk->next != NULL)
-	{
-		branch_tk = (t_token_info *)malloc(sizeof(t_token_info));
-		branch_tk->word = ft_strdup(src_tk->word);
-		branch_tk->kind = src_tk->kind;
-		branch_tk->next = NULL;
-		cp_tk->next = branch_tk;
-		cp_tk = cp_tk->next;
-		src_tk = src_tk->next;
-	}
-	cp_tk->next = make_eof_token();
-	return (root_tk.next);
+	cp_token = (t_token_info *)malloc(sizeof(t_token_info));
+	cp_token->word = ft_strdup(token->word);
+	cp_token->kind = token->kind;
+	cp_token->next = NULL;
+	return (cp_token);
 }
 
-t_node_info	*make_eof_node(void)
+void	token_append_tail(t_node_info *node, t_token_info *cp_token)
 {
-	t_node_info	*new_node;
-
-	new_node = (t_node_info *)malloc(sizeof(t_node_info));
-	new_node->node_tk = NULL;
-	new_node->kind = NODE_EOF;
-	new_node->next = NULL;
-	return (new_node);
+	t_token_info *search_token;
+	
+	search_token=node->node_token;
+	
+	while (search_token->next != NULL)
+		search_token=search_token->next;
+	search_token->next= cp_token;
 }
 
-//ここは本来オペランドなどで,今回はnodeを一つだけ作る
+//最初にEOFトークンを作っておくのはいいかもね。ありようがここには
+void	word_node(t_node_info *node, t_token_info *token)
+{
+	t_token_info	*cp_token;
+
+	cp_token = ft_tokendup(token);
+	if (node->node_token == NULL)
+		node->node_token = cp_token;
+	else
+		token_append_tail(node, cp_token);
+}
+
+void	append_node(t_node_info *node, t_token_info *token)
+{
+	if (token->kind == WORD)
+		word_node(node, token);
+	//	else if(token->kind==OP)
+	//		op_node(node,token);
+	//	else if(token->kind==RESERVE)
+	//		reserve_node(node,token);
+	//	else if(token->kind==ROF)
+	//		eof_node(node);
+}
+
+t_node_info	*make_node(void)
+{
+	t_node_info	*node;
+
+	node = (t_node_info *)malloc(sizeof(t_node_info));
+	node->kind = -1;
+	node->next = NULL;
+	node->node_token = NULL;
+	node->redirects = NULL;
+	node->targetfd = -1;
+	node->filename = NULL;
+	node->filefd = -1;
+	node->stashed_targetfd = -1;
+	return (node);
+}
+
 t_node_info	*parser(t_token_info *token)
 {
-	t_node_info	root_node;
 	t_node_info	*node;
-	t_node_info	*new_node;
+	t_token_info *eof_token;
 
-	node = &root_node;
-	new_node = (t_node_info *)malloc(sizeof(t_node_info));
-	new_node->node_tk = ft_tokendup(token);
-	new_node->kind = SIMPLE_CMD;
-	new_node->next = NULL;
-	node->next = new_node;
-	node = node->next;
-	new_node = make_eof_node();
-	node->next = new_node;
-	return (root_node.next);
+	node = make_node();
+	while (token->kind != ROF)
+	{
+		append_node(node, token);
+		token = token->next;
+	}
+	eof_token=make_eof_token();
+	token_append_tail(node,eof_token);	
+	return (node);
 }
+
