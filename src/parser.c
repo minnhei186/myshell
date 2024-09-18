@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 12:45:31 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/18 13:27:37 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/18 14:40:24 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,14 @@ t_token_info	*ft_tokendup(t_token_info *token)
 
 void	token_append_tail(t_node_info *node, t_token_info *cp_token)
 {
-	t_token_info *search_token;
-	
-	search_token=node->node_token;
-	
+	t_token_info	*search_token;
+
+	search_token = node->node_token;
 	while (search_token->next != NULL)
-		search_token=search_token->next;
-	search_token->next= cp_token;
+		search_token = search_token->next;
+	search_token->next = cp_token;
 }
 
-//最初にEOFトークンを作っておくのはいいかもね。ありようがここには
 void	word_node(t_node_info *node, t_token_info *token)
 {
 	t_token_info	*cp_token;
@@ -46,6 +44,21 @@ void	word_node(t_node_info *node, t_token_info *token)
 		token_append_tail(node, cp_token);
 }
 
+void	eof_node(t_node_info *node)
+{
+	t_token_info	*eof_token;
+
+	eof_token = (t_token_info *)ft_calloc(1, sizeof(t_token_info));
+	eof_token->word = NULL;
+	eof_token->kind = ROF;
+	eof_token->next = NULL;
+
+	if(node->node_token==NULL)
+		node->node_token=eof_token;
+	else
+		token_append_tail(node,eof_token);
+}
+
 void	append_node(t_node_info *node, t_token_info *token)
 {
 	if (token->kind == WORD)
@@ -54,8 +67,8 @@ void	append_node(t_node_info *node, t_token_info *token)
 	//		op_node(node,token);
 	//	else if(token->kind==RESERVE)
 	//		reserve_node(node,token);
-	//	else if(token->kind==ROF)
-	//		eof_node(node);
+	else if (token->kind == ROF)
+		eof_node(node);
 }
 
 t_node_info	*make_node(void)
@@ -77,16 +90,13 @@ t_node_info	*make_node(void)
 t_node_info	*parser(t_token_info *token)
 {
 	t_node_info	*node;
-	t_token_info *eof_token;
 
 	node = make_node();
-	while (token->kind != ROF)
+	while (token->next != NULL)
 	{
 		append_node(node, token);
 		token = token->next;
 	}
-	eof_token=make_eof_token();
-	token_append_tail(node,eof_token);	
+	append_node(node, token);
 	return (node);
 }
-
