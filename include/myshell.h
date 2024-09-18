@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/17 13:27:45 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/18 09:06:09 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,13 +56,12 @@ struct						s_token
 	t_token_info			*next;
 };
 
-
 ///
-///parser_header
+/// parser_header
 enum						e_node_kind
 {
-	SIMPLE_CMD,
-	NODE_EOF,
+	ND_SIMPLE_CMD,
+	ND_REDIR_OUT,
 };
 typedef enum e_node_kind	t_node_kind;
 
@@ -70,9 +69,16 @@ typedef struct s_node		t_node_info;
 
 struct						s_node
 {
-	t_token_info			*node_tk;
 	t_node_kind				kind;
-	t_node_info					*next;
+	t_node					*next;
+	// CMD
+	t_token					*args;
+	t_node					*redirects;
+	// REDIR
+	int						targetfd;
+	t_token					*filename;
+	int						filefd;
+	int						stashed_targetfd;
 };
 
 // error_utils
@@ -87,11 +93,11 @@ char						*path_get(char *command);
 
 // tokenizer
 t_token_info				*tokenizer(t_prompt_info *info, char *prompt);
-t_token_info	*make_eof_token(void);
+t_token_info				*make_eof_token(void);
 // token_utils
 char						**token2argv(t_token_info *token);
 
-//parser
-t_node_info	*parser(t_token_info *token);
+// parser
+t_node_info					*parser(t_token_info *token);
 
 #endif
