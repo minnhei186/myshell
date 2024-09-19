@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 12:45:31 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/19 11:10:47 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/19 11:30:42 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,7 @@ t_token_info	*output_redirect_node(t_node_info *node, t_token_info *token)
 	t_node_info	*redirect_node;
 
 	redirect_node = make_node();
+	redirect_node->kind=ND_REDIR_OUT;
 	token = token->next;
 	if (token->kind != WORD)
 	{
@@ -161,6 +162,8 @@ t_node_info	*parser(t_token_info *token)
 	t_node_info	*node;
 
 	node = make_node();
+	node->kind=ND_SIMPLE_CMD;
+
 	while (token->next != NULL)
 	{
 		token = append_node(node, token);

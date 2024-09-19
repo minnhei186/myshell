@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 10:37:11 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/17 12:12:49 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/19 11:27:42 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ bool	is_same_top(char *s, char *keyword)
 bool	is_operand(char *prompt)
 {
 	size_t	i;
-	char	*operators[] = {"||", "&", "&&", ";", ";;", "(", ")", "|", "\n"};
+	char	*operators[] = {"||", "&", "&&", ";", ";;", "(", ")", "|", "\n","<",">"};
 
 	i = 0;
 	while (i < sizeof(operators) / sizeof(*operators))
@@ -57,7 +57,7 @@ bool	is_operand(char *prompt)
 char	*malloc_op(char *prompt)
 {
 	char	*op_str;
-	char	*operators[] = {"||", "&&", "&", ";;", ";", "(", ")", "|", "\n"};
+	char	*operators[] = {"||", "&&", "&", ";;", ";", "(", ")", "|", "\n","<",">"};
 	size_t	i;
 
 	i = 0;
