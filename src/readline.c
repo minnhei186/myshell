@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/18 13:19:54 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/19 14:30:06 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,17 +73,72 @@ void	extern_command(t_prompt_info *info)
 		parent_process(info, pid);
 }
 
-//info->prompt;
-//info->prompt_argv;
-void	prompt_operation(t_prompt_info *info)
+// redirect_zone
+void redirect_open_set(t_node_info *redirect)
+{
+	redirect->filefd = open(redirect->filename->word, O_CREAT | O_WRONLY, 0644);
+	redirect->targetfd=STDOUT_FILENO;
+}
+
+void init_redirect(t_node_info *node)
+{
+	while(node->redirects!=NULL)
+	{
+		redirect_open_set(node->redirects);
+		node=node->redirects;
+	}
+}
+
+void redirect_do_set(t_node_info *redirect)
+{
+	redirect->stashedfd = fcntl(redirect->targetfd, F_DUPFD, 10);
+	dup2(redirect->filefd,redirect->targetfd);
+}
+
+
+void do_redirect(t_node_info *node)
+{
+	while(node->redirects!=NULL)
+	{
+		redirect_do_set(node->redirects);
+		node=node->redirects;
+	}
+
+}
+
+void set_redirect(t_node_info *node)
+{
+	init_redirect(node);
+	do_redirect(node);
+}
+
+void redirect_reset_set(t_node_info *redirect)
+{
+	dup2(redirect->stashedfd,redirect->targetfd);
+}
+
+
+
+void reset_redirect(t_node_info *node)
+{
+	while(node->redirects!=NULL)
+	{
+		redirect_reset_set(node->redirects);
+		node=node->redirects;
+	}
+}
+
+void	shell_operation(t_prompt_info *info)
 {
 	t_token_info *token;
 	t_node_info *node;
 
 	token=tokenizer(info,info->str);
 	node=parser(token);	
+	set_redirect(node);
 	info->cmd_argv=token2argv(node->node_token);
 	extern_command(info);
+	reset_redirect(node);
 }
 
 int	shell_loop(t_prompt_info *info)
@@ -94,7 +149,7 @@ int	shell_loop(t_prompt_info *info)
 	if (*(info->str))
 	{
 		add_history(info->str);
-		prompt_operation(info);
+		shell_operation(info);
 	}
 	free(info->str);
 	info->str = NULL;

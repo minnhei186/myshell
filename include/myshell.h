@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/18 13:21:28 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/19 14:28:44 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ struct						s_node
 	int						targetfd;
 	t_token_info				*filename;
 	int						filefd;
-	int						stashed_targetfd;
+	int						stashedfd;
 };
 
 // error_utils

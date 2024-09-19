@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 12:45:31 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/19 11:30:42 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/19 14:29:35 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_node_info	*make_node(void)
 	node->targetfd = -1;
 	node->filename = NULL;
 	node->filefd = -1;
-	node->stashed_targetfd = -1;
+	node->stashedfd = -1;
 	return (node);
 }
 
@@ -107,7 +107,7 @@ t_token_info	*output_redirect_node(t_node_info *node, t_token_info *token)
 		printf("parse_syntax_error_need_word\n");
 		return (token);
 	}
-	redirect_node->node_token = ft_tokendup(token);
+	redirect_node->filename = ft_tokendup(token);
 	if (node->redirects== NULL)
 		node->redirects = redirect_node;
 	else
