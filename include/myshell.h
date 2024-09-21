@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/20 18:49:59 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/21 12:05:02 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,9 @@
 
 # define FALSE 0
 # define TRUE 1
+
+extern char **environ;
+
 
 typedef struct s_prompt_info
 {
@@ -70,7 +73,7 @@ typedef struct s_node		t_node_info;
 struct						s_node
 {
 	t_node_kind				kind;
-	t_node_info					*next;
+	t_node_info					*re_node;
 	// CMD
 	t_token_info				*node_token;
 	t_node_info				*redirects;

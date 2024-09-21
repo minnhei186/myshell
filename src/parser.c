@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 12:45:31 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/19 14:29:35 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/21 12:11:57 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ t_node_info	*make_node(void)
 
 	node = (t_node_info *)malloc(sizeof(t_node_info));
 	node->kind = -1;
-	node->next = NULL;
+	node->re_node = NULL;
 	node->node_token = NULL;
 	node->redirects = NULL;
 	node->targetfd = -1;
@@ -76,22 +76,23 @@ void	eof_node(t_node_info *node)
 
 int	type_redirect_op(t_token_info *token)
 {
-	if (strcmp(token->word,">")==0)
+	if (strcmp(token->word, ">") == 0)
 		return (1);
-	else if (strcmp(token->word,"<")==0)
+	else if (strcmp(token->word, "<") == 0)
 		return (2);
 	return (0);
 }
 
 //必ずひとつ目のredirectは存在しているとする
+//これはre_nodeではなく、->redirectsではないのか？
 void	redirect_append_tail(t_node_info *node, t_node_info *append_redirect)
 {
 	t_node_info	*search_redirect;
 
 	search_redirect = node->redirects;
 	while (search_redirect->redirects != NULL)
-		search_redirect = search_redirect->next;
-	search_redirect->next = append_redirect;
+		search_redirect = search_redirect->redirects;
+	search_redirect->redirects = append_redirect;
 }
 
 //明日はここから！！！
@@ -100,7 +101,7 @@ t_token_info	*output_redirect_node(t_node_info *node, t_token_info *token)
 	t_node_info	*redirect_node;
 
 	redirect_node = make_node();
-	redirect_node->kind=ND_REDIR_OUT;
+	redirect_node->kind = ND_REDIR_OUT;
 	token = token->next;
 	if (token->kind != WORD)
 	{
@@ -108,7 +109,7 @@ t_token_info	*output_redirect_node(t_node_info *node, t_token_info *token)
 		return (token);
 	}
 	redirect_node->filename = ft_tokendup(token);
-	if (node->redirects== NULL)
+	if (node->redirects == NULL)
 		node->redirects = redirect_node;
 	else
 		redirect_append_tail(node, redirect_node);
@@ -120,8 +121,7 @@ t_token_info	*redirect_node(t_node_info *node, t_token_info *token)
 {
 	t_token_info	*now_token;
 
-	now_token=token;
-
+	now_token = token;
 	//ここではどのリダイレクトか
 	if (type_redirect_op(token) == 1)
 		now_token = output_redirect_node(node, token);
@@ -135,7 +135,7 @@ t_token_info	*op_node(t_node_info *node, t_token_info *token)
 	t_token_info	*now_token;
 
 	//リダイレクトかどうか
-	now_token=token;
+	now_token = token;
 	if (type_redirect_op(token) != 0)
 		now_token = redirect_node(node, token);
 	return (now_token);
@@ -162,8 +162,7 @@ t_node_info	*parser(t_token_info *token)
 	t_node_info	*node;
 
 	node = make_node();
-	node->kind=ND_SIMPLE_CMD;
-
+	node->kind = ND_SIMPLE_CMD;
 	while (token->next != NULL)
 	{
 		token = append_node(node, token);
