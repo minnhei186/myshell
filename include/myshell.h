@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/19 14:28:44 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/20 18:49:59 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,5 +99,9 @@ char						**token2argv(t_token_info *token);
 
 // parser
 t_node_info					*parser(t_token_info *token);
+
+//redirect
+void set_redirect(t_node_info *node);
+void reset_redirect(t_node_info *node);
 
 #endif
