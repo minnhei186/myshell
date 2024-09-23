@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/21 12:14:08 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/21 12:19:26 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,18 +35,6 @@ void	child_process(t_node_info *node)
 	execve(cmd_path, cmd_prompt, cmd_envp);
 	//error_set("cannot_exe_command", 0, info);
 }
-
-//void	parent_process(t_prompt_info *info, int pid)
-//{
-//	int	recive_status;
-//
-//	if (waitpid(pid, &recive_status, 0) == -1)
-//	{
-//		error_set("waitpid_error", 0, info);
-//		return ;
-//	}
-//	info->status = recive_status;
-//}
 
 int	command_comunication(t_node_info *node)
 {

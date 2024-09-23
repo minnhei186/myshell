@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/21 12:05:02 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/23 13:24:31 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,7 @@
 # define FALSE 0
 # define TRUE 1
 
-extern char **environ;
-
+extern char					**environ;
 
 typedef struct s_prompt_info
 {
@@ -63,6 +62,7 @@ struct						s_token
 /// parser_header
 enum						e_node_kind
 {
+	ND_PIPE,
 	ND_SIMPLE_CMD,
 	ND_REDIR_OUT,
 };
@@ -73,16 +73,25 @@ typedef struct s_node		t_node_info;
 struct						s_node
 {
 	t_node_kind				kind;
-	t_node_info					*re_node;
-	// CMD
-	t_token_info				*node_token;
+
+	// pipe_node
+	t_node_info				*re_node;
+	int						inpipe[2];
+	int						outpipe[2];
+
+	//cmd_node
+	t_node_info				*cmd;
+	t_token_info			*node_token;
+
+	//redirects_node
 	t_node_info				*redirects;
-	// REDIR
 	int						targetfd;
-	t_token_info				*filename;
+	t_token_info			*filename;
+	t_token_info			*delimiter;
 	int						filefd;
 	int						stashedfd;
-};
+
+	};
 
 // error_utils
 void						error_set(char *err_msg, int error_type,
@@ -103,8 +112,8 @@ char						**token2argv(t_token_info *token);
 // parser
 t_node_info					*parser(t_token_info *token);
 
-//redirect
-void set_redirect(t_node_info *node);
-void reset_redirect(t_node_info *node);
+// redirect
+void						set_redirect(t_node_info *node);
+void						reset_redirect(t_node_info *node);
 
 #endif
