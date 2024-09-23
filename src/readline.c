@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/21 12:19:26 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/23 14:02:41 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	child_process(t_node_info *node)
 	char	*cmd_path;
 	char	**cmd_envp;
 
-	cmd_prompt = token2argv(node->node_token);
+	cmd_prompt = token2argv(node->cmd->node_token);
 	cmd_path = path_get(cmd_prompt[0]);
 	cmd_envp = environ; 
 	if (cmd_path == NULL)
@@ -115,7 +115,7 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		status = shell_loop(&info);
-		if (status != 1)
+		if (status == 1)
 			break ;
 	}
 	clear_history();
