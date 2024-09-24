@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/23 13:24:31 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/23 16:09:57 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,23 +79,29 @@ struct						s_node
 	int						inpipe[2];
 	int						outpipe[2];
 
-	//cmd_node
+	// cmd_node
 	t_node_info				*cmd;
 	t_token_info			*node_token;
 
-	//redirects_node
+	// redirects_node
 	t_node_info				*redirects;
 	int						targetfd;
 	t_token_info			*filename;
 	t_token_info			*delimiter;
 	int						filefd;
 	int						stashedfd;
-
-	};
+};
 
 // error_utils
 void						error_set(char *err_msg, int error_type,
 								t_prompt_info *info);
+
+// pipe
+void						prepare_pipe(t_node_info *node);
+void						prepare_pipe_child(t_node_info *node);
+void						prepare_pipe_parent(t_node_info *node);
+
+
 
 // prompt_info_func
 void						info_init(t_prompt_info *info, char **envp);
@@ -113,7 +119,8 @@ char						**token2argv(t_token_info *token);
 t_node_info					*parser(t_token_info *token);
 
 // redirect
-void						set_redirect(t_node_info *node);
+void						do_redirect(t_node_info *node);
+void						prepare_redirect(t_node_info *node);
 void						reset_redirect(t_node_info *node);
 
 #endif

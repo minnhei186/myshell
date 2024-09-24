@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 12:45:31 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/23 14:31:56 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/23 17:53:08 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@ t_node_info	*make_node(void)
 	node->kind = -1;
 	// pipe_node
 	node->re_node = NULL;
-	node->inpipe[0] = -1;
+	node->inpipe[0] = STDIN_FILENO;
 	node->inpipe[1] = -1;
-	node->outpipe[0] = -1;
-	node->outpipe[1] = -1;
+	node->outpipe[0] =-1;
+	node->outpipe[1] = STDOUT_FILENO;;
 	// cmd_node
 	node->cmd = NULL;
 	node->node_token = NULL;
@@ -150,6 +150,10 @@ t_token_info	*op_node(t_node_info *node, t_token_info *token)
 	now_token = token;
 	if (type_redirect_op(token) != 0)
 		now_token = redirect_node(node, token);
+	//パイプかどうか
+	if((strcmp(token->word, "|") == 0))
+			eof_token(node);	
+
 	return (now_token);
 }
 
@@ -166,7 +170,7 @@ t_token_info	*append_node(t_node_info *node, t_token_info *token)
 		now_token = op_node(node, token);//cmdではなくredirects_nodeにおいて
 	//	else if(token->kind==RESERVE)
 	//		reserve_node(node,token);
-	else if ((token->kind == ROF)||(strcmp(token->word, "|") == 0))
+	else if (token->kind == ROF)
 		eof_token(node);
 	return (now_token);
 }
@@ -174,6 +178,11 @@ t_token_info	*append_node(t_node_info *node, t_token_info *token)
 //command_parserは次だよ。
 //ただしサブシェルなどをここでは扱わないので、一元化されている。
 //しかし本来はね。
+
+
+//今日はここから
+//op_nodeにもeofを追加している　パイプね
+//eof_tokenをかなりいじってるよ。
 t_node_info	*prompt_parser(t_token_info *token)
 {
 	t_node_info		*command_node;
@@ -184,6 +193,8 @@ t_node_info	*prompt_parser(t_token_info *token)
 	while (token->next != NULL)
 	{
 		now_token = append_node(command_node, token);	
+		if((strcmp(token->word, "|") == 0))
+			return command_node;
 		token = now_token->next;
 	}
 	append_node(command_node, token);

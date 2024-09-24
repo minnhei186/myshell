@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/23 14:02:41 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/24 14:31:48 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,9 @@ void	child_process(t_node_info *node)
 	char	*cmd_path;
 	char	**cmd_envp;
 
+
+	prepare_pipe_child(node);
+	do_redirect(node->cmd);
 	cmd_prompt = token2argv(node->cmd->node_token);
 	cmd_path = path_get(cmd_prompt[0]);
 	cmd_envp = environ; 
@@ -36,10 +39,16 @@ void	child_process(t_node_info *node)
 	//error_set("cannot_exe_command", 0, info);
 }
 
+void close_final_pipe(t_node_info *node)
+{
+	close(node->outpipe[0]);
+}
+
 int	command_comunication(t_node_info *node)
 {
 	int	pid;
 
+	prepare_pipe(node);
 	pid = fork();
 	if (pid == -1)
 	{
@@ -48,8 +57,10 @@ int	command_comunication(t_node_info *node)
 	}
 	else if (pid == 0)
 		child_process(node);
+	prepare_pipe_parent(node);
 	if (node->re_node!= NULL)
 		return (command_comunication(node->re_node));
+	close_final_pipe(node);//最後のnodeでは、活かすものがない。closeでいい
 	return (pid);
 }
 
@@ -79,7 +90,7 @@ int	shell_operation(t_prompt_info *info)
 
 	token = tokenizer(info, info->str);
 	node = parser(token);
-	set_redirect(node);
+	prepare_redirect(node);
 	status = exec(node);
 	reset_redirect(node);
 	return (status);

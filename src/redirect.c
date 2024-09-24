@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 18:47:50 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/23 14:57:11 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/23 15:14:22 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,11 @@ void	do_redirect(t_node_info *node)
 	}
 }
 
-void	set_redirect(t_node_info *node)
+void	prepare_redirect(t_node_info *node)
 {
 	while (1)
 	{
 		init_redirect(node->cmd);
-		do_redirect(node->cmd);
 		if (node->re_node == NULL)
 			break ;
 		node = node->re_node;
