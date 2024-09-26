@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 17:36:42 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/25 18:08:14 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/26 10:54:29 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,22 +32,44 @@ void	do_quote_removal(t_token_info *token)
 	//なぜなら、この格納庫ではなくて
 	//アドレスはマロックされている構造体のポインタに格納するので。
 	i = 0;
-	j=0;
+	j = 0;
 	while (old_word[i])
 	{
-		if (old_word[i] == '\'')
+		if (old_word[i] == '\'')//必ずこれが来るなら次の'もある
+		{
 			i++;
-		new_word[j]=old_word[i];
+			while (old_word[i] != '\'')
+			{
+				new_word[j] = old_word[i];
+				j++;
+				i++;
+			}
+			i++;
+		}
+		else if(old_word[i] == '\"')
+		{
+			i++;
+			while (old_word[i] != '\"')
+			{
+				new_word[j] = old_word[i];
+				j++;
+				i++;
+			}
+			i++;
+		}
+		else 
+		{
+		new_word[j] = old_word[i];
 		j++;
 		i++;
+		}
 	}
 	free(token->word);
-	token->word=new_word;
+	token->word = new_word;
 }
 
 void	quote_removal(t_token_info *token)
 {
-
 	while (token->next != NULL)
 	{
 		if ((token->kind == WORD) && (token->word != NULL))
