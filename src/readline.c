@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/25 12:23:29 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/25 18:09:23 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ int	shell_operation(t_prompt_info *info)
 	int				status;
 
 	token = tokenizer(info, info->str);
+	expand(token);
 	node = parser(token);
 	prepare_redirect(node);
 	status = exec(node);

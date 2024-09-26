@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 10:37:11 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/25 12:24:02 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/25 17:32:43 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,15 +84,34 @@ t_token_info	*make_operand_token(char *prompt)
 	return (new_token);
 }
 
+//めた文字がくる前に'がきた場合は、'が来るまでwordとする。
+////コンティニューとか使っても面白いかもね。
 t_token_info	*make_word_token(char *prompt)
 {
 	int				i;
 	t_token_info	*new_token;
 	char			*word_str;
 
+	//先頭からどこまでコピーするかサイズを考える。
 	i = 0;
 	while (prompt[i] && !is_meta(prompt[i]))
+	{
+		if(prompt[i]=='\'')//singl qout;
+		{
+			i++;
+			while(prompt[i]!='\'')//'が来るまで全てskip
+				i++;
+		}
+		
+		if(prompt[i]=='\"')//singl qout;
+		{
+			i++;
+			while(prompt[i]!='\"')//'が来るまで全てskip
+				i++;
+		}
+		
 		i++;
+	}
 	word_str = ft_calloc(i + 1, sizeof(char));
 	word_str = strncpy(word_str, prompt, i);
 	new_token = (t_token_info *)ft_calloc(1, sizeof(t_token_info));
@@ -148,7 +167,7 @@ t_token_info	*tokenizer(t_prompt_info *info, char *prompt)
 			error_set_print("error_occurd", 0, info);
 		}
 		else
-			set_size = ft_strlen(token->word);
+			set_size = ft_strlen(token->word);//うわお、これりゃ
 		prompt += set_size;
 	}
 	token->next = make_eof_token();
