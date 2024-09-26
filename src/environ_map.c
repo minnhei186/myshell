@@ -1,31 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   error_utils.c                                      :+:      :+:    :+:   */
+/*   environ_map.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/14 13:09:32 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/25 12:20:50 by hosokawa         ###   ########.fr       */
+/*   Created: 2024/09/24 15:38:56 by hosokawa          #+#    #+#             */
+/*   Updated: 2024/09/25 11:22:19 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myshell.h"
 
-void	system_error(char *err_msg,
-			t_prompt_info *info) __attribute__((noreturn));
-
-void	error_set_print(char *err_msg, int error_type, t_prompt_info *info)
-{
-	info->status = errno;
-	if (error_type)
-		perror(err_msg);
-	else
-		ft_putendl_fd(err_msg, STDERR_FILENO);
-}
-
-void	system_error(char *err_msg, t_prompt_info *info)
-{
-	error_set_print(err_msg, SYSTEM_ERROR, info);
-	exit(1);
-}
+//後に実際のchar **envpもここで扱うからかな。
+//
+//typedef struct s_item
+//{
+//	char	*name;
+//	char	*value;
+//}			t_item;
+//
+//typedef struct s_map
+//{
+//	t_item	*item_head;
+//	char	**environ;
+//}
+//
+//t_map *
+//map_init(char **envp)
+//{
+//	t_map	*map;
+//
+//	map = malloc(sizeof(map));
+//	map->environ = ft_pptdup(envp);
+//	map->item_head = make_item(envp);
+//}

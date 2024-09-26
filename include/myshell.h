@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/23 16:09:57 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/25 12:22:06 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,14 @@
 # define FALSE 0
 # define TRUE 1
 
+# define YOURSER_ERROR 0
+# define SYSTEM_ERROR 1
+
 extern char					**environ;
 
 typedef struct s_prompt_info
 {
-	char *str; // prompt
-	char					**cmd_argv;
+	char *str;   // prompt
 	char **envp; //環境
 	int						status;
 
@@ -93,15 +95,14 @@ struct						s_node
 };
 
 // error_utils
-void						error_set(char *err_msg, int error_type,
+void						error_set_print(char *err_msg, int error_type,
 								t_prompt_info *info);
+void						system_error(char *err_msg, t_prompt_info *info);
 
 // pipe
 void						prepare_pipe(t_node_info *node);
 void						prepare_pipe_child(t_node_info *node);
 void						prepare_pipe_parent(t_node_info *node);
-
-
 
 // prompt_info_func
 void						info_init(t_prompt_info *info, char **envp);

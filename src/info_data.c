@@ -6,16 +6,17 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 11:52:26 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/17 12:07:17 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/25 11:32:03 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myshell.h"
 
+//cmd_argvはnodeでなので必要ない
+//ここで本来はmapを作成しておきたい
 void	info_init(t_prompt_info *info, char **envp)
 {
 	info->str = NULL;
-	info->cmd_argv=NULL;
 	info->envp = envp;
 	info->status = 0;
 }

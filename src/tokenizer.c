@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 10:37:11 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/19 11:27:42 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/25 12:24:02 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ t_token_info	*tokenizer(t_prompt_info *info, char *prompt)
 		if (token == NULL)
 		{
 			set_size = 1;
-			error_set("error_occurd", 0, info);
+			error_set_print("error_occurd", 0, info);
 		}
 		else
 			set_size = ft_strlen(token->word);
