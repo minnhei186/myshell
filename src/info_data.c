@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 11:52:26 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/26 19:18:44 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/27 13:29:18 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	info_init(t_prompt_info *info, char **envp)
 {
 	info->str = NULL;
 	info->envp = envp;
-	info->status = 0;
+	info->shell_finish_flag=0;
+	info->last_status = 0;
 	info->yourser_err=0;
 }

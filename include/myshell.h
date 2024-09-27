@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/26 18:58:24 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/27 13:30:24 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ typedef struct s_prompt_info
 {
 	char *str;   // prompt
 	char **envp; //環境
-	int						status;
+	int shell_finish_flag;
+	int						last_status;
 	int						yourser_err;
 
 }							t_prompt_info;

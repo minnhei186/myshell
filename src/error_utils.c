@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 13:09:32 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/26 19:43:02 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/27 13:36:29 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 void	error_set_print(char *err_msg, int error_type, t_prompt_info *info)
 {
-	info->status = errno;
+	info->last_status = errno;
 	if (error_type)
 		perror(err_msg);
 	else

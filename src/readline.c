@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/26 19:45:32 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/27 13:36:54 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,13 +131,13 @@ void	shell_loop(t_prompt_info *info)
 	// eofではreadlineでNULLが返るのでその時にだけ！！ループが
 	info->str = readline("myshell:");
 	if (info->str == NULL)
-		info->status = 1;
+		info->shell_finish_flag=1;
 	else
 	{
 		if (*(info->str)) //空文字ではないなら
 		{
 			add_history(info->str);
-			info->status = shell_operation(info);
+			info->last_status = shell_operation(info);
 		}
 		free(info->str); // readlineよりある文字列空間が存在するので
 		info->str = NULL;
@@ -155,13 +155,11 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	rl_outstream = stderr;
 	info_init(&info, envp); //ここでmapの作成をしてもいいかもしれない。
-	while (1)
+	while (info.shell_finish_flag!=1)
 	{
 		shell_loop(&info);
-		if (info.status == 1)
-			break ;
 		info.yourser_err=0;
 	}
 	clear_history();
-	return (info.status);
+	return (info.last_status);
 }
