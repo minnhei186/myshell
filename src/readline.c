@@ -6,16 +6,16 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/25 18:09:23 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/26 19:45:32 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myshell.h"
 
-//__attribute__((destructor)) static void destructor()
-//{
-//	system("leaks -q myshell");
-//}
+__attribute__((destructor)) static void destructor()
+{
+	system("leaks -q myshell");
+}
 
 void	child_process(t_node_info *node)
 {
@@ -81,6 +81,31 @@ int	exec(t_node_info *node)
 	return (status);
 }
 
+void do_free_token(t_token_info *token)
+{
+	free(token->word);
+	free(token);
+}
+
+//ここで重要なのはtokenは別の格納庫であり、そこの同じアドレスが入っている
+//そうそう、構造体を解放するとはnextの保管庫をを解放するということである。その中身とはまた異なる。
+void free_token(t_token_info *token)
+{
+	t_token_info *next_token;
+
+	while(token->next!=NULL)
+	{
+		next_token=token->next;
+		do_free_token(token);
+		token=next_token;
+	}
+	if(token!=NULL)
+		do_free_token(token);
+	return ;
+}
+
+
+//ここではユーザーエラーを全てinfo場で考えよう。
 int	shell_operation(t_prompt_info *info)
 {
 	t_token_info	*token;
@@ -88,6 +113,11 @@ int	shell_operation(t_prompt_info *info)
 	int				status;
 
 	token = tokenizer(info, info->str);
+	if(info->yourser_err)
+	{
+		free_token(token);
+		return 0;
+	}
 	expand(token);
 	node = parser(token);
 	prepare_redirect(node);
@@ -130,6 +160,7 @@ int	main(int argc, char **argv, char **envp)
 		shell_loop(&info);
 		if (info.status == 1)
 			break ;
+		info.yourser_err=0;
 	}
 	clear_history();
 	return (info.status);

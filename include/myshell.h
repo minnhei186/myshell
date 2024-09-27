@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/25 18:09:07 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/26 18:58:24 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ typedef struct s_prompt_info
 	char *str;   // prompt
 	char **envp; //環境
 	int						status;
+	int						yourser_err;
 
 }							t_prompt_info;
 
@@ -116,8 +117,8 @@ t_token_info				*make_eof_token(void);
 // token_utils
 char						**token2argv(t_token_info *token);
 
-//expand
-void	expand(t_token_info *token);
+// expand
+void						expand(t_token_info *token);
 
 // parser
 t_node_info					*parser(t_token_info *token);

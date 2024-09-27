@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 10:37:11 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/25 17:32:43 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/26 19:17:48 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ bool	is_same_top(char *s, char *keyword)
 bool	is_operand(char *prompt)
 {
 	size_t	i;
-	char	*operators[] = {"||", "&", "&&", ";", ";;", "(", ")", "|", "\n","<",">"};
+	char	*operators[] = {"||", "&", "&&", ";", ";;", "(", ")", "|", "\n",
+			"<", ">"};
 
 	i = 0;
 	while (i < sizeof(operators) / sizeof(*operators))
@@ -57,7 +58,8 @@ bool	is_operand(char *prompt)
 char	*malloc_op(char *prompt)
 {
 	char	*op_str;
-	char	*operators[] = {"||", "&&", "&", ";;", ";", "(", ")", "|", "\n","<",">"};
+	char	*operators[] = {"||", "&&", "&", ";;", ";", "(", ")", "|", "\n",
+			"<", ">"};
 	size_t	i;
 
 	i = 0;
@@ -86,7 +88,16 @@ t_token_info	*make_operand_token(char *prompt)
 
 //めた文字がくる前に'がきた場合は、'が来るまでwordとする。
 ////コンティニューとか使っても面白いかもね。
-t_token_info	*make_word_token(char *prompt)
+// promptが終端まで閉じられずに消費されたらエラーとしよう
+// break??どうするかだな。
+// NULLだったらエラーとするかな
+
+void tokenizer_error(t_prompt_info *info,char *err_msg)
+{
+	info->yourser_err=1;
+	dprintf(STDERR_FILENO, "minishell: %s\n", err_msg);
+}
+t_token_info	*make_word_token(t_prompt_info *info, char *prompt)
 {
 	int				i;
 	t_token_info	*new_token;
@@ -96,21 +107,34 @@ t_token_info	*make_word_token(char *prompt)
 	i = 0;
 	while (prompt[i] && !is_meta(prompt[i]))
 	{
-		if(prompt[i]=='\'')//singl qout;
+		if (prompt[i] == '\'') // singl qout;
 		{
 			i++;
-			while(prompt[i]!='\'')//'が来るまで全てskip
+			while (prompt[i] != '\'') //'が来るまで全てskip
+			{
+				if (prompt[i] == '\0')
+				{
+					tokenizer_error(info, "not_close_single_qouat");
+					break;
+				}
 				i++;
+			}
 		}
-		
-		if(prompt[i]=='\"')//singl qout;
+		if (prompt[i] == '\"') // singl qout;
 		{
 			i++;
-			while(prompt[i]!='\"')//'が来るまで全てskip
+			while (prompt[i] != '\"') //'が来るまで全てskip
+			{
+				if(prompt[i]=='\0')
+				{
+					tokenizer_error(info,"not_close_double_qouat");
+					break;
+				}
 				i++;
+			}
 		}
-		
-		i++;
+		if(prompt[i]!='\0')
+			i++;
 	}
 	word_str = ft_calloc(i + 1, sizeof(char));
 	word_str = strncpy(word_str, prompt, i);
@@ -132,7 +156,8 @@ t_token_info	*make_eof_token(void)
 	return (new_token);
 }
 
-t_token_info	*make_token(char *prompt, t_token_info *parent_tk)
+t_token_info	*make_token(t_prompt_info *info, char *prompt,
+		t_token_info *parent_tk)
 {
 	t_token_info	*token;
 
@@ -141,7 +166,9 @@ t_token_info	*make_token(char *prompt, t_token_info *parent_tk)
 	//	else if (is_reserved(prompt))
 	//		token = make_reserved_token(prompt);
 	else
-		token = make_word_token(prompt);
+	{
+		token = make_word_token(info, prompt);
+	}
 	parent_tk->next = token;
 	return (token);
 }
@@ -160,14 +187,11 @@ t_token_info	*tokenizer(t_prompt_info *info, char *prompt)
 		prompt = space_skip(prompt);
 		if (*prompt == '\0')
 			break ;
-		token = make_token(prompt, token);
-		if (token == NULL)
-		{
-			set_size = 1;
-			error_set_print("error_occurd", 0, info);
-		}
-		else
-			set_size = ft_strlen(token->word);//うわお、これりゃ
+		token = make_token(info, prompt, token);
+		if(info->yourser_err==1)
+			break;
+
+		set_size = ft_strlen(token->word); 
 		prompt += set_size;
 	}
 	token->next = make_eof_token();
