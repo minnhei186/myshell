@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 17:36:42 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/30 14:22:46 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/30 15:51:22 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ void	remove_double_quote(char *new_word, char *old_word, int *i, int *j)
 	*i = (*i) + 1;
 }
 
-//あくまでも、ここでのポインターだけを動かす、ということ
 void	remove_quote(t_token_info *token)
 {
 	char	*new_word;
@@ -66,7 +65,6 @@ void	remove_quote(t_token_info *token)
 	token->word = new_word;
 }
 
-//全てのtokenはeofが存在する
 //ただし、そもそも処理されていないtokenもある
 void	token_quote_removal(t_token_info *token)
 {
@@ -94,32 +92,58 @@ void	quote_remover(t_node_info *node)
 
 /// name_value
 
- void	token_variable_expand(t_token_info *token)
-{
-	if(token==NULL)
-		return ;
-	while (token->next != NULL)
-	{
-		if ((token->kind == WORD) && (token->word != NULL))
-			expand_variable(token);
-		token = token->next;
-	}
-}
-
-
-
- void variable_expander(t_node_info *node)
-{
-	if(node==NULL)
-		return ;
-
-	token_variable_expand(node->node_token);
-	token_variable_expand(node->filename);
-	variable_expander(node->redirects);
-	variable_expander(node->cmd);
-	variable_expander(node->re_node);
-}
-
+//void	expand_variable(t_token_info *token)
+//{
+//	char	*new_word;
+//	char	*old_word;
+//	int		i;
+//	int		j;
+//
+//	old_word = token->word;
+//	i = strlen(old_word);
+//	new_word = calloc(i + 1, sizeof(char));
+//	i = 0;
+//	j = 0;
+//	while (old_word[i])
+//	{
+//		if (old_word[i] == '\'')
+//			remove_single_quote(new_word, old_word, &i, &j);
+//		else if (old_word[i] == '\"')
+//			remove_double_quote(new_word, old_word, &i, &j);
+//		else
+//		{
+//			new_word[j] = old_word[i];
+//			j++;
+//			i++;
+//		}
+//	}
+//	free(token->word);
+//	token->word = new_word;
+//}
+//
+//void	token_variable_expand(t_token_info *token)
+//{
+//	if (token == NULL)
+//		return ;
+//	while (token->next != NULL)
+//	{
+//		if ((token->kind == WORD) && (token->word != NULL))
+//			expand_variable(token);
+//		token = token->next;
+//	}
+//}
+//
+//void	variable_expander(t_node_info *node)
+//{
+//	if (node == NULL)
+//		return ;
+//	token_variable_expand(node->node_token);
+//	token_variable_expand(node->filename);
+//	variable_expander(node->redirects);
+//	variable_expander(node->cmd);
+//	variable_expander(node->re_node);
+//}
+//
 void	expand(t_node_info *node)
 {
 	// variable_expander(node);
