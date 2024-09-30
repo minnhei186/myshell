@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 12:45:31 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/23 17:53:08 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/29 18:16:38 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,9 @@ t_node_info	*make_node(void)
 	node->re_node = NULL;
 	node->inpipe[0] = STDIN_FILENO;
 	node->inpipe[1] = -1;
-	node->outpipe[0] =-1;
-	node->outpipe[1] = STDOUT_FILENO;;
+	node->outpipe[0] = -1;
+	node->outpipe[1] = STDOUT_FILENO;
+	;
 	// cmd_node
 	node->cmd = NULL;
 	node->node_token = NULL;
@@ -115,6 +116,7 @@ t_token_info	*output_redirect_node(t_node_info *node, t_token_info *token)
 
 	redirect_node = make_node();
 	redirect_node->kind = ND_REDIR_OUT;
+	redirect_node->delimiter=ft_tokendup(token);
 	token = token->next;
 	if (token->kind != WORD)
 	{
@@ -129,6 +131,28 @@ t_token_info	*output_redirect_node(t_node_info *node, t_token_info *token)
 	return (token);
 }
 
+t_token_info	*input_redirect_node(t_node_info *node, t_token_info *token)
+{
+	t_node_info	*redirect_node;
+
+	redirect_node = make_node();
+	redirect_node->kind = ND_REDIR_IN;
+	redirect_node->delimiter=ft_tokendup(token);
+	token = token->next;
+	if (token->kind != WORD)
+	{
+		printf("parse_syntax_error_need_word\n");
+		return (token);
+	}
+	redirect_node->filename = ft_tokendup(token);
+	if (node->redirects == NULL)
+		node->redirects = redirect_node;
+	else
+		redirect_append_tail(node, redirect_node);
+	return (token);
+}
+
+
 t_token_info	*redirect_node(t_node_info *node, t_token_info *token)
 {
 	t_token_info	*now_token;
@@ -136,12 +160,12 @@ t_token_info	*redirect_node(t_node_info *node, t_token_info *token)
 	now_token = token;
 	if (type_redirect_op(token) == 1)
 		now_token = output_redirect_node(node, token);
-	// else if(type_redirect_op(token)==2)
-	//	now_token=input_redirect_node(node,token);
+	 else if(type_redirect_op(token)==2)
+		now_token=input_redirect_node(node,token);
 	return (now_token);
 }
 
-//cmdではなくredirects_nodeにおいて
+// cmdではなくredirects_nodeにおいて
 t_token_info	*op_node(t_node_info *node, t_token_info *token)
 {
 	t_token_info	*now_token;
@@ -151,13 +175,11 @@ t_token_info	*op_node(t_node_info *node, t_token_info *token)
 	if (type_redirect_op(token) != 0)
 		now_token = redirect_node(node, token);
 	//パイプかどうか
-	if((strcmp(token->word, "|") == 0))
-			eof_token(node);	
-
+	if ((strcmp(token->word, "|") == 0))
+		eof_token(node);
 	return (now_token);
 }
 
-// pipe,SIMPLE_CMD,REDIRECT,　wordはトークンとして。
 // tokenにpipeがきたらそれはeofトークンとして処理しよう。
 t_token_info	*append_node(t_node_info *node, t_token_info *token)
 {
@@ -167,22 +189,12 @@ t_token_info	*append_node(t_node_info *node, t_token_info *token)
 	if (token->kind == WORD)
 		word_token(node, token);
 	else if (token->kind == OP)
-		now_token = op_node(node, token);//cmdではなくredirects_nodeにおいて
-	//	else if(token->kind==RESERVE)
-	//		reserve_node(node,token);
+		now_token = op_node(node, token); 
 	else if (token->kind == ROF)
 		eof_token(node);
 	return (now_token);
 }
 
-//command_parserは次だよ。
-//ただしサブシェルなどをここでは扱わないので、一元化されている。
-//しかし本来はね。
-
-
-//今日はここから
-//op_nodeにもeofを追加している　パイプね
-//eof_tokenをかなりいじってるよ。
 t_node_info	*prompt_parser(t_token_info *token)
 {
 	t_node_info		*command_node;
@@ -192,9 +204,9 @@ t_node_info	*prompt_parser(t_token_info *token)
 	command_node->kind = ND_SIMPLE_CMD;
 	while (token->next != NULL)
 	{
-		now_token = append_node(command_node, token);	
-		if((strcmp(token->word, "|") == 0))
-			return command_node;
+		now_token = append_node(command_node, token);
+		if ((strcmp(token->word, "|") == 0))
+			return (command_node);
 		token = now_token->next;
 	}
 	append_node(command_node, token);
@@ -219,9 +231,9 @@ t_node_info	*parser(t_token_info *token)
 
 	node = make_node();
 	node->kind = ND_PIPE;
-	node->cmd= prompt_parser(token);
-	now_token=find_pipe(token);
-	if (now_token!=NULL)
+	node->cmd = prompt_parser(token);
+	now_token = find_pipe(token);
+	if (now_token != NULL)
 	{
 		now_token = now_token->next;
 		node->re_node = parser(now_token);

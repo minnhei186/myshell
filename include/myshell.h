@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/27 13:30:24 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/29 18:17:06 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ typedef struct s_prompt_info
 	int						yourser_err;
 
 }							t_prompt_info;
-
 // tokenizer_header
 enum						e_token_kind
 {
@@ -69,6 +68,7 @@ enum						e_node_kind
 	ND_PIPE,
 	ND_SIMPLE_CMD,
 	ND_REDIR_OUT,
+	ND_REDIR_IN,
 };
 typedef enum e_node_kind	t_node_kind;
 
@@ -95,6 +95,16 @@ struct						s_node
 	int						filefd;
 	int						stashedfd;
 };
+
+
+
+typedef struct s_operation_info
+{
+	t_token_info *token;
+	t_node_info *node;
+}t_operation_info;
+
+
 
 // error_utils
 void						error_set_print(char *err_msg, int error_type,

@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 15:16:31 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/24 14:29:06 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/29 11:33:11 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	prepare_pipe(t_node_info *node)
 void	prepare_pipe_child(t_node_info *node)
 {
 	close(node->outpipe[0]);             
-	dup2(node->inpipe[0], STDIN_FILENO); 
+	dup2(node->inpipe[0], STDIN_FILENO);//targetfdでもある（リダイレクトされていても 
 	if (node->inpipe[0] != STDIN_FILENO)
 		close(node->inpipe[0]);
 	dup2(node->outpipe[1], STDOUT_FILENO);

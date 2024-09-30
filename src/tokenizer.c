@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 10:37:11 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/26 19:17:48 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/29 10:16:44 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,54 +86,65 @@ t_token_info	*make_operand_token(char *prompt)
 	return (new_token);
 }
 
-//めた文字がくる前に'がきた場合は、'が来るまでwordとする。
-////コンティニューとか使っても面白いかもね。
-// promptが終端まで閉じられずに消費されたらエラーとしよう
-// break??どうするかだな。
-// NULLだったらエラーとするかな
-
-void tokenizer_error(t_prompt_info *info,char *err_msg)
+void	tokenizer_error(t_prompt_info *info, char *err_msg)
 {
-	info->yourser_err=1;
+	info->yourser_err = 1;
 	dprintf(STDERR_FILENO, "minishell: %s\n", err_msg);
 }
+
+int	recive_single_qout(t_prompt_info *info, char *prompt, int i)
+{
+	if (prompt[i] == '\'')
+	{
+		i++;
+		while (prompt[i] != '\'')
+		{
+			if (prompt[i] == '\0')
+			{
+				tokenizer_error(info, "not_close_single_qouat");
+				return (-1);
+			}
+			i++;
+		}
+	}
+	return (i);
+}
+
+int	recive_double_qout(t_prompt_info *info, char *prompt, int i)
+{
+	if (prompt[i] == '\"')
+	{
+		i++;
+		while (prompt[i] != '\"')
+		{
+			if (prompt[i] == '\0')
+			{
+				tokenizer_error(info, "not_close_single_qouat");
+				return (-1);
+			}
+			i++;
+		}
+	}
+	return (i);
+}
+
+// promptのポインタは独立
 t_token_info	*make_word_token(t_prompt_info *info, char *prompt)
 {
 	int				i;
 	t_token_info	*new_token;
 	char			*word_str;
 
-	//先頭からどこまでコピーするかサイズを考える。
 	i = 0;
 	while (prompt[i] && !is_meta(prompt[i]))
 	{
-		if (prompt[i] == '\'') // singl qout;
-		{
-			i++;
-			while (prompt[i] != '\'') //'が来るまで全てskip
-			{
-				if (prompt[i] == '\0')
-				{
-					tokenizer_error(info, "not_close_single_qouat");
-					break;
-				}
-				i++;
-			}
-		}
-		if (prompt[i] == '\"') // singl qout;
-		{
-			i++;
-			while (prompt[i] != '\"') //'が来るまで全てskip
-			{
-				if(prompt[i]=='\0')
-				{
-					tokenizer_error(info,"not_close_double_qouat");
-					break;
-				}
-				i++;
-			}
-		}
-		if(prompt[i]!='\0')
+		i = recive_single_qout(info, prompt, i);
+		if (info->yourser_err == 1)
+			return (NULL);
+		i = recive_double_qout(info, prompt, i);
+		if (info->yourser_err == 1)
+			return (NULL);
+		if (prompt[i] != '\0')
 			i++;
 	}
 	word_str = ft_calloc(i + 1, sizeof(char));
@@ -156,43 +167,50 @@ t_token_info	*make_eof_token(void)
 	return (new_token);
 }
 
-t_token_info	*make_token(t_prompt_info *info, char *prompt,
+t_token_info	*make_token(t_prompt_info *info, char **prompt,
 		t_token_info *parent_tk)
 {
 	t_token_info	*token;
+	int				set_size;
 
-	if (is_operand(prompt))
-		token = make_operand_token(prompt);
-	//	else if (is_reserved(prompt))
-	//		token = make_reserved_token(prompt);
+	if (is_operand(*prompt))
+		token = make_operand_token(*prompt);
 	else
-	{
-		token = make_word_token(info, prompt);
-	}
+		token = make_word_token(info, *prompt);
 	parent_tk->next = token;
+	if (info->yourser_err == 1)
+	{
+		while (**prompt)
+			*prompt += 1;
+		return (token);
+	}
+	set_size = ft_strlen(token->word);
+	(*prompt) = (*prompt) + set_size;
 	return (token);
 }
 
-//呼び出し元で
-// origin_prompt = prompt; //別にいらないかも、ここでfreeする必要もないし戻る(
+//全てメタ文字だった場合は？
 t_token_info	*tokenizer(t_prompt_info *info, char *prompt)
 {
 	t_token_info	root_tk;
 	t_token_info	*token;
-	int				set_size;
 
 	token = &root_tk;
 	while (*prompt)
 	{
 		prompt = space_skip(prompt);
 		if (*prompt == '\0')
-			break ;
-		token = make_token(info, prompt, token);
-		if(info->yourser_err==1)
-			break;
+		{
+			token = make_eof_token();
+			return (root_tk.next);
+		}
 
-		set_size = ft_strlen(token->word); 
-		prompt += set_size;
+		token = make_token(info, &prompt, token);
+		if (info->yourser_err == 1)
+		{
+			token = make_eof_token();
+			return (root_tk.next);
+		}
 	}
 	token->next = make_eof_token();
 	return (root_tk.next);
