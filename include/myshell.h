@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/29 18:17:06 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/30 13:57:08 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ t_token_info				*make_eof_token(void);
 char						**token2argv(t_token_info *token);
 
 // expand
-void						expand(t_token_info *token);
+void						expand(t_node_info *token);
 
 // parser
 t_node_info					*parser(t_token_info *token);

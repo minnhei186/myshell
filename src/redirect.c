@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 18:47:50 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/29 18:50:29 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/30 11:45:34 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	redirect_out_init(t_node_info *redirect)
 
 void	redirect_in_init(t_node_info *redirect)
 {
-	redirect->filefd = open(redirect->filename->word, O_CREAT | O_WRONLY, 0644);
+	redirect->filefd = open(redirect->filename->word, O_CREAT | O_RDONLY, 0644);
 	redirect->targetfd = STDIN_FILENO;
 }
 

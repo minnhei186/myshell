@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/29 11:47:23 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/09/30 13:56:05 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,10 +85,10 @@ void	shell_operation(t_prompt_info *info, t_operation_info *operation)
 	operation->token = tokenizer(info, info->str);
 	if (info->yourser_err)
 		return ;
-	expand(operation->token);
+	operation->node = parser(operation->token);
 	if (info->yourser_err)
 		return ;
-	operation->node = parser(operation->token);
+	expand(operation->node);
 	if (info->yourser_err)
 		return ;
 	prepare_redirect(operation->node);
