@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/30 15:54:58 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/01 10:52:33 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ void	child_process(t_node_info *node)
 	char	*cmd_path;
 	char	**cmd_envp;
 
-	do_redirect(node->cmd);
 	prepare_pipe_child(node);
+	do_redirect(node->cmd);
 	cmd_prompt = token2argv(node->cmd->node_token);
 	cmd_path = path_get(cmd_prompt[0]);
 	cmd_envp = environ;
