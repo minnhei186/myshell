@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 17:36:42 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/01 19:42:57 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/02 10:42:52 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,11 @@ char	*ft_char_recalloc(char *old, size_t count)
 	return (new);
 }
 
-// oldはエラーの時消さずに持ってこう。
-//うわ、いいねこのありようによって。おもしろ
-// oldがNULLの時は新しく作る。
 char	*append_char(char *old, char append_c)
 {
 	char	*new;
 	int		i;
 
-	//成功した場合はoldは消える。oldに元のところでしてしまおう
 	new = ft_char_recalloc(old, 1);
 	if (new == NULL)
 		return (NULL);
@@ -60,7 +56,6 @@ char	*append_char(char *old, char append_c)
 	return (new);
 }
 
-// pptは格納庫のアドレス *pptでその格納庫の中に入れることができるし中のものにアクセスしている；
 #define SINGLE_QUOTE '\''
 #define DOUBLE_QUOTE '\"'
 
@@ -92,10 +87,6 @@ char	*remove_double_quote(char **word_ppt, char *new_word)
 	return (new_word);
 }
 
-// freeしてしまうのは問題か？
-// freeしなくてもいいかもな（realloc)
-//いや、そうか新しく作るものをreallocしていけば、freeは必要
-// oldが存在していたら新しく作成しよう。
 void	remove_quote(t_token_info *token)
 {
 	char	*word;
@@ -143,11 +134,6 @@ void	quote_remover(t_node_info *node)
 	quote_remover(node->re_node);
 }
 
-// countを符号なしの64bit範囲で考える
-// reallocではなくて、calloc側の処理にした方が良いかも
-//それはおk、しかし計算というのはその領域を超える可能性を常に持っている。
-//計算は今を超えていくのである。
-//
 bool	is_alpha_or_under(char c)
 {
 	return (ft_isalpha(c) || c == '_');
@@ -164,7 +150,6 @@ bool	is_variable(char *word)
 	return (false);
 }
 
-//ここのエラー処理注意
 char	*expand_variable_word(char **word, char *new_word)
 {
 	char	*variable_name;
@@ -215,6 +200,33 @@ char *expand_variable_single_quote(char **word,char *new_word)
 	return new_word;
 }
 
+char *expand_variable_double_quote(char **word,char *new_word)
+{
+	//append_and_skip_single_quote
+	new_word=append_char(new_word,**word);
+	*word=*word+1;
+	while(**word!=DOUBLE_QUOTE)
+	{
+		if(**word=='\0')
+		{
+			printf("not_close_double_quote\n");
+			return NULL;
+		} 
+		if(is_variable(*word))
+			new_word=expand_variable_word(word,new_word);
+		else
+		{
+			new_word=append_char(new_word,**word);
+			*word=*word+1;
+		}
+	}
+	
+	new_word=append_char(new_word,**word);
+	*word=*word+1;
+	return new_word;
+}
+
+
 
 void	expand_variable(t_token_info *token)
 {
@@ -227,8 +239,8 @@ void	expand_variable(t_token_info *token)
 	{
 		 if (*word == SINGLE_QUOTE)
 			new_word = expand_variable_single_quote(&word, new_word);
-		// else if (*word == DOUBLE_QUOTE)
-		//	new_word = expand_variable_double_quote(&word, new_word);
+		 else if (*word == DOUBLE_QUOTE)
+			new_word = expand_variable_double_quote(&word, new_word);
 		else if (is_variable(word))
 			new_word = expand_variable_word(&word, new_word);
 		else

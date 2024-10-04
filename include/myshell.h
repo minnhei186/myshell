@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/30 13:57:08 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/04 10:14:52 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,13 +32,29 @@
 
 extern char					**environ;
 
+typedef struct s_item		t_item;
+
+struct						s_item
+{
+	char					*name;
+	char					*value;
+	t_item					*next;
+};
+
+typedef struct s_map
+{
+	t_item					*item;
+	char **environment;
+}							t_map;
+
 typedef struct s_prompt_info
 {
 	char *str;   // prompt
 	char **envp; //環境
-	int shell_finish_flag;
+	int						shell_finish_flag;
 	int						last_status;
 	int						yourser_err;
+	t_map					*map;
 
 }							t_prompt_info;
 // tokenizer_header
@@ -96,15 +112,11 @@ struct						s_node
 	int						stashedfd;
 };
 
-
-
 typedef struct s_operation_info
 {
-	t_token_info *token;
-	t_node_info *node;
-}t_operation_info;
-
-
+	t_token_info			*token;
+	t_node_info				*node;
+}							t_operation_info;
 
 // error_utils
 void						error_set_print(char *err_msg, int error_type,
@@ -138,5 +150,21 @@ t_node_info					*parser(t_token_info *token);
 void						do_redirect(t_node_info *node);
 void						prepare_redirect(t_node_info *node);
 void						reset_redirect(t_node_info *node);
+
+// is_identifier
+bool						is_alpha_or_under(char c);
+bool						is_alpha_or_under_or_digit(char c);
+bool						is_variable(char *word);
+bool						is_identifier(const char *s);
+
+
+//shell_map
+t_item	*make_unit_item(const char *name, const char *value);
+t_map	*make_map(void);
+char	*search_value(t_item *item, const char *find_name);
+char	*item_value_get(t_map *map, const char *find_name);
+int	item_set(t_map *map, const char *name, const char *value);
+int	item_unset(t_map *map, const char *name);
+int	item_put(t_map *map, const char *string, bool empty_value);
 
 #endif

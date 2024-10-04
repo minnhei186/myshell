@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/01 10:52:33 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/04 10:36:11 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,11 +124,14 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	rl_outstream = stderr;
 	info_init(&info, envp);
-	while (info.shell_finish_flag != 1)
+	if (info.shell_finish_flag != 1)
 	{
-		shell_loop(&info);
-		info.yourser_err = 0;
+		while (info.shell_finish_flag != 1)
+		{
+			shell_loop(&info);
+			info.yourser_err = 0;
+		}
+		clear_history();
 	}
-	clear_history();
 	return (info.last_status);
 }
