@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/05 13:45:54 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/05 14:32:37 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,13 @@ void	child_process(t_node_info *node)
 	cmd_prompt = token2argv(node->cmd->node_token);
 	cmd_path = path_get(cmd_prompt[0]);
 	cmd_envp = environ;
+	
+	int i;
+	i=0;
+	while(cmd_prompt[i])
+		printf("%s\n",cmd_prompt[i++]);
+	printf("%s \n",cmd_path);
+
 	if (cmd_path == NULL)
 	{
 		printf("not_exist_commnad\n");

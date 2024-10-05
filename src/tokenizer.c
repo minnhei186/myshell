@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 10:37:11 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/29 10:16:44 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/05 15:01:27 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,10 +200,7 @@ t_token_info	*tokenizer(t_prompt_info *info, char *prompt)
 	{
 		prompt = space_skip(prompt);
 		if (*prompt == '\0')
-		{
-			token = make_eof_token();
-			return (root_tk.next);
-		}
+			break;	
 
 		token = make_token(info, &prompt, token);
 		if (info->yourser_err == 1)
