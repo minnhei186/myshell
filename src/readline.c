@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/05 12:11:23 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/05 12:31:06 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,7 +195,7 @@ void	shell_loop(t_prompt_info *info)
 	operation.node = NULL;
 	info->str = readline("myshell:");
 	if (info->str == NULL)
-		info->shell_finish_flag = 1;
+		info->shell_finish= 1;
 	else
 	{
 		if (*(info->str))
@@ -217,9 +217,9 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	rl_outstream = stderr;
 	info_init(&info, envp);
-	if (info.yourser_err != 1)
+	if (info.shell_finish!= 1)
 	{
-		while (info.yourser_err != 1)
+		while (info.shell_finish!= 1)
 		{
 			shell_loop(&info);
 			info.yourser_err = 0;

@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/04 10:14:52 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/05 12:29:51 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,7 @@ typedef struct s_map
 typedef struct s_prompt_info
 {
 	char *str;   // prompt
-	char **envp; //環境
-	int						shell_finish_flag;
+	int						shell_finish;
 	int						last_status;
 	int						yourser_err;
 	t_map					*map;
