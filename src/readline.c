@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/04 17:50:28 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/05 12:11:23 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,8 +117,10 @@ int	builtin_exit(t_prompt_info *info,char **argv)
 bool	is_builtin(t_node_info *node)
 {
 	const char		*cmd_name;
-	char			*builtin_commands[] = {"exit", "export", "unset", "env",
-					"cd", "echo", "pwd"};
+	//char			*builtin_commands[] = {"exit", "export", "unset", "env",
+	//				"cd", "echo", "pwd"};
+	char			*builtin_commands[] = {"exit"};
+
 	unsigned int	i;
 
 	if (node == NULL || node->cmd == NULL | node->cmd->node_token== NULL
@@ -215,9 +217,9 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	rl_outstream = stderr;
 	info_init(&info, envp);
-	if (info.shell_finish_flag != 1)
+	if (info.yourser_err != 1)
 	{
-		while (info.shell_finish_flag != 1)
+		while (info.yourser_err != 1)
 		{
 			shell_loop(&info);
 			info.yourser_err = 0;
