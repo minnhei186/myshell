@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path_finder.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:05:38 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/14 17:08:33 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/04 18:15:42 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ char	*path_get(char *command)
 	char	*unit_path;
 	char	*command_path;
 
+	if (strchr(command, '/') != NULL && access(command, F_OK) == 0)
+		return command;
 	path_env = getenv("PATH");
 	while (1)
 	{
