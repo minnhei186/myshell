@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/05 12:31:06 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/05 13:45:54 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,7 +202,7 @@ void	shell_loop(t_prompt_info *info)
 		{
 			add_history(info->str);
 			shell_operation(info, &operation);
-			//	free_operation(operation);
+			free_operation(operation);
 		}
 		free(info->str);
 		info->str = NULL;

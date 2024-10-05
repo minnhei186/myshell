@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 13:09:32 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/05 12:02:58 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/05 13:44:08 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,18 +28,6 @@ void	fatal_error_exit(char *err_msg)
 	write(STDERR_FILENO,"\n",ft_strlen("\n"));
 	exit(EXIT_FAILURE);
 }
-
-
-void *minishell_malloc(size_t size)
-{
-	void *pt;
-
-	pt=malloc(size);
-	if(pt==NULL)
-		fatal_error_exit("failed to allocate memory");
-	return pt;
-}
-
 
 //こいつはどこで用いるんだろうか？systemエラー以外？（ユーザーエラーとの違いは？
 //システムコールエラーでも、なぜstatusでexit？

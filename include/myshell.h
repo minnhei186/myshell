@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/05 12:29:51 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/05 13:45:07 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,9 +118,16 @@ typedef struct s_operation_info
 }							t_operation_info;
 
 // error_utils
-void						error_set_print(char *err_msg, int error_type,
-								t_prompt_info *info);
-void						system_error(char *err_msg, t_prompt_info *info);
+void	perror_prestr(void);
+void	fatal_error_exit(char *err_msg);
+
+//free_utils
+void	token_free(t_token_info *token);
+void	node_free(t_node_info *node);
+void	free_operation(t_operation_info operation);
+
+//shell_refunc
+void *minishell_malloc(size_t size);
 
 // pipe
 void						prepare_pipe(t_node_info *node);
