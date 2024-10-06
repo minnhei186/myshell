@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 13:09:32 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/06 16:41:46 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/06 18:34:02 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,20 @@ void tokenizer_error(t_prompt_info *info,char *err_msg)
 	write(STDERR_FILENO,err_msg,ft_strlen(err_msg));
 	write(STDERR_FILENO,"\n",ft_strlen("\n"));
 }
+
+//lineにNULLがきた場合にセグフォ、くることはあるのか？
+void parser_error(t_prompt_info *info,char *token_word)
+{
+	char *err_msg="syntax error near unexpected token";
+	info->yourser_err=1;
+	perror_prestr();
+	write(STDERR_FILENO, err_msg, ft_strlen(err_msg)); 
+	write(STDERR_FILENO, " '", 2); 
+	write(STDERR_FILENO, token_word, ft_strlen(token_word)); 
+	write(STDERR_FILENO, "'", 1); 
+	write(STDERR_FILENO, "\n", 1); 
+}
+
 
 
 //void	tokenize_error(char *location,char *line)

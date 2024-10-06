@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/06 16:44:47 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/06 18:07:40 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,8 @@ typedef struct s_operation_info
 void						perror_prestr(void);
 void						fatal_error_exit(char *err_msg);
 void						tokenizer_error(t_prompt_info *info, char *err_msg);
-
+void						parser_error(t_prompt_info *info, char
+								* token_word);
 // free_utils
 void						token_free(t_token_info *token);
 void						node_free(t_node_info *node);
@@ -152,7 +153,7 @@ char						**token2argv(t_token_info *token);
 void						expand(t_node_info *token);
 
 // parser
-t_node_info					*parser(t_token_info *token);
+t_node_info					*parser(t_prompt_info *info,t_token_info *token);
 
 // redirect
 void						do_redirect(t_node_info *node);

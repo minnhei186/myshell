@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 12:45:31 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/29 18:16:38 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/06 18:33:22 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_node_info	*make_node(void)
 {
 	t_node_info	*node;
 
-	node = (t_node_info *)malloc(sizeof(t_node_info));
+	node = (t_node_info *)minishell_malloc(sizeof(t_node_info));
 	node->kind = -1;
 	// pipe_node
 	node->re_node = NULL;
@@ -110,19 +110,21 @@ void	redirect_append_tail(t_node_info *node, t_node_info *append_redirect)
 	search_redirect->redirects = append_redirect;
 }
 
-t_token_info	*output_redirect_node(t_node_info *node, t_token_info *token)
+t_token_info	*output_redirect_node(t_prompt_info *info,t_node_info *node, t_token_info *token)
 {
 	t_node_info	*redirect_node;
+
+	if (token->next->kind != WORD)//ここを先に判定！//何も作らず何も追加せず返す
+	{
+		parser_error(info,token->word);
+		return (NULL);
+	}
+
 
 	redirect_node = make_node();
 	redirect_node->kind = ND_REDIR_OUT;
 	redirect_node->delimiter=ft_tokendup(token);
 	token = token->next;
-	if (token->kind != WORD)
-	{
-		printf("parse_syntax_error_need_word\n");
-		return (token);
-	}
 	redirect_node->filename = ft_tokendup(token);
 	if (node->redirects == NULL)
 		node->redirects = redirect_node;
@@ -131,20 +133,22 @@ t_token_info	*output_redirect_node(t_node_info *node, t_token_info *token)
 	return (token);
 }
 
-t_token_info	*input_redirect_node(t_node_info *node, t_token_info *token)
+//構文と生成規則による
+//先に判定した方がいいかも、作らず追加せずに返してあげる
+t_token_info	*input_redirect_node(t_prompt_info *info,t_node_info *node, t_token_info *token)
 {
 	t_node_info	*redirect_node;
 
+	if (token->next->kind != WORD)//ここを先に判定！//何も作らず何も追加せず返す
+	{
+		parser_error(info,token->word);
+		return (NULL);
+	}
 	redirect_node = make_node();
 	redirect_node->kind = ND_REDIR_IN;
 	redirect_node->delimiter=ft_tokendup(token);
 	token = token->next;
-	if (token->kind != WORD)
-	{
-		printf("parse_syntax_error_need_word\n");
-		return (token);
-	}
-	redirect_node->filename = ft_tokendup(token);
+		redirect_node->filename = ft_tokendup(token);
 	if (node->redirects == NULL)
 		node->redirects = redirect_node;
 	else
@@ -153,35 +157,36 @@ t_token_info	*input_redirect_node(t_node_info *node, t_token_info *token)
 }
 
 
-t_token_info	*redirect_node(t_node_info *node, t_token_info *token)
+t_token_info	*redirect_node(t_prompt_info *info,t_node_info *node, t_token_info *token)
 {
 	t_token_info	*now_token;
 
 	now_token = token;
 	if (type_redirect_op(token) == 1)
-		now_token = output_redirect_node(node, token);
+		now_token = output_redirect_node(info,node, token);
 	 else if(type_redirect_op(token)==2)
-		now_token=input_redirect_node(node,token);
+		now_token=input_redirect_node(info,node,token);
 	return (now_token);
 }
 
 // cmdではなくredirects_nodeにおいて
-t_token_info	*op_node(t_node_info *node, t_token_info *token)
+// 構文と生成規則による？
+t_token_info	*op_node(t_prompt_info *info,t_node_info *node, t_token_info *token)
 {
 	t_token_info	*now_token;
 
 	//リダイレクトかどうか
 	now_token = token;
 	if (type_redirect_op(token) != 0)
-		now_token = redirect_node(node, token);
+		now_token = redirect_node(info,node, token);
 	//パイプかどうか
-	if ((strcmp(token->word, "|") == 0))
+	if ((ft_strncmp(token->word, "|",1) == 0))
 		eof_token(node);
 	return (now_token);
 }
 
 // tokenにpipeがきたらそれはeofトークンとして処理しよう。
-t_token_info	*append_node(t_node_info *node, t_token_info *token)
+t_token_info	*append_node(t_prompt_info *info,t_node_info *node, t_token_info *token)
 {
 	t_token_info	*now_token;
 
@@ -189,13 +194,13 @@ t_token_info	*append_node(t_node_info *node, t_token_info *token)
 	if (token->kind == WORD)
 		word_token(node, token);
 	else if (token->kind == OP)
-		now_token = op_node(node, token); 
+		now_token = op_node(info,node, token); 
 	else if (token->kind == ROF)
 		eof_token(node);
 	return (now_token);
 }
 
-t_node_info	*prompt_parser(t_token_info *token)
+t_node_info	*prompt_parser(t_prompt_info *info,t_token_info *token)
 {
 	t_node_info		*command_node;
 	t_token_info	*now_token;
@@ -204,12 +209,14 @@ t_node_info	*prompt_parser(t_token_info *token)
 	command_node->kind = ND_SIMPLE_CMD;
 	while (token->next != NULL)
 	{
-		now_token = append_node(command_node, token);
-		if ((strcmp(token->word, "|") == 0))
+		now_token = append_node(info,command_node, token);
+		if(info->yourser_err==1)//ここを追加　//ここでもう処理終わりとするerr
+			return command_node;
+		if ((ft_strncmp(token->word, "|",1) == 0))
 			return (command_node);
 		token = now_token->next;
 	}
-	append_node(command_node, token);
+	append_node(info,command_node, token);
 	return (command_node);
 }
 
@@ -217,26 +224,26 @@ t_token_info	*find_pipe(t_token_info *token)
 {
 	while (token->next != NULL)
 	{
-		if (strcmp(token->word, "|") == 0)
+		if (ft_strncmp(token->word, "|",1) == 0)
 			return (token);
 		token = token->next;
 	}
 	return (NULL);
 }
 
-t_node_info	*parser(t_token_info *token)
+t_node_info	*parser(t_prompt_info *info,t_token_info *token)
 {
 	t_node_info		*node;
 	t_token_info	*now_token;
 
 	node = make_node();
 	node->kind = ND_PIPE;
-	node->cmd = prompt_parser(token);
+	node->cmd = prompt_parser(info,token);
 	now_token = find_pipe(token);
 	if (now_token != NULL)
 	{
 		now_token = now_token->next;
-		node->re_node = parser(now_token);
+		node->re_node = parser(info,now_token);
 	}
 	return (node);
 }
