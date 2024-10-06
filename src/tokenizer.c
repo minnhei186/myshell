@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 10:37:11 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/06 16:44:07 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/06 16:48:17 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ t_token_info	*make_operand_token(char *prompt)
 	char			*op_str;
 
 	op_str = malloc_op(prompt);
-	new_token = (t_token_info *)ft_calloc(1, sizeof(t_token_info));
+	new_token = (t_token_info *)minishell_calloc(1, sizeof(t_token_info));
 	new_token->word = op_str;
 	new_token->kind = OP;
 	new_token->next = NULL;
