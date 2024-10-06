@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 10:37:11 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/05 15:01:27 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/06 16:44:07 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,12 +86,6 @@ t_token_info	*make_operand_token(char *prompt)
 	return (new_token);
 }
 
-void	tokenizer_error(t_prompt_info *info, char *err_msg)
-{
-	info->yourser_err = 1;
-	dprintf(STDERR_FILENO, "minishell: %s\n", err_msg);
-}
-
 int	recive_single_qout(t_prompt_info *info, char *prompt, int i)
 {
 	if (prompt[i] == '\'')
@@ -102,7 +96,7 @@ int	recive_single_qout(t_prompt_info *info, char *prompt, int i)
 			if (prompt[i] == '\0')
 			{
 				tokenizer_error(info, "not_close_single_qouat");
-				return (-1);
+				return -1;
 			}
 			i++;
 		}
@@ -119,8 +113,8 @@ int	recive_double_qout(t_prompt_info *info, char *prompt, int i)
 		{
 			if (prompt[i] == '\0')
 			{
-				tokenizer_error(info, "not_close_single_qouat");
-				return (-1);
+				tokenizer_error(info, "not_close_double_qouat");
+				return -1;
 			}
 			i++;
 		}
@@ -147,9 +141,10 @@ t_token_info	*make_word_token(t_prompt_info *info, char *prompt)
 		if (prompt[i] != '\0')
 			i++;
 	}
-	word_str = ft_calloc(i + 1, sizeof(char));
-	word_str = strncpy(word_str, prompt, i);
-	new_token = (t_token_info *)ft_calloc(1, sizeof(t_token_info));
+	word_str = minishell_calloc(i + 1, sizeof(char));
+	//word_str = strncpy(word_str, prompt, i);
+	ft_strlcpy(word_str, prompt, i+1);//必ず成功
+	new_token = (t_token_info *)minishell_calloc(1, sizeof(t_token_info));
 	new_token->word = word_str;
 	new_token->kind = WORD;
 	new_token->next = NULL;
@@ -160,7 +155,7 @@ t_token_info	*make_eof_token(void)
 {
 	t_token_info	*new_token;
 
-	new_token = (t_token_info *)ft_calloc(1, sizeof(t_token_info));
+	new_token = (t_token_info *)minishell_calloc(1, sizeof(t_token_info));
 	new_token->word = NULL;
 	new_token->kind = ROF;
 	new_token->next = NULL;
@@ -177,37 +172,36 @@ t_token_info	*make_token(t_prompt_info *info, char **prompt,
 		token = make_operand_token(*prompt);
 	else
 		token = make_word_token(info, *prompt);
-	parent_tk->next = token;
 	if (info->yourser_err == 1)
 	{
+		parent_tk->next = make_eof_token();
 		while (**prompt)
 			*prompt += 1;
-		return (token);
+		return (NULL);
 	}
+	parent_tk->next = token;
 	set_size = ft_strlen(token->word);
 	(*prompt) = (*prompt) + set_size;
 	return (token);
 }
 
-//全てメタ文字だった場合は？
 t_token_info	*tokenizer(t_prompt_info *info, char *prompt)
 {
 	t_token_info	root_tk;
 	t_token_info	*token;
 
+	root_tk.word = NULL;
+	root_tk.kind = 0;
+	root_tk.next = NULL;
 	token = &root_tk;
 	while (*prompt)
 	{
-		prompt = space_skip(prompt);
+		prompt = space_skip(prompt); 
 		if (*prompt == '\0')
-			break;	
-
+			break ;
 		token = make_token(info, &prompt, token);
 		if (info->yourser_err == 1)
-		{
-			token = make_eof_token();
 			return (root_tk.next);
-		}
 	}
 	token->next = make_eof_token();
 	return (root_tk.next);

@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/05 13:45:07 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/06 16:44:47 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,12 @@ struct						s_item
 typedef struct s_map
 {
 	t_item					*item;
-	char **environment;
+	char					**environment;
 }							t_map;
 
 typedef struct s_prompt_info
 {
-	char *str;   // prompt
+	char *str; // prompt
 	int						shell_finish;
 	int						last_status;
 	int						yourser_err;
@@ -118,16 +118,18 @@ typedef struct s_operation_info
 }							t_operation_info;
 
 // error_utils
-void	perror_prestr(void);
-void	fatal_error_exit(char *err_msg);
+void						perror_prestr(void);
+void						fatal_error_exit(char *err_msg);
+void						tokenizer_error(t_prompt_info *info, char *err_msg);
 
-//free_utils
-void	token_free(t_token_info *token);
-void	node_free(t_node_info *node);
-void	free_operation(t_operation_info operation);
+// free_utils
+void						token_free(t_token_info *token);
+void						node_free(t_node_info *node);
+void						free_operation(t_operation_info operation);
 
-//shell_refunc
-void *minishell_malloc(size_t size);
+// shell_refunc
+void						*minishell_malloc(size_t size);
+void						*minishell_calloc(size_t count, size_t size);
 
 // pipe
 void						prepare_pipe(t_node_info *node);
@@ -163,14 +165,16 @@ bool						is_alpha_or_under_or_digit(char c);
 bool						is_variable(char *word);
 bool						is_identifier(const char *s);
 
-
-//shell_map
-t_item	*make_unit_item(const char *name, const char *value);
-t_map	*make_map(void);
-char	*search_value(t_item *item, const char *find_name);
-char	*item_value_get(t_map *map, const char *find_name);
-int	item_set(t_map *map, const char *name, const char *value);
-int	item_unset(t_map *map, const char *name);
-int	item_put(t_map *map, const char *string, bool empty_value);
+// shell_map
+t_item						*make_unit_item(const char *name,
+								const char *value);
+t_map						*make_map(void);
+char						*search_value(t_item *item, const char *find_name);
+char						*item_value_get(t_map *map, const char *find_name);
+int							item_set(t_map *map, const char *name,
+								const char *value);
+int							item_unset(t_map *map, const char *name);
+int							item_put(t_map *map, const char *string,
+								bool empty_value);
 
 #endif
