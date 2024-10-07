@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/06 18:08:14 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/07 12:49:27 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,7 @@ void	shell_operation(t_prompt_info *info, t_operation_info *operation)
 	expand(operation->node);
 	if (info->yourser_err)
 		return ;
-	prepare_redirect(operation->node);
+	prepare_redirect(info,operation->node);
 	if (info->yourser_err)
 		return ;
 	exec(info, operation->node);

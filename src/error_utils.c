@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 13:09:32 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/06 18:34:02 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/07 12:43:05 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,16 @@ void parser_error(t_prompt_info *info,char *token_word)
 	write(STDERR_FILENO, "'", 1); 
 	write(STDERR_FILENO, "\n", 1); 
 }
+
+void minishell_perror(t_prompt_info *info,char *err_msg)
+{
+	info->yourser_err=1;
+	perror_prestr();
+	perror(err_msg);
+}
+
+
+
 
 
 
