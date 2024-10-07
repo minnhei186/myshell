@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/23 15:16:31 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/29 11:33:11 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/07 14:18:46 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,8 @@ void	prepare_pipe(t_node_info *node)
 {
 	if (node->re_node != NULL)
 	{
-		pipe(node->outpipe);
+		if(pipe(node->outpipe)==-1)
+			fatal_error_exit("failed to create a pipe");
 		cpy_pipe(node->re_node->inpipe, node->outpipe);
 	}
 }
@@ -38,10 +39,13 @@ void	prepare_pipe(t_node_info *node)
 void	prepare_pipe_child(t_node_info *node)
 {
 	close(node->outpipe[0]);             
-	dup2(node->inpipe[0], STDIN_FILENO);//targetfdでもある（リダイレクトされていても 
+	if(dup2(node->inpipe[0], STDIN_FILENO)==-1)
+		fatal_error_exit("failed to dup2 a pipe");
+
 	if (node->inpipe[0] != STDIN_FILENO)
 		close(node->inpipe[0]);
-	dup2(node->outpipe[1], STDOUT_FILENO);
+	if(dup2(node->outpipe[1], STDOUT_FILENO)==-1)
+		fatal_error_exit("failed to dup2 a pipe");
 	if (node->outpipe[1] != STDOUT_FILENO)
 		close(node->outpipe[1]);
 }

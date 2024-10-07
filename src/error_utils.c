@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 13:09:32 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/07 12:43:05 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/07 15:44:05 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,19 @@ void	perror_prestr(void)
 void	fatal_error_exit(char *err_msg)
 {
 	perror_prestr();
-	write(STDERR_FILENO,err_msg,ft_strlen(err_msg));
-	write(STDERR_FILENO,"\n",ft_strlen("\n"));
+	perror(err_msg);
 	exit(EXIT_FAILURE);
 }
+
+void yourser_error_exit(char *err_msg)
+{
+	perror_prestr();
+	write(STDERR_FILENO, err_msg, ft_strlen(err_msg));
+	write(STDERR_FILENO,"\n", 1);
+	exit(EXIT_FAILURE);
+}
+
+
 
 
 void tokenizer_error(t_prompt_info *info,char *err_msg)

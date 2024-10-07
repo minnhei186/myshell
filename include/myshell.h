@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/07 12:48:54 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/07 16:04:46 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,7 @@ void						tokenizer_error(t_prompt_info *info, char *err_msg);
 void						parser_error(t_prompt_info *info, char *token_word);
 void						minishell_perror(t_prompt_info *info,
 								char *err_msg);
+void						yourser_error_exit(char *err_msg);
 // free_utils
 void						token_free(t_token_info *token);
 void						node_free(t_node_info *node);
@@ -158,7 +159,8 @@ t_node_info					*parser(t_prompt_info *info, t_token_info *token);
 
 // redirect
 void						do_redirect(t_node_info *node);
-void						prepare_redirect(t_prompt_info *info,t_node_info *node);
+void						prepare_redirect(t_prompt_info *info,
+								t_node_info *node);
 void						reset_redirect(t_node_info *node);
 
 // is_identifier
@@ -178,5 +180,9 @@ int							item_set(t_map *map, const char *name,
 int							item_unset(t_map *map, const char *name);
 int							item_put(t_map *map, const char *string,
 								bool empty_value);
+
+//builtin
+void	exec_bultin(t_prompt_info *info, t_node_info *node);
+bool	is_builtin(t_node_info *node);
 
 #endif
