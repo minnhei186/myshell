@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 17:36:42 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/02 10:42:52 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/07 16:55:59 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,53 +179,85 @@ char	*expand_variable_word(char **word, char *new_word)
 	return (new_word);
 }
 
-char *expand_variable_single_quote(char **word,char *new_word)
+char	*expand_variable_single_quote(char **word, char *new_word)
 {
-	//append_and_skip_single_quote
-	new_word=append_char(new_word,**word);
-	*word=*word+1;
-	while(**word!=SINGLE_QUOTE)
+	// append_and_skip_single_quote
+	new_word = append_char(new_word, **word);
+	*word = *word + 1;
+	while (**word != SINGLE_QUOTE)
 	{
-		if(**word=='\0')
+		if (**word == '\0')
 		{
 			printf("not_close_single_quote\n");
-			return NULL;
+			return (NULL);
 		}
-		new_word=append_char(new_word,**word);
-		*word=*word+1;
+		new_word = append_char(new_word, **word);
+		*word = *word + 1;
 	}
-	
-	new_word=append_char(new_word,**word);
-	*word=*word+1;
-	return new_word;
+	new_word = append_char(new_word, **word);
+	*word = *word + 1;
+	return (new_word);
 }
 
-char *expand_variable_double_quote(char **word,char *new_word)
+char	*expand_variable_double_quote(char **word, char *new_word)
 {
-	//append_and_skip_single_quote
-	new_word=append_char(new_word,**word);
-	*word=*word+1;
-	while(**word!=DOUBLE_QUOTE)
+	// append_and_skip_single_quote
+	new_word = append_char(new_word, **word);
+	*word = *word + 1;
+	while (**word != DOUBLE_QUOTE)
 	{
-		if(**word=='\0')
+		if (**word == '\0')
 		{
 			printf("not_close_double_quote\n");
-			return NULL;
-		} 
-		if(is_variable(*word))
-			new_word=expand_variable_word(word,new_word);
+			return (NULL);
+		}
+		if (is_variable(*word))
+			new_word = expand_variable_word(word, new_word);
 		else
 		{
-			new_word=append_char(new_word,**word);
-			*word=*word+1;
+			new_word = append_char(new_word, **word);
+			*word = *word + 1;
 		}
 	}
-	
-	new_word=append_char(new_word,**word);
-	*word=*word+1;
+	new_word = append_char(new_word, **word);
+	*word = *word + 1;
+	return (new_word);
+}
+
+
+bool is_special_parameter(char *word)
+{
+	if(word[0]=='$'&&word[1]=='?')
+		return true;
+	return false;
+}
+
+
+//全く違う世界が
+//最初の数字以外は
+//全て10で割ってappend_numで送り、new_wordに確保
+//その最後の数字（一番右の桁のために'0'+(num%10)を用いて指定したものをappendする
+//そうか、帰ってきて追加されたnew_wordに対して、今の数字でappend_charだな！！
+char *append_num(char *new_word, int num)
+{
+	if (num == 0)
+	{
+		new_word=append_char(new_word, '0');//0の数なら
+		return new_word;
+	}
+	if (num / 10 != 0)
+		new_word=append_num(new_word, num / 10);//一桁でないなら
+	new_word=append_char(new_word, '0' + (num % 10));//0以外の数なら
 	return new_word;
 }
 
+
+char *expand_special_parameter(char **word,char *new_word)
+{
+	*word=*word+2;
+	new_word=append_status(new_word,info->last_status);//infoここで用いる！！
+	return new_word;
+}
 
 
 void	expand_variable(t_token_info *token)
@@ -237,12 +269,14 @@ void	expand_variable(t_token_info *token)
 	new_word = NULL;
 	while (*word)
 	{
-		 if (*word == SINGLE_QUOTE)
+		if (*word == SINGLE_QUOTE)
 			new_word = expand_variable_single_quote(&word, new_word);
-		 else if (*word == DOUBLE_QUOTE)
+		else if (*word == DOUBLE_QUOTE)
 			new_word = expand_variable_double_quote(&word, new_word);
 		else if (is_variable(word))
 			new_word = expand_variable_word(&word, new_word);
+		else if (is_special_parameter(word))
+			new_word = expand_special_parameter(&word, new_word);
 		else
 		{
 			new_word = append_char(new_word, *word);
