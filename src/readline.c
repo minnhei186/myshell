@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/08 18:01:25 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/09 16:27:35 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,17 @@ void	child_process(t_node_info *node)
 	char	**cmd_prompt;
 	char	*cmd_path;
 	char	**cmd_envp;
-//	int		i;
 
+	//	int		i;
 	prepare_pipe_child(node);
 	do_redirect(node->cmd);
 	cmd_prompt = token2argv(node->cmd->node_token);
 	cmd_path = path_get(cmd_prompt[0]);
 	cmd_envp = environ;
-//	i = 0;
-//	while (cmd_prompt[i])
-//		printf("%s\n", cmd_prompt[i++]);
-//	printf("%s \n", cmd_path);
+	//	i = 0;
+	//	while (cmd_prompt[i])
+	//		printf("%s\n", cmd_prompt[i++]);
+	//	printf("%s \n", cmd_path);
 	if (cmd_path == NULL)
 		yourser_error_exit("command_not_found");
 	if (execve(cmd_path, cmd_prompt, cmd_envp) == -1)
@@ -88,7 +88,7 @@ void	shell_operation(t_prompt_info *info, t_operation_info *operation)
 	operation->node = parser(info, operation->token);
 	if (info->yourser_err)
 		return ;
-	expand(info,operation->node);
+	expand(info, operation->node);
 	if (info->yourser_err)
 		return ;
 	prepare_redirect(info, operation->node);
@@ -107,7 +107,20 @@ void	shell_loop(t_prompt_info *info)
 	operation.node = NULL;
 	info->str = readline("myshell:");
 	if (info->str == NULL)
-		info->shell_finish = 1;
+	{
+		if (sig == SIGINT)
+		{
+			info->yourser_err = 1;
+			sig = 0;
+			rl_replace_line("", 0);
+			rl_on_new_line();
+			rl_redisplay();
+		}
+		else
+		{
+			info->shell_finish = 1;
+		}
+	}
 	else
 	{
 		if (*(info->str))
@@ -127,7 +140,7 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-	rl_outstream = stderr;
+	init_signal();
 	info_init(&info, envp);
 	if (info.shell_finish != 1)
 	{
@@ -138,6 +151,6 @@ int	main(int argc, char **argv, char **envp)
 		}
 		clear_history();
 	}
-//	clear_info(info);//ここで初めてinfoをクリアする//initエラーも含められる
+	//	clear_info(info);//ここで初めてinfoをクリアする//initエラーも含められる
 	return (info.last_status);
 }

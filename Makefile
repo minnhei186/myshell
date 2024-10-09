@@ -6,15 +6,18 @@
 #    By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/14 13:58:08 by hosokawa          #+#    #+#              #
-#    Updated: 2024/09/14 14:01:23 by hosokawa         ###   ########.fr        #
+#    Updated: 2024/10/09 13:43:25 by hosokawa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC=cc
 CFLAGS=-Wall -Wextra -Werror
-INCDIR=-Iinclude 
+#INCDIR=-Iinclude 
+INCDIR=-Iinclude -I/opt/homebrew/opt/readline/include  
 LIBDIR=libft
-LIBS=-lreadline
+#LIBS=-lreadline
+LIBS=-L/opt/homebrew/opt/readline/lib -lreadline -L$(LIBDIR) -lft
+
 
 SRCS =$(wildcard src/*.c)
 OBJS=$(SRCS:.c=.o)

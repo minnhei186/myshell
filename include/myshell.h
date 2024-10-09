@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/09 10:29:17 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/09 15:01:52 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,12 @@
 # include <errno.h>
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <signal.h>
 # include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
+#include <termios.h>
 
 # define FALSE 0
 # define TRUE 1
@@ -31,6 +33,7 @@
 # define SYSTEM_ERROR 1
 
 extern char					**environ;
+extern volatile sig_atomic_t sig;
 
 typedef struct s_item		t_item;
 
@@ -136,7 +139,7 @@ void						free_operation(t_operation_info operation);
 void						*minishell_malloc(size_t size);
 void						*minishell_calloc(size_t count, size_t size);
 char						*minishell_strdup(const char *s1);
-char						*minishell_strndup(const char *s,size_t len);
+char						*minishell_strndup(const char *s, size_t len);
 
 // pipe
 void						prepare_pipe(t_node_info *node);
@@ -188,5 +191,9 @@ void						item_put(t_prompt_info *info, t_map *map,
 // builtin
 void						exec_bultin(t_prompt_info *info, t_node_info *node);
 bool						is_builtin(t_node_info *node);
+
+// signal
+void						init_signal(void);
+int							check_signal_state(void);
 
 #endif
