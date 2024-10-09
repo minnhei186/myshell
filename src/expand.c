@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 17:36:42 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/07 16:55:59 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/08 13:04:22 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,15 +252,15 @@ char *append_num(char *new_word, int num)
 }
 
 
-char *expand_special_parameter(char **word,char *new_word)
+char *expand_special_parameter(t_prompt_info *info,char **word,char *new_word)
 {
 	*word=*word+2;
-	new_word=append_status(new_word,info->last_status);//infoここで用いる！！
+	new_word=append_num(new_word,info->last_status);//infoここで用いる！！
 	return new_word;
 }
 
 
-void	expand_variable(t_token_info *token)
+void	expand_variable(t_prompt_info *info,t_token_info *token)
 {
 	char	*word;
 	char	*new_word;
@@ -276,7 +276,7 @@ void	expand_variable(t_token_info *token)
 		else if (is_variable(word))
 			new_word = expand_variable_word(&word, new_word);
 		else if (is_special_parameter(word))
-			new_word = expand_special_parameter(&word, new_word);
+			new_word = expand_special_parameter(info,&word, new_word);
 		else
 		{
 			new_word = append_char(new_word, *word);
@@ -287,31 +287,32 @@ void	expand_variable(t_token_info *token)
 	token->word = new_word;
 }
 
-void	token_variable_expand(t_token_info *token)
+void	token_variable_expand(t_prompt_info *info,t_token_info *token)
 {
 	if (token == NULL)
 		return ;
 	while (token->next != NULL)
 	{
 		if ((token->kind == WORD) && (token->word != NULL))
-			expand_variable(token);
+			expand_variable(info,token);
 		token = token->next;
 	}
 }
 
-void	variable_expander(t_node_info *node)
+//info_last_statusの順序や存在をどのように考えるのか、この世界について
+void	variable_expander(t_prompt_info *info,t_node_info *node)
 {
 	if (node == NULL)
 		return ;
-	token_variable_expand(node->node_token);
-	token_variable_expand(node->filename);
-	variable_expander(node->redirects);
-	variable_expander(node->cmd);
-	variable_expander(node->re_node);
+	token_variable_expand(info,node->node_token);
+	token_variable_expand(info,node->filename);
+	variable_expander(info,node->redirects);
+	variable_expander(info,node->cmd);
+	variable_expander(info,node->re_node);
 }
 
-void	expand(t_node_info *node)
+void	expand(t_prompt_info *info,t_node_info *node)
 {
-	variable_expander(node);
+	variable_expander(info,node);
 	quote_remover(node);
 }

@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 13:17:27 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/05 13:45:23 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/08 18:01:10 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,3 +46,21 @@ void	free_operation(t_operation_info operation)
 	token_free(operation.token);
 	node_free(operation.node);
 }
+
+//void map_free(t_map *map)
+//{
+//	if(map->item)
+//		item_free(map->item);
+//	if(map->environment)
+//		ppt_free(environment);
+//}
+//
+//
+//void clear_info(t_prompt_info *info)
+//{
+//	if(info->str)
+//		free(info->str);
+//	if(info->map)
+//		map_free(info->map);
+//}
+

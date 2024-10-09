@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 11:19:34 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/04 10:38:15 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/09 10:32:57 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,19 +32,19 @@ t_item	*make_unit_item(const char *name, const char *value)
 {
 	t_item	*new_item;
 
-	new_item = (t_item *)malloc(sizeof(t_item));
-	new_item->name = ft_strdup(name);
-	new_item->value = ft_strdup(value);
+	new_item = (t_item *)minishell_malloc(sizeof(t_item));
+	new_item->name =(char *) minishell_strdup(name);
+	new_item->value = (char *)minishell_strdup(value);
 	return (new_item);
 }
 
-t_map	*make_map(void)
+t_map	*minishell_make_map(void)
 {
 	t_map	*new_map;
 
-	new_map = (t_map *)malloc(sizeof(t_map));
+	new_map = (t_map *)minishell_malloc(sizeof(t_map));
 	new_map->item = NULL;
-	new_map->environment= NULL;
+	new_map->environment = NULL;
 	return (new_map);
 }
 
@@ -79,31 +79,33 @@ char	*item_value_get(t_map *map, const char *find_name)
 
 //まずそれを持っているか考え、あったら更新なかったら追加
 //重要なのは実態のメンバnextにアクセスすること。
-int	item_set(t_map *map, const char *name, const char *value)
+
+//ここも修正が必要
+//ここではユーザーエラーは必要ないためinfoはいらない?
+void item_set(t_map *map, const char *name, const char *value)
 {
 	t_item	*new_item;
 	t_item	*old_item;
 	t_item	*last_item;
 
 	old_item = map->item;
-	last_item=NULL;
+	last_item = NULL;
 	new_item = make_unit_item(name, value);
 	while (old_item != NULL)
 	{
 		if (ft_strncmp(name, old_item->name, sizeof(old_item->name)) == 0)
 		{
 			free(old_item->value);
-			old_item->value = ft_strdup(name);
-			return (0);
+			old_item->value = minishell_strdup(value);
+			return ;
 		}
 		last_item = old_item;
 		old_item = old_item->next;
 	}
-	if(last_item==NULL)
-		map->item=new_item;
+	if (last_item == NULL)
+		map->item = new_item;
 	else
 		last_item->next = new_item;
-	return (0);
 }
 
 int	item_unset(t_map *map, const char *name)
@@ -139,28 +141,34 @@ int	item_unset(t_map *map, const char *name)
 	return (1);
 }
 
-int	item_put(t_map *map, const char *string, bool empty_value)
+void	item_put(t_prompt_info *info, t_map *map, const char *string,
+		bool empty_value)
 {
 	char	*middle_qual;
 	char	*name;
 	char	*value;
-	int		result;
 
 	middle_qual = ft_strchr(string, '=');
 	if (middle_qual == NULL)
 	{
 		if (empty_value == false)
-			return (1);
-		name = ft_strdup(string);
-		value = NULL;
+		{
+			minishell_yourser_perror(info, "need = in environ");
+			return ;
+		}
+		else
+		{
+			name = minishell_strdup(string);
+			value = NULL;
+		}
 	}
 	else
 	{
-		name = strndup(string, middle_qual - string);
-		value = ft_strdup(middle_qual + 1);
+		//ここ
+		name = minishell_strndup(string, middle_qual - string);
+		value = minishell_strdup(middle_qual + 1);
 	}
-	result = item_set(map, name, value);
+	item_set(map, name, value);//ここでセットされる。しかしfreeはする
 	free(name);
 	free(value);
-	return (result);
 }

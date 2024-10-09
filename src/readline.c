@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/07 16:19:30 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/08 18:01:25 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	shell_operation(t_prompt_info *info, t_operation_info *operation)
 	operation->node = parser(info, operation->token);
 	if (info->yourser_err)
 		return ;
-	expand(operation->node);
+	expand(info,operation->node);
 	if (info->yourser_err)
 		return ;
 	prepare_redirect(info, operation->node);
@@ -138,5 +138,6 @@ int	main(int argc, char **argv, char **envp)
 		}
 		clear_history();
 	}
+//	clear_info(info);//ここで初めてinfoをクリアする//initエラーも含められる
 	return (info.last_status);
 }

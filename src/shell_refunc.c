@@ -6,22 +6,21 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 13:43:30 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/05 16:10:15 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/09 10:30:12 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myshell.h"
 
-void *minishell_malloc(size_t size)
+void	*minishell_malloc(size_t size)
 {
-	void *pt;
+	void	*pt;
 
-	pt=malloc(size);
-	if(pt==NULL)
+	pt = malloc(size);
+	if (pt == NULL)
 		fatal_error_exit("failed to allocate memory");
-	return pt;
+	return (pt);
 }
-
 
 void	*minishell_calloc(size_t count, size_t size)
 {
@@ -41,4 +40,46 @@ void	*minishell_calloc(size_t count, size_t size)
 		i++;
 	}
 	return (headp);
+}
+
+char	*minishell_strdup(const char *s1)
+{
+	int		len;
+	int		i;
+	char	*p;
+	char	*phead;
+
+	i = 0;
+	if (s1 == NULL)
+		return (NULL);
+	len = ft_strlen(s1);
+	p = (char *)minishell_malloc(sizeof(char) * len + 1);
+	phead = p;
+	while (i < len)
+	{
+		*p = *s1;
+		p++;
+		s1++;
+		i++;
+	}
+	*p = '\0';
+	return (phead);
+}
+
+char	*minishell_strndup(const char *s, size_t len)
+{
+	char	*new;
+	size_t		i;
+
+	i = 0;
+	if (s == NULL)
+		return (NULL);
+	new = (char *)minishell_malloc(sizeof(char) * len + 1);
+	while (i < len&&s[i]!='\0')
+	{
+		new[i]= s[i];
+		i++;
+	}
+	new[i] = '\0';
+	return (new);
 }

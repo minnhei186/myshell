@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 13:09:32 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/07 15:44:05 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/08 18:02:11 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,22 @@ void yourser_error_exit(char *err_msg)
 	exit(EXIT_FAILURE);
 }
 
+void minishell_yourser_perror(t_prompt_info *info,char *err_msg)
+{
+	info->yourser_err=1;
+	perror_prestr();
+	write(STDERR_FILENO, err_msg, ft_strlen(err_msg));
+	write(STDERR_FILENO,"\n", 1);
+}
+
+void minishell_perror(t_prompt_info *info,char *err_msg)
+{
+	info->yourser_err=1;
+	perror_prestr();
+	perror(err_msg);
+}
+
+
 
 
 
@@ -58,13 +74,6 @@ void parser_error(t_prompt_info *info,char *token_word)
 	write(STDERR_FILENO, token_word, ft_strlen(token_word)); 
 	write(STDERR_FILENO, "'", 1); 
 	write(STDERR_FILENO, "\n", 1); 
-}
-
-void minishell_perror(t_prompt_info *info,char *err_msg)
-{
-	info->yourser_err=1;
-	perror_prestr();
-	perror(err_msg);
 }
 
 

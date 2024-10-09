@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/07 16:04:46 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/09 10:29:17 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,8 @@ void						tokenizer_error(t_prompt_info *info, char *err_msg);
 void						parser_error(t_prompt_info *info, char *token_word);
 void						minishell_perror(t_prompt_info *info,
 								char *err_msg);
+void						minishell_yourser_perror(t_prompt_info *info,
+								char *err_msg);
 void						yourser_error_exit(char *err_msg);
 // free_utils
 void						token_free(t_token_info *token);
@@ -133,6 +135,8 @@ void						free_operation(t_operation_info operation);
 // shell_refunc
 void						*minishell_malloc(size_t size);
 void						*minishell_calloc(size_t count, size_t size);
+char						*minishell_strdup(const char *s1);
+char						*minishell_strndup(const char *s,size_t len);
 
 // pipe
 void						prepare_pipe(t_node_info *node);
@@ -152,7 +156,7 @@ t_token_info				*make_eof_token(void);
 char						**token2argv(t_token_info *token);
 
 // expand
-void						expand(t_node_info *token);
+void						expand(t_prompt_info *info, t_node_info *token);
 
 // parser
 t_node_info					*parser(t_prompt_info *info, t_token_info *token);
@@ -172,17 +176,17 @@ bool						is_identifier(const char *s);
 // shell_map
 t_item						*make_unit_item(const char *name,
 								const char *value);
-t_map						*make_map(void);
+t_map						*minishell_make_map(void);
 char						*search_value(t_item *item, const char *find_name);
 char						*item_value_get(t_map *map, const char *find_name);
-int							item_set(t_map *map, const char *name,
+void						item_set(t_map *map, const char *name,
 								const char *value);
 int							item_unset(t_map *map, const char *name);
-int							item_put(t_map *map, const char *string,
-								bool empty_value);
+void						item_put(t_prompt_info *info, t_map *map,
+								const char *string, bool empty_value);
 
-//builtin
-void	exec_bultin(t_prompt_info *info, t_node_info *node);
-bool	is_builtin(t_node_info *node);
+// builtin
+void						exec_bultin(t_prompt_info *info, t_node_info *node);
+bool						is_builtin(t_node_info *node);
 
 #endif
