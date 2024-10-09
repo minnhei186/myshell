@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/09 16:53:52 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/09 17:19:16 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,8 @@ void							yourser_error_exit(char *err_msg);
 void							token_free(t_token_info *token);
 void							node_free(t_node_info *node);
 void							free_operation(t_operation_info operation);
+void							clear_info(t_prompt_info *info);
+void							item_free(t_item *item);
 
 // shell_refunc
 void							*minishell_malloc(size_t size);

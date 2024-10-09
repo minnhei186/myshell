@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 11:19:34 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/09 16:55:08 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/09 17:41:40 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ t_item	*make_unit_item(const char *name, const char *value)
 	new_item = (t_item *)minishell_malloc(sizeof(t_item));
 	new_item->name =(char *) minishell_strdup(name);
 	new_item->value = (char *)minishell_strdup(value);
+	new_item->next=NULL;
 	return (new_item);
 }
 
@@ -52,7 +53,7 @@ char	*search_value(t_item *item, const char *find_name)
 {
 	char	*new_value;
 
-	if (ft_strncmp(item->name, find_name, sizeof(find_name)) == 0)
+	if (ft_strncmp(item->name, find_name, ft_strlen(find_name)) == 0)
 	{
 		new_value = ft_strdup(item->value);
 		return (new_value);
@@ -93,10 +94,12 @@ void item_set(t_map *map, const char *name, const char *value)
 	new_item = make_unit_item(name, value);
 	while (old_item != NULL)
 	{
-		if (ft_strncmp(name, old_item->name, sizeof(old_item->name)) == 0)
+		if (ft_strncmp(name, old_item->name, ft_strlen(old_item->name)) == 0)
 		{
 			free(old_item->value);
+			old_item->value=NULL;
 			old_item->value = minishell_strdup(value);
+			item_free(new_item);
 			return ;
 		}
 		last_item = old_item;
@@ -117,7 +120,7 @@ int	item_unset(t_map *map, const char *name)
 	prev = NULL;
 	while (item != NULL)
 	{
-		if (ft_strncmp(item->name, name, sizeof(name)) == 0)
+		if (ft_strncmp(item->name, name, ft_strlen(name)) == 0)
 		{
 			if (prev == NULL) //繋ぎ合わせるものがない時は？
 			{

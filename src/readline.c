@@ -6,11 +6,16 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/09 16:36:53 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/09 17:08:56 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myshell.h"
+
+__attribute__((destructor)) static void destructor()
+{
+	system("leaks -q myshell");
+}
 
 void	child_process(t_node_info *node)
 {
@@ -129,15 +134,15 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	init_signal();
 	info_init(&info, envp);
-	if (info.shell_finish != 1)
-	{
-		while (info.shell_finish != 1)
-		{
-			shell_loop(&info);
-			info.yourser_err = 0;
-		}
-		clear_history();
-	}
-//	clear_info(info); // info_errも含む
+//	if (info.shell_finish != 1)
+//	{
+//		while (info.shell_finish != 1)
+//		{
+//			shell_loop(&info);
+//			info.yourser_err = 0;
+//		}
+//		clear_history();
+//	}
+	clear_info(&info); // info_errも含む
 	return (info.last_status);
 }
