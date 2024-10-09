@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 11:19:34 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/09 10:32:57 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/09 16:55:08 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ t_map	*minishell_make_map(void)
 
 	new_map = (t_map *)minishell_malloc(sizeof(t_map));
 	new_map->item = NULL;
-	new_map->environment = NULL;
+	new_map->envp= NULL;
 	return (new_map);
 }
 

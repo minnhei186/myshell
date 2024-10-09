@@ -6,15 +6,12 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 13:17:27 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/08 18:01:10 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/09 17:01:37 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myshell.h"
 
-//そのtoken構造体自体の解放について
-//それとメンバの中について
-// tokenのセグフォとその風について
 void	token_free(t_token_info *token)
 {
 	t_token_info	*next_token;
@@ -47,20 +44,70 @@ void	free_operation(t_operation_info operation)
 	node_free(operation.node);
 }
 
-//void map_free(t_map *map)
-//{
-//	if(map->item)
-//		item_free(map->item);
-//	if(map->environment)
-//		ppt_free(environment);
-//}
-//
-//
-//void clear_info(t_prompt_info *info)
-//{
-//	if(info->str)
-//		free(info->str);
-//	if(info->map)
-//		map_free(info->map);
-//}
+void	item_free(t_item *item)
+{
+	t_item	*next_item;
 
+	while (item != NULL)
+	{
+		if (item->name)
+		{
+			free(item->name);
+			item->name = NULL;
+		}
+		if (item->value)
+		{
+			free(item->value);
+			item->value = NULL;
+		}
+		next_item = item->next;
+		item->next = NULL;
+		free(item);
+		item = next_item;
+	}
+}
+
+void	ppt_free(char **ppt)
+{
+	int	i;
+
+	if (ppt == NULL)
+		return ;
+	i = 0;
+	while (ppt[i])
+	{
+		free(ppt[i]);
+		ppt[i] = NULL;
+		i++;
+	}
+	free(ppt);
+}
+
+void	map_free(t_map *map)
+{
+	if (map->item)
+	{
+		item_free(map->item);
+		map->item = NULL;
+	}
+	if (map->envp)
+	{
+		ppt_free(map->envp);
+		map->envp = NULL;
+	}
+}
+
+void	clear_info(t_prompt_info *info)
+{
+	if (info->str)
+	{
+		free(info->str);
+		info->str = NULL;
+	}
+	if (info->map)
+	{
+		map_free(info->map);
+		free(info->map);
+		info->map =NULL;
+	}
+}

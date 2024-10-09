@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/09 16:27:35 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/09 16:36:53 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	command_comunication(t_node_info *node)
 	prepare_pipe_parent(node);
 	if (node->re_node != NULL)
 		return (command_comunication(node->re_node));
-	close_final_pipe(node); //最後のnodeでは、活かすものがない。closeでいい
+	close_final_pipe(node); //最後のnode、生かすpipeがないため。
 	return (pid);
 }
 
@@ -107,20 +107,7 @@ void	shell_loop(t_prompt_info *info)
 	operation.node = NULL;
 	info->str = readline("myshell:");
 	if (info->str == NULL)
-	{
-		if (sig == SIGINT)
-		{
-			info->yourser_err = 1;
-			sig = 0;
-			rl_replace_line("", 0);
-			rl_on_new_line();
-			rl_redisplay();
-		}
-		else
-		{
-			info->shell_finish = 1;
-		}
-	}
+		info->shell_finish = 1;
 	else
 	{
 		if (*(info->str))
@@ -151,6 +138,6 @@ int	main(int argc, char **argv, char **envp)
 		}
 		clear_history();
 	}
-	//	clear_info(info);//ここで初めてinfoをクリアする//initエラーも含められる
+//	clear_info(info); // info_errも含む
 	return (info.last_status);
 }

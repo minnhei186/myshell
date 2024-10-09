@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/09 15:01:52 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/09 16:53:52 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@
 # include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <termios.h>
 # include <unistd.h>
-#include <termios.h>
 
 # define FALSE 0
 # define TRUE 1
@@ -32,35 +32,35 @@
 # define YOURSER_ERROR 0
 # define SYSTEM_ERROR 1
 
-extern char					**environ;
-extern volatile sig_atomic_t sig;
+extern char						**environ;
+extern volatile sig_atomic_t	sig;
 
-typedef struct s_item		t_item;
+typedef struct s_item			t_item;
 
-struct						s_item
+struct							s_item
 {
-	char					*name;
-	char					*value;
-	t_item					*next;
+	char						*name;
+	char						*value;
+	t_item						*next;
 };
 
 typedef struct s_map
 {
-	t_item					*item;
-	char					**environment;
-}							t_map;
+	t_item						*item;
+	char						**envp;
+}								t_map;
 
 typedef struct s_prompt_info
 {
-	char *str; // prompt
-	int						shell_finish;
-	int						last_status;
-	int						yourser_err;
-	t_map					*map;
+	char						*str;
+	t_map						*map;
+	int							last_status;
+	int							yourser_err;
+	int							shell_finish;
 
-}							t_prompt_info;
-// tokenizer_header
-enum						e_token_kind
+}								t_prompt_info;
+
+enum							e_token_kind
 {
 	RESERVE,
 	WORD,
@@ -68,132 +68,136 @@ enum						e_token_kind
 	ROF,
 };
 
-typedef enum e_token_kind	e_kind;
+typedef enum e_token_kind		e_kind;
 
-typedef struct s_token		t_token_info;
+typedef struct s_token			t_token_info;
 
-struct						s_token
+struct							s_token
 {
-	char					*word;
-	e_kind					kind;
-	t_token_info			*next;
+	char						*word;
+	e_kind						kind;
+	t_token_info				*next;
 };
 
-///
-/// parser_header
-enum						e_node_kind
+enum							e_node_kind
 {
 	ND_PIPE,
 	ND_SIMPLE_CMD,
 	ND_REDIR_OUT,
 	ND_REDIR_IN,
 };
-typedef enum e_node_kind	t_node_kind;
+typedef enum e_node_kind		t_node_kind;
 
-typedef struct s_node		t_node_info;
+typedef struct s_node			t_node_info;
 
-struct						s_node
+struct							s_node
 {
-	t_node_kind				kind;
+	t_node_kind					kind;
 
 	// pipe_node
-	t_node_info				*re_node;
-	int						inpipe[2];
-	int						outpipe[2];
+	t_node_info					*re_node;
+	int							inpipe[2];
+	int							outpipe[2];
 
 	// cmd_node
-	t_node_info				*cmd;
-	t_token_info			*node_token;
+	t_node_info					*cmd;
+	t_token_info				*node_token;
 
 	// redirects_node
-	t_node_info				*redirects;
-	int						targetfd;
-	t_token_info			*filename;
-	t_token_info			*delimiter;
-	int						filefd;
-	int						stashedfd;
+	t_node_info					*redirects;
+	int							targetfd;
+	t_token_info				*filename;
+	t_token_info				*delimiter;
+	int							filefd;
+	int							stashedfd;
 };
 
 typedef struct s_operation_info
 {
-	t_token_info			*token;
-	t_node_info				*node;
-}							t_operation_info;
+	t_token_info				*token;
+	t_node_info					*node;
+}								t_operation_info;
 
 // error_utils
-void						perror_prestr(void);
-void						fatal_error_exit(char *err_msg);
-void						tokenizer_error(t_prompt_info *info, char *err_msg);
-void						parser_error(t_prompt_info *info, char *token_word);
-void						minishell_perror(t_prompt_info *info,
-								char *err_msg);
-void						minishell_yourser_perror(t_prompt_info *info,
-								char *err_msg);
-void						yourser_error_exit(char *err_msg);
+void							perror_prestr(void);
+void							fatal_error_exit(char *err_msg);
+void							tokenizer_error(t_prompt_info *info,
+									char *err_msg);
+void							parser_error(t_prompt_info *info,
+									char *token_word);
+void							minishell_perror(t_prompt_info *info,
+									char *err_msg);
+void							minishell_yourser_perror(t_prompt_info *info,
+									char *err_msg);
+void							yourser_error_exit(char *err_msg);
 // free_utils
-void						token_free(t_token_info *token);
-void						node_free(t_node_info *node);
-void						free_operation(t_operation_info operation);
+void							token_free(t_token_info *token);
+void							node_free(t_node_info *node);
+void							free_operation(t_operation_info operation);
 
 // shell_refunc
-void						*minishell_malloc(size_t size);
-void						*minishell_calloc(size_t count, size_t size);
-char						*minishell_strdup(const char *s1);
-char						*minishell_strndup(const char *s, size_t len);
+void							*minishell_malloc(size_t size);
+void							*minishell_calloc(size_t count, size_t size);
+char							*minishell_strdup(const char *s1);
+char							*minishell_strndup(const char *s, size_t len);
 
 // pipe
-void						prepare_pipe(t_node_info *node);
-void						prepare_pipe_child(t_node_info *node);
-void						prepare_pipe_parent(t_node_info *node);
+void							prepare_pipe(t_node_info *node);
+void							prepare_pipe_child(t_node_info *node);
+void							prepare_pipe_parent(t_node_info *node);
 
 // prompt_info_func
-void						info_init(t_prompt_info *info, char **envp);
+void							info_init(t_prompt_info *info, char **envp);
 
 // path_finder
-char						*path_get(char *command);
+char							*path_get(char *command);
 
 // tokenizer
-t_token_info				*tokenizer(t_prompt_info *info, char *prompt);
-t_token_info				*make_eof_token(void);
+t_token_info					*tokenizer(t_prompt_info *info, char *prompt);
+t_token_info					*make_eof_token(void);
 // token_utils
-char						**token2argv(t_token_info *token);
+char							**token2argv(t_token_info *token);
 
 // expand
-void						expand(t_prompt_info *info, t_node_info *token);
+void							expand(t_prompt_info *info, t_node_info *token);
 
 // parser
-t_node_info					*parser(t_prompt_info *info, t_token_info *token);
+t_node_info						*parser(t_prompt_info *info,
+									t_token_info *token);
 
 // redirect
-void						do_redirect(t_node_info *node);
-void						prepare_redirect(t_prompt_info *info,
-								t_node_info *node);
-void						reset_redirect(t_node_info *node);
+void							do_redirect(t_node_info *node);
+void							prepare_redirect(t_prompt_info *info,
+									t_node_info *node);
+void							reset_redirect(t_node_info *node);
 
 // is_identifier
-bool						is_alpha_or_under(char c);
-bool						is_alpha_or_under_or_digit(char c);
-bool						is_variable(char *word);
-bool						is_identifier(const char *s);
+bool							is_alpha_or_under(char c);
+bool							is_alpha_or_under_or_digit(char c);
+bool							is_variable(char *word);
+bool							is_identifier(const char *s);
 
 // shell_map
-t_item						*make_unit_item(const char *name,
-								const char *value);
-t_map						*minishell_make_map(void);
-char						*search_value(t_item *item, const char *find_name);
-char						*item_value_get(t_map *map, const char *find_name);
-void						item_set(t_map *map, const char *name,
-								const char *value);
-int							item_unset(t_map *map, const char *name);
-void						item_put(t_prompt_info *info, t_map *map,
-								const char *string, bool empty_value);
+t_item							*make_unit_item(const char *name,
+									const char *value);
+t_map							*minishell_make_map(void);
+char							*search_value(t_item *item,
+									const char *find_name);
+char							*item_value_get(t_map *map,
+									const char *find_name);
+void							item_set(t_map *map, const char *name,
+									const char *value);
+int								item_unset(t_map *map, const char *name);
+void							item_put(t_prompt_info *info, t_map *map,
+									const char *string, bool empty_value);
 
 // builtin
-void						exec_bultin(t_prompt_info *info, t_node_info *node);
-bool						is_builtin(t_node_info *node);
+void							exec_bultin(t_prompt_info *info,
+									t_node_info *node);
+bool							is_builtin(t_node_info *node);
 
 // signal
-void						init_signal(void);
-int							check_signal_state(void);
+void							init_signal(void);
+int								check_signal_state(void);
 
 #endif
