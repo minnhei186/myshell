@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 12:45:31 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/06 18:33:22 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/10 19:28:36 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,8 @@ int	type_redirect_op(t_token_info *token)
 		return (1);
 	else if (strcmp(token->word, "<") == 0)
 		return (2);
+	else if(strcmp(token->word,">>")==0)
+		return 3;
 	return (0);
 }
 
@@ -156,6 +158,32 @@ t_token_info	*input_redirect_node(t_prompt_info *info,t_node_info *node, t_token
 	return (token);
 }
 
+t_token_info *append_redirect_node(t_prompt_info *info,t_node_info *node,t_token_info *token)
+
+{
+	t_node_info	*redirect_node;
+
+	if (token->next->kind != WORD)//ここを先に判定！//何も作らず何も追加せず返す
+	{
+		parser_error(info,token->word);
+		return (NULL);
+	}
+
+
+	redirect_node = make_node();
+	redirect_node->kind = ND_REDIR_APPEND;
+	redirect_node->delimiter=ft_tokendup(token);
+	token = token->next;
+	redirect_node->filename = ft_tokendup(token);
+	if (node->redirects == NULL)
+		node->redirects = redirect_node;
+	else
+		redirect_append_tail(node, redirect_node);
+	return (token);
+}
+
+
+
 
 t_token_info	*redirect_node(t_prompt_info *info,t_node_info *node, t_token_info *token)
 {
@@ -166,6 +194,8 @@ t_token_info	*redirect_node(t_prompt_info *info,t_node_info *node, t_token_info 
 		now_token = output_redirect_node(info,node, token);
 	 else if(type_redirect_op(token)==2)
 		now_token=input_redirect_node(info,node,token);
+	else if(type_redirect_op(token)==3)
+		now_token=append_redirect_node(info,node,token);
 	return (now_token);
 }
 

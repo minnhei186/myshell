@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 17:36:42 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/08 13:04:22 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/10 13:57:08 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,7 +179,7 @@ char	*expand_variable_word(char **word, char *new_word)
 	return (new_word);
 }
 
-char	*expand_variable_single_quote(char **word, char *new_word)
+char	*expand_variable_single_quote(t_prompt_info *info,char **word, char *new_word)
 {
 	// append_and_skip_single_quote
 	new_word = append_char(new_word, **word);
@@ -188,7 +188,8 @@ char	*expand_variable_single_quote(char **word, char *new_word)
 	{
 		if (**word == '\0')
 		{
-			printf("not_close_single_quote\n");
+			minishell_yourser_perror(info,"not_close_single_quote");
+			free(new_word);
 			return (NULL);
 		}
 		new_word = append_char(new_word, **word);
@@ -199,7 +200,7 @@ char	*expand_variable_single_quote(char **word, char *new_word)
 	return (new_word);
 }
 
-char	*expand_variable_double_quote(char **word, char *new_word)
+char	*expand_variable_double_quote(t_prompt_info *info,char **word, char *new_word)
 {
 	// append_and_skip_single_quote
 	new_word = append_char(new_word, **word);
@@ -208,7 +209,8 @@ char	*expand_variable_double_quote(char **word, char *new_word)
 	{
 		if (**word == '\0')
 		{
-			printf("not_close_double_quote\n");
+			minishell_yourser_perror(info,"not_close_double_quote");
+			free(new_word);
 			return (NULL);
 		}
 		if (is_variable(*word))
@@ -224,43 +226,40 @@ char	*expand_variable_double_quote(char **word, char *new_word)
 	return (new_word);
 }
 
-
-bool is_special_parameter(char *word)
+bool	is_special_parameter(char *word)
 {
-	if(word[0]=='$'&&word[1]=='?')
-		return true;
-	return false;
+	if (word[0] == '$' && word[1] == '?')
+		return (true);
+	return (false);
 }
-
 
 //全く違う世界が
 //最初の数字以外は
 //全て10で割ってappend_numで送り、new_wordに確保
 //その最後の数字（一番右の桁のために'0'+(num%10)を用いて指定したものをappendする
 //そうか、帰ってきて追加されたnew_wordに対して、今の数字でappend_charだな！！
-char *append_num(char *new_word, int num)
+char	*append_num(char *new_word, int num)
 {
 	if (num == 0)
 	{
-		new_word=append_char(new_word, '0');//0の数なら
-		return new_word;
+		new_word = append_char(new_word, '0'); // 0の数なら
+		return (new_word);
 	}
 	if (num / 10 != 0)
-		new_word=append_num(new_word, num / 10);//一桁でないなら
-	new_word=append_char(new_word, '0' + (num % 10));//0以外の数なら
-	return new_word;
+		new_word = append_num(new_word, num / 10);      //一桁でないなら
+	new_word = append_char(new_word, '0' + (num % 10)); // 0以外の数なら
+	return (new_word);
 }
 
-
-char *expand_special_parameter(t_prompt_info *info,char **word,char *new_word)
+char	*expand_special_parameter(t_prompt_info *info, char **word,
+		char *new_word)
 {
-	*word=*word+2;
-	new_word=append_num(new_word,info->last_status);//infoここで用いる！！
-	return new_word;
+	*word = *word + 2;
+	new_word = append_num(new_word, info->last_status); // infoここで用いる！！
+	return (new_word);
 }
 
-
-void	expand_variable(t_prompt_info *info,t_token_info *token)
+void	expand_variable(t_prompt_info *info, t_token_info *token)
 {
 	char	*word;
 	char	*new_word;
@@ -270,49 +269,69 @@ void	expand_variable(t_prompt_info *info,t_token_info *token)
 	while (*word)
 	{
 		if (*word == SINGLE_QUOTE)
-			new_word = expand_variable_single_quote(&word, new_word);
+			new_word = expand_variable_single_quote(info,&word, new_word);
 		else if (*word == DOUBLE_QUOTE)
-			new_word = expand_variable_double_quote(&word, new_word);
+			new_word = expand_variable_double_quote(info,&word, new_word);
 		else if (is_variable(word))
 			new_word = expand_variable_word(&word, new_word);
 		else if (is_special_parameter(word))
-			new_word = expand_special_parameter(info,&word, new_word);
+			new_word = expand_special_parameter(info, &word, new_word);
 		else
 		{
 			new_word = append_char(new_word, *word);
 			word++;
 		}
 	}
-	free(token->word);
-	token->word = new_word;
+	if (info->yourser_err)
+		return ;
+	else
+	{
+		free(token->word);
+		token->word = new_word;
+	}
 }
 
-void	token_variable_expand(t_prompt_info *info,t_token_info *token)
+//これだとeofには何もしないということになりそう.
+void	token_variable_expand(t_prompt_info *info, t_token_info *token)
 {
 	if (token == NULL)
 		return ;
-	while (token->next != NULL)
+	while (token != NULL)
 	{
 		if ((token->kind == WORD) && (token->word != NULL))
-			expand_variable(info,token);
+		{
+			expand_variable(info, token);
+			if (info->yourser_err)
+				return ;
+		}
 		token = token->next;
 	}
 }
 
-//info_last_statusの順序や存在をどのように考えるのか、この世界について
-void	variable_expander(t_prompt_info *info,t_node_info *node)
+// info_last_statusの順序や存在をどのように考えるのか、この世界について
+void	variable_expander(t_prompt_info *info, t_node_info *node)
 {
 	if (node == NULL)
 		return ;
-	token_variable_expand(info,node->node_token);
-	token_variable_expand(info,node->filename);
-	variable_expander(info,node->redirects);
-	variable_expander(info,node->cmd);
-	variable_expander(info,node->re_node);
+	token_variable_expand(info, node->node_token);
+	if (info->yourser_err)
+		return ;
+	token_variable_expand(info, node->filename);
+	if (info->yourser_err)
+		return ;
+	variable_expander(info, node->redirects);
+	if (info->yourser_err)
+		return ;
+	variable_expander(info, node->cmd);
+	if (info->yourser_err)
+		return ;
+	variable_expander(info, node->re_node);
+	if (info->yourser_err)
+		return ;
 }
 
-void	expand(t_prompt_info *info,t_node_info *node)
+void	expand(t_prompt_info *info, t_node_info *node)
 {
-	variable_expander(info,node);
+	variable_expander(info, node);
 	quote_remover(node);
 }

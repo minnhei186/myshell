@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/20 18:47:50 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/07 13:07:26 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/10 19:31:27 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,23 @@ void	redirect_in_init(t_prompt_info *info, t_node_info *redirect)
 		minishell_perror(info, redirect->filename->word);
 }
 
+void	redirect_append_init(t_prompt_info *info, t_node_info *redirect)
+{
+	redirect->targetfd = STDOUT_FILENO;
+	redirect->filefd = open(redirect->filename->word,
+			O_CREAT | O_WRONLY | O_APPEND, 0644);
+	if (redirect->filefd < 0)
+		minishell_perror(info, redirect->filename->word);
+}
+
 void	redirect_type_init(t_prompt_info *info, t_node_info *redirect)
 {
 	if (redirect->kind == ND_REDIR_OUT)
 		redirect_out_init(info, redirect);
 	else if (redirect->kind == ND_REDIR_IN)
 		redirect_in_init(info, redirect);
+	else if (redirect->kind == ND_REDIR_APPEND)
+		redirect_append_init(info, redirect);
 }
 
 void	init_redirect(t_prompt_info *info, t_node_info *cmd_node)

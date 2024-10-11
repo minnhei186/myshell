@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 10:37:11 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/06 16:48:17 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/10 19:42:57 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ bool	is_operand(char *prompt)
 {
 	size_t	i;
 	char	*operators[] = {"||", "&", "&&", ";", ";;", "(", ")", "|", "\n",
-			"<", ">"};
+			"<", ">",">>","<<"};
 
 	i = 0;
 	while (i < sizeof(operators) / sizeof(*operators))
@@ -59,7 +59,7 @@ char	*malloc_op(char *prompt)
 {
 	char	*op_str;
 	char	*operators[] = {"||", "&&", "&", ";;", ";", "(", ")", "|", "\n",
-			"<", ">"};
+			"<<", ">>","<",">"};
 	size_t	i;
 
 	i = 0;

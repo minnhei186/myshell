@@ -6,16 +6,16 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/10 13:10:44 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/10 13:31:12 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myshell.h"
 
-__attribute__((destructor)) static void destructor()
-{
-	system("leaks -q myshell");
-}
+//__attribute__((destructor)) static void destructor()
+//{
+//	system("leaks -q myshell");
+//}
 
 void	child_process(t_node_info *node)
 {
