@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:03:16 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/12 12:32:05 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/12 15:56:54 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,7 +188,7 @@ int	builtin_echo(t_prompt_info *info, char **argv)
 //	if(pwd==NULL ||//ここから
 
 
-void	exec_bultin(t_prompt_info *info, t_node_info *node)
+void	exec_builtin(t_prompt_info *info, t_node_info *node)
 {
 	char	**cmd_argv;
 	int		status;

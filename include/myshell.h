@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/12 14:18:37 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/12 15:57:09 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,7 +198,7 @@ void							item_put(t_prompt_info *info, t_map *map,
 char	**item2argv(t_item *item);
 
 // builtin
-void							exec_bultin(t_prompt_info *info,
+void							exec_builtin(t_prompt_info *info,
 									t_node_info *node);
 bool							is_builtin(t_node_info *node);
 
