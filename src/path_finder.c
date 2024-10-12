@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:05:38 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/04 18:15:42 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/12 14:17:49 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ char	*make_command_path(char *command, char *unit_path)
 	free(path_slash);
 	return (command_path);
 }
-char	*path_get(char *command)
+char	*path_get(t_prompt_info *info,char *command)
 {
 	char	*path_env;
 	char	*unit_path;
@@ -47,7 +47,9 @@ char	*path_get(char *command)
 
 	if (strchr(command, '/') != NULL && access(command, F_OK) == 0)
 		return command;
-	path_env = getenv("PATH");
+	path_env=item_value_get(info->map,"PATH");
+	if(path_env==NULL)
+		return NULL;
 	while (1)
 	{
 		unit_path = cut_and_move_env(&path_env);

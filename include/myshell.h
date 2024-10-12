@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/10 19:29:31 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/12 14:18:37 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,7 @@ void							prepare_pipe_parent(t_node_info *node);
 void							info_init(t_prompt_info *info, char **envp);
 
 // path_finder
-char							*path_get(char *command);
+char							*path_get(t_prompt_info *info,char *command);
 
 // tokenizer
 t_token_info					*tokenizer(t_prompt_info *info, char *prompt);
@@ -193,6 +193,9 @@ void							item_set(t_map *map, const char *name,
 int								item_unset(t_map *map, const char *name);
 void							item_put(t_prompt_info *info, t_map *map,
 									const char *string, bool empty_value);
+
+//shell_map_utils
+char	**item2argv(t_item *item);
 
 // builtin
 void							exec_bultin(t_prompt_info *info,

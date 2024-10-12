@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/10 13:31:12 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/12 14:13:27 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 //	system("leaks -q myshell");
 //}
 
-void	child_process(t_node_info *node)
+void	child_process(t_prompt_info *info,t_node_info *node)
 {
 	char	**cmd_prompt;
 	char	*cmd_path;
@@ -27,8 +27,8 @@ void	child_process(t_node_info *node)
 	prepare_pipe_child(node);
 	do_redirect(node->cmd);
 	cmd_prompt = token2argv(node->cmd->node_token);
-	cmd_path = path_get(cmd_prompt[0]);
-	cmd_envp = environ;
+	cmd_path = path_get(info,cmd_prompt[0]);
+	cmd_envp = item2argv(info->map->item);
 	//	i = 0;
 	//	while (cmd_prompt[i])
 	//		printf("%s\n", cmd_prompt[i++]);
@@ -47,7 +47,7 @@ void	close_final_pipe(t_node_info *node)
 	close(node->outpipe[0]);
 }
 
-int	command_comunication(t_node_info *node)
+int	command_comunication(t_prompt_info *info,t_node_info *node)
 {
 	int	pid;
 
@@ -56,10 +56,10 @@ int	command_comunication(t_node_info *node)
 	if (pid == -1)
 		fatal_error_exit("faild to fork");
 	else if (pid == 0)
-		child_process(node);
+		child_process(info,node);
 	prepare_pipe_parent(node);
 	if (node->re_node != NULL)
-		return (command_comunication(node->re_node));
+		return (command_comunication(info,node->re_node));
 	close_final_pipe(node); //最後のnode、生かすpipeがないため。
 	return (pid);
 }
@@ -80,7 +80,7 @@ void	exec(t_prompt_info *info, t_node_info *node)
 		exec_bultin(info, node);
 	else
 	{
-		last_pid = command_comunication(node);
+		last_pid = command_comunication(info,node);
 		info->last_status = wait_process(last_pid);
 	}
 }
