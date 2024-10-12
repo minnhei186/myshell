@@ -6,13 +6,11 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:03:16 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/07 16:03:26 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/12 12:32:05 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myshell.h"
-
-
 
 bool	is_numeric(char *s)
 {
@@ -26,8 +24,30 @@ bool	is_numeric(char *s)
 	}
 	return (true);
 }
+bool	is_builtin(t_node_info *node)
+{
+	const char		*cmd_name;
+	char			*builtin_commands[] = {"exit", "env", "export", "unset",
+					"echo"};
+	unsigned int	i;
 
-int	builtin_exit(t_prompt_info *info,char **argv)
+	// char			*builtin_commands[] = {"exit", "export", "unset", "env",
+	//				"cd", "echo", "pwd"};
+	if (node == NULL || node->cmd == NULL | node->cmd->node_token == NULL
+		|| node->cmd->node_token->word == NULL)
+		return (false);
+	cmd_name = node->cmd->node_token->word;
+	i = 0;
+	while (i < sizeof(builtin_commands) / sizeof(*builtin_commands))
+	{
+		if (strcmp(cmd_name, builtin_commands[i]) == 0)
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+int	builtin_exit(t_prompt_info *info, char **argv)
 {
 	long	res;
 	char	*arg;
@@ -50,35 +70,129 @@ int	builtin_exit(t_prompt_info *info,char **argv)
 	exit(255);
 }
 
-bool	is_builtin(t_node_info *node)
+int	builtin_env(t_prompt_info *info)
 {
-	const char		*cmd_name;
-	//char			*builtin_commands[] = {"exit", "export", "unset", "env",
-	//				"cd", "echo", "pwd"};
-	char			*builtin_commands[] = {"exit"};
+	t_item	*item;
 
-	unsigned int	i;
-
-	if (node == NULL || node->cmd == NULL | node->cmd->node_token== NULL
-		|| node->cmd->node_token->word == NULL)
-		return (false);
-	cmd_name = node->cmd->node_token->word;
-	i = 0;
-	while (i < sizeof(builtin_commands) / sizeof(*builtin_commands))
+	item = info->map->item;
+	while (item != NULL)
 	{
-		if (strcmp(cmd_name, builtin_commands[i]) == 0)
-			return (true);
+		if (item->value)
+			printf("%s=%s\n", item->name, item->value);
+		item = item->next;
+	}
+	printf("_=/usr/bin/env\n");
+	return (0);
+}
+
+void	print_all_env(t_prompt_info *info)
+{
+	t_item	*item;
+
+	item = info->map->item;
+	while (item != NULL)
+	{
+		if (item->value)
+		{
+			printf("declare -x %s=\"%s\"\n", item->name, item->value);
+		}
+		else
+		{
+			printf("declare -x %s\n", item->name);
+		}
+		item = item->next;
+	}
+}
+
+int	builtin_export(t_prompt_info *info, char **argv)
+{
+	size_t	i;
+	int		status;
+
+	if (argv[1] == NULL)
+	{
+		print_all_env(info);
+		return (0);
+	}
+	status = 0;
+	i = 1;
+	while (argv[i])
+	{
+		item_put(info, info->map, argv[i], 1);
+		if (info->yourser_err == 1)
+		{
+			printf("error\n");
+			status = 1;
+		}
 		i++;
 	}
-	return (false);
+	return (status);
 }
+
+int	builtin_unset(t_prompt_info *info, char **argv)
+{
+	int		status;
+	size_t	i;
+
+	status = 0;
+	i = 1;
+	while (argv[i])
+	{
+		if (item_unset(info->map, argv[i]) < 0)
+		{
+			printf("error\n");
+			status = 1;
+		}
+		else
+			status = 0;
+		i++;
+	}
+	return (status);
+}
+
+int	builtin_echo(t_prompt_info *info, char **argv)
+{
+	size_t	i;
+	int		new_line_flag;
+	int		first_flag;
+
+
+	(void)info;
+	i = 1;
+	new_line_flag = 1;
+	if (argv[i] && ft_strncmp(argv[i], "-n", 2) == 0)
+	{
+		i++;
+		new_line_flag = 0;
+	}
+	first_flag = 1;
+	while (argv[i])
+	{
+		if (first_flag == 0)
+			write(STDOUT_FILENO, " ", 1);
+		first_flag = 0;
+		write(STDOUT_FILENO, argv[i], ft_strlen(argv[i]));
+		i++;
+	}
+	if (new_line_flag == 1)
+		write(STDOUT_FILENO, "\n", 1);
+	return (0);
+}
+
+//int builtin_pwd(t_prompt_info *info,char **argv)
+//{
+//	char *pwd
+//	char cwd[PATH_MAX];
+//
+//	pwd=search_value(info->item,"PWD");
+//	if(pwd==NULL ||//ここから
+
 
 void	exec_bultin(t_prompt_info *info, t_node_info *node)
 {
 	char	**cmd_argv;
 	int		status;
 
-	status = 0;
 	do_redirect(node);
 	cmd_argv = token2argv(node->cmd->node_token);
 	if (ft_strncmp(cmd_argv[0], "exit", 4) == 0)
@@ -86,6 +200,33 @@ void	exec_bultin(t_prompt_info *info, t_node_info *node)
 		status = builtin_exit(info, cmd_argv);
 		info->last_status = status;
 	}
+	else if (ft_strncmp(cmd_argv[0], "env", 3) == 0)
+	{
+		status = builtin_env(info);
+		info->last_status = status;
+	}
+	else if (ft_strncmp(cmd_argv[0], "export", 6) == 0)
+	{
+		status = builtin_export(info, cmd_argv);
+		info->last_status = status;
+	}
+	else if (ft_strncmp(cmd_argv[0], "unset", 5) == 0)
+	{
+		status = builtin_unset(info, cmd_argv);
+		info->last_status = status;
+	}
+	else if (ft_strncmp(cmd_argv[0], "echo", 5) == 0)
+	{
+		status = builtin_echo(info, cmd_argv);
+		info->last_status = status;
+	}
+	//else if (ft_strncmp(cmd_argv[0], "pwd", 3) == 0)
+	//{
+	//	status = builtin_pwd(info, cmd_argv);
+	//	info->last_status = status;
+	//}
+
+	
 	free(cmd_argv);
 	reset_redirect(node);
 	return ;
