@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/14 13:19:08 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/14 14:51:05 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,11 @@
 
 # define YOURSER_ERROR 0
 # define SYSTEM_ERROR 1
+
+
+#define SINGLE_QUOTE '\''
+#define DOUBLE_QUOTE '\"'
+
 # define OPERATORS                                                             \
 	{                                                                         \
 		"||", "&&", "&", ";;", ";", "(", ")", "|", "\n", "<<", ">>", "<", ">" \
@@ -206,6 +211,41 @@ void	token_append_tail(t_node_info *node, t_token_info *cp_token);
 int	type_redirect_op(t_token_info *token);
 int	is_pipe_op(t_token_info *token);
 void	redirect_append_tail(t_node_info *node, t_node_info *append_redirect);
+//////////////////////////////////////
+//expand
+////////////////////////////////////////
+//main
+void	expand(t_prompt_info *info, t_node_info *node);
+//expand_memory_utils
+char	*ft_char_recalloc(char *old, size_t count);
+char	*append_char(char *old, char append_c);
+//expand_expander
+void	expand_variable(t_prompt_info *info, t_token_info *token);
+void	token_variable_expand(t_prompt_info *info, t_token_info *token);
+void	variable_expander(t_prompt_info *info, t_node_info *node);
+//expand_expander_element
+bool	variable_error_check(char *word);
+char	*expand_special_parameter(t_prompt_info *info, char **word,
+		char *new_word);
+char	*expand_variable_word(char **word, char *new_word);
+char	*expand_variable_single_quote(t_prompt_info *info, char **word,
+		char *new_word);
+char	*expand_variable_double_quote(t_prompt_info *info, char **word,
+		char *new_word);
+//expand_expander_utils
+bool	is_alpha_or_under(char c);
+bool	is_alpha_or_under_or_digit(char c);
+bool	is_variable(char *word);
+bool	is_special_parameter(char *word);
+char	*append_num(char *new_word, int num);
+//expand_remover
+char	*remove_single_quote(char **word_ppt, char *new_word);
+char	*remove_double_quote(char **word_ppt, char *new_word);
+void	remove_quote(t_token_info *token);
+void	token_quote_removal(t_token_info *token);
+void	quote_remover(t_node_info *node);
+
+
 
 // pipe
 void							prepare_pipe(t_node_info *node);
