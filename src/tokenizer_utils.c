@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token_utils.c                                      :+:      :+:    :+:   */
+/*   tokenizer_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 11:45:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/09/17 12:10:00 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/14 12:31:21 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,4 +43,34 @@ char	**token2argv(t_token_info *token)
 	}
 	tk_argv[i] = NULL;
 	return (tk_argv);
+}
+
+bool	is_meta(char c)
+{
+	if (c && ft_strchr("|&;()<> \t\n", c))
+		return (true);
+	return (false);
+}
+
+bool	is_same_top(char *s, char *keyword)
+{
+	if (ft_memcmp(s, keyword, ft_strlen(keyword)) == 0)
+		return (true);
+	return (false);
+}
+
+bool	is_operand(char *prompt)
+{
+	size_t	i;
+	char	*operators[13];
+
+	init_operators(operators);
+	i = 0;
+	while (i < sizeof(operators) / sizeof(*operators))
+	{
+		if (is_same_top(prompt, operators[i]))
+			return (true);
+		i++;
+	}
+	return (false);
 }
