@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/14 14:51:05 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/14 16:27:14 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,7 +227,7 @@ void	variable_expander(t_prompt_info *info, t_node_info *node);
 bool	variable_error_check(char *word);
 char	*expand_special_parameter(t_prompt_info *info, char **word,
 		char *new_word);
-char	*expand_variable_word(char **word, char *new_word);
+char	*expand_variable_word(t_prompt_info *info,char **word, char *new_word);
 char	*expand_variable_single_quote(t_prompt_info *info, char **word,
 		char *new_word);
 char	*expand_variable_double_quote(t_prompt_info *info, char **word,
@@ -239,11 +239,11 @@ bool	is_variable(char *word);
 bool	is_special_parameter(char *word);
 char	*append_num(char *new_word, int num);
 //expand_remover
-char	*remove_single_quote(char **word_ppt, char *new_word);
-char	*remove_double_quote(char **word_ppt, char *new_word);
-void	remove_quote(t_token_info *token);
-void	token_quote_removal(t_token_info *token);
-void	quote_remover(t_node_info *node);
+char	*remove_single_quote(t_prompt_info *info,char **word_ppt, char *new_word);
+char	*remove_double_quote(t_prompt_info *info,char **word_ppt, char *new_word);
+void	remove_quote(t_prompt_info *info,t_token_info *token);
+void	token_quote_removal(t_prompt_info *info,t_token_info *token);
+void	quote_remover(t_prompt_info *info,t_node_info *node);
 
 
 

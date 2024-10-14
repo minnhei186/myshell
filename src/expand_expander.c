@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 14:30:17 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/14 15:15:16 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/14 16:07:42 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	expand_variable(t_prompt_info *info, t_token_info *token)
 		else if (*word == DOUBLE_QUOTE)
 			new_word = expand_variable_double_quote(info, &word, new_word);
 		else if (is_variable(word))
-			new_word = expand_variable_word(&word, new_word);
+			new_word = expand_variable_word(info,&word, new_word);
 		else if (is_special_parameter(word))
 			new_word = expand_special_parameter(info, &word, new_word);
 		else if (variable_error_check(word))
