@@ -6,16 +6,16 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/14 11:17:58 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/14 11:20:30 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myshell.h"
 
-//__attribute__((destructor)) static void destructor()
-//{
-//	system("leaks -q myshell");
-//}
+__attribute__((destructor)) static void destructor()
+{
+	system("leaks -q myshell");
+}
 
 void	child_process(t_prompt_info *info, t_node_info *node)
 {
@@ -98,15 +98,15 @@ void	shell_operation(t_prompt_info *info, t_operation_info *operation)
 	operation->node = parser(info, operation->token);
 	if (info->yourser_err)
 		return ;
-	expand(info, operation->node);
-	if (info->yourser_err)
-		return ;
-	prepare_redirect(info, operation->node);
-	if (info->yourser_err)
-		return ;
-	exec(info, operation->node);
-	if (info->yourser_err)
-		return ;
+	//expand(info, operation->node);
+	//if (info->yourser_err)
+	//	return ;
+	//prepare_redirect(info, operation->node);
+	//if (info->yourser_err)
+	//	return ;
+	//exec(info, operation->node);
+	//if (info->yourser_err)
+	//	return ;
 }
 
 void	shell_loop(t_prompt_info *info)

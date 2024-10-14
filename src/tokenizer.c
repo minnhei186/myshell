@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/15 10:37:11 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/10 19:42:57 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/14 11:32:27 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ char	*space_skip(char *prompt)
 
 bool	is_same_top(char *s, char *keyword)
 {
-	if (memcmp(s, keyword, strlen(keyword)) == 0)
+	if (ft_memcmp(s, keyword, ft_strlen(keyword)) == 0)
 		return (true);
 	;
 	return (false);
@@ -142,8 +142,7 @@ t_token_info	*make_word_token(t_prompt_info *info, char *prompt)
 			i++;
 	}
 	word_str = minishell_calloc(i + 1, sizeof(char));
-	//word_str = strncpy(word_str, prompt, i);
-	ft_strlcpy(word_str, prompt, i+1);//必ず成功
+	ft_strlcpy(word_str, prompt, i+1);
 	new_token = (t_token_info *)minishell_calloc(1, sizeof(t_token_info));
 	new_token->word = word_str;
 	new_token->kind = WORD;
