@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:03:16 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/12 15:56:54 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/14 11:11:33 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,9 @@ bool	is_builtin(t_node_info *node)
 {
 	const char		*cmd_name;
 	char			*builtin_commands[] = {"exit", "env", "export", "unset",
-					"echo"};
+					"echo", "pwd", "cd"};
 	unsigned int	i;
 
-	// char			*builtin_commands[] = {"exit", "export", "unset", "env",
-	//				"cd", "echo", "pwd"};
 	if (node == NULL || node->cmd == NULL | node->cmd->node_token == NULL
 		|| node->cmd->node_token->word == NULL)
 		return (false);
@@ -156,7 +154,6 @@ int	builtin_echo(t_prompt_info *info, char **argv)
 	int		new_line_flag;
 	int		first_flag;
 
-
 	(void)info;
 	i = 1;
 	new_line_flag = 1;
@@ -179,14 +176,48 @@ int	builtin_echo(t_prompt_info *info, char **argv)
 	return (0);
 }
 
-//int builtin_pwd(t_prompt_info *info,char **argv)
-//{
-//	char *pwd
-//	char cwd[PATH_MAX];
-//
-//	pwd=search_value(info->item,"PWD");
-//	if(pwd==NULL ||//ここから
+bool	equal_path(const char *path1, const char *path2)
+{
+	struct stat	pt1;
+	struct stat	pt2;
 
+	ft_memset(&pt1, 0, sizeof(pt1));
+	ft_memset(&pt2, 0, sizeof(pt2));
+	if (stat(path1, &pt1) < 0)
+		printf("error\n");
+	if (stat(path2, &pt2) < 0)
+		printf("error\n");
+	if (pt1.st_ino == pt2.st_ino)
+		return (true);
+	else
+		return (false);
+}
+
+int	builtin_pwd(t_prompt_info *info, char **argv)
+{
+	char	*pwd;
+	char	cwd[PATH_MAX];
+
+	(void)argv;
+	pwd = search_value(info->map->item, "PWD");
+	if (pwd == NULL || !equal_path(pwd, "."))
+	{
+		if (getcwd(cwd, PATH_MAX) == NULL)
+		{
+			printf("error\n");
+			return (1);
+		}
+		write(STDOUT_FILENO, cwd, ft_strlen(cwd));
+		write(STDOUT_FILENO, "\n", 1);
+		return (0);
+	}
+	else
+	{
+		write(STDOUT_FILENO, pwd, ft_strlen(pwd));
+		write(STDOUT_FILENO, "\n", 1);
+		return (0);
+	}
+}
 
 void	exec_builtin(t_prompt_info *info, t_node_info *node)
 {
@@ -220,13 +251,16 @@ void	exec_builtin(t_prompt_info *info, t_node_info *node)
 		status = builtin_echo(info, cmd_argv);
 		info->last_status = status;
 	}
-	//else if (ft_strncmp(cmd_argv[0], "pwd", 3) == 0)
-	//{
-	//	status = builtin_pwd(info, cmd_argv);
-	//	info->last_status = status;
-	//}
-
-	
+	else if (ft_strncmp(cmd_argv[0], "pwd", 3) == 0)
+	{
+		status = builtin_pwd(info, cmd_argv);
+		info->last_status = status;
+	}
+	else if (ft_strncmp(cmd_argv[0], "cd", 2) == 0)
+	{
+		status = builtin_cd(info, cmd_argv);
+		info->last_status = status;
+	}
 	free(cmd_argv);
 	reset_redirect(node);
 	return ;

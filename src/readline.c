@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/12 15:58:33 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/14 11:17:58 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,10 @@ void	shell_loop(t_prompt_info *info)
 	operation.node = NULL;
 	info->str = readline("myshell:");
 	if (info->str == NULL)
+	{
 		info->shell_finish = 1;
+		write(STDOUT_FILENO,"exit\n",5);
+	}
 	else
 	{
 		if (*(info->str))

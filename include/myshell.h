@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/12 15:57:09 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/14 11:10:14 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <sys/stat.h>
 # include <termios.h>
 # include <unistd.h>
 
@@ -153,7 +154,7 @@ void							prepare_pipe_parent(t_node_info *node);
 void							info_init(t_prompt_info *info, char **envp);
 
 // path_finder
-char							*path_get(t_prompt_info *info,char *command);
+char							*path_get(t_prompt_info *info, char *command);
 
 // tokenizer
 t_token_info					*tokenizer(t_prompt_info *info, char *prompt);
@@ -194,13 +195,14 @@ int								item_unset(t_map *map, const char *name);
 void							item_put(t_prompt_info *info, t_map *map,
 									const char *string, bool empty_value);
 
-//shell_map_utils
-char	**item2argv(t_item *item);
+// shell_map_utils
+char							**item2argv(t_item *item);
 
 // builtin
 void							exec_builtin(t_prompt_info *info,
 									t_node_info *node);
 bool							is_builtin(t_node_info *node);
+int	builtin_cd(t_prompt_info *info, char **argv);
 
 // signal
 void							init_signal(void);
