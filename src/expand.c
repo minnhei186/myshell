@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 17:36:42 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/10 13:57:08 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/14 13:34:27 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,7 +179,8 @@ char	*expand_variable_word(char **word, char *new_word)
 	return (new_word);
 }
 
-char	*expand_variable_single_quote(t_prompt_info *info,char **word, char *new_word)
+char	*expand_variable_single_quote(t_prompt_info *info, char **word,
+		char *new_word)
 {
 	// append_and_skip_single_quote
 	new_word = append_char(new_word, **word);
@@ -188,7 +189,7 @@ char	*expand_variable_single_quote(t_prompt_info *info,char **word, char *new_wo
 	{
 		if (**word == '\0')
 		{
-			minishell_yourser_perror(info,"not_close_single_quote");
+			minishell_yourser_perror(info, "not_close_single_quote");
 			free(new_word);
 			return (NULL);
 		}
@@ -200,7 +201,8 @@ char	*expand_variable_single_quote(t_prompt_info *info,char **word, char *new_wo
 	return (new_word);
 }
 
-char	*expand_variable_double_quote(t_prompt_info *info,char **word, char *new_word)
+char	*expand_variable_double_quote(t_prompt_info *info, char **word,
+		char *new_word)
 {
 	// append_and_skip_single_quote
 	new_word = append_char(new_word, **word);
@@ -209,7 +211,7 @@ char	*expand_variable_double_quote(t_prompt_info *info,char **word, char *new_wo
 	{
 		if (**word == '\0')
 		{
-			minishell_yourser_perror(info,"not_close_double_quote");
+			minishell_yourser_perror(info, "not_close_double_quote");
 			free(new_word);
 			return (NULL);
 		}
@@ -269,9 +271,9 @@ void	expand_variable(t_prompt_info *info, t_token_info *token)
 	while (*word)
 	{
 		if (*word == SINGLE_QUOTE)
-			new_word = expand_variable_single_quote(info,&word, new_word);
+			new_word = expand_variable_single_quote(info, &word, new_word);
 		else if (*word == DOUBLE_QUOTE)
-			new_word = expand_variable_double_quote(info,&word, new_word);
+			new_word = expand_variable_double_quote(info, &word, new_word);
 		else if (is_variable(word))
 			new_word = expand_variable_word(&word, new_word);
 		else if (is_special_parameter(word))
@@ -308,7 +310,6 @@ void	token_variable_expand(t_prompt_info *info, t_token_info *token)
 	}
 }
 
-// info_last_statusの順序や存在をどのように考えるのか、この世界について
 void	variable_expander(t_prompt_info *info, t_node_info *node)
 {
 	if (node == NULL)
@@ -333,5 +334,9 @@ void	variable_expander(t_prompt_info *info, t_node_info *node)
 void	expand(t_prompt_info *info, t_node_info *node)
 {
 	variable_expander(info, node);
+	if (info->yourser_err)
+		return ;
 	quote_remover(node);
+	if (info->yourser_err)
+		return ;
 }

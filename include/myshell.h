@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/14 11:10:14 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/14 13:19:08 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,10 @@
 
 # define YOURSER_ERROR 0
 # define SYSTEM_ERROR 1
+# define OPERATORS                                                             \
+	{                                                                         \
+		"||", "&&", "&", ";;", ";", "(", ")", "|", "\n", "<<", ">>", "<", ">" \
+	}
 
 extern char						**environ;
 extern volatile sig_atomic_t	sig;
@@ -144,6 +148,64 @@ void							*minishell_malloc(size_t size);
 void							*minishell_calloc(size_t count, size_t size);
 char							*minishell_strdup(const char *s1);
 char							*minishell_strndup(const char *s, size_t len);
+/////////////////////////////////
+// tokenizer
+// ////////////////////////////
+// main
+t_token_info					*tokenizer(t_prompt_info *info, char *prompt);
+char							*space_skip(char *prompt);
+// tokenizer_make_token
+t_token_info					*make_token(t_prompt_info *info, char **prompt,
+									t_token_info *parent_tk);
+t_token_info					*make_eof_token(void);
+t_token_info					*make_word_token(t_prompt_info *info,
+									char *prompt);
+void							init_operators(char **operators);
+
+// tokenizer_make_token_utils
+int								recive_double_qout(t_prompt_info *info,
+									char *prompt, int i);
+int								recive_single_qout(t_prompt_info *info,
+									char *prompt, int i);
+t_token_info					*make_operand_token(char *prompt);
+char							*malloc_op(char *prompt);
+// tokenizer_utils
+int								token_size(t_token_info *token);
+char							**token2argv(t_token_info *token);
+bool							is_meta(char c);
+bool							is_same_top(char *s, char *keyword);
+bool							is_operand(char *prompt);
+////////////////////////////////
+//parser
+////////////////////////////////
+// main
+t_node_info	*make_node(void);
+t_node_info	*prompt_parser(t_prompt_info *info, t_token_info *token);
+t_token_info	*find_pipe(t_token_info *token);
+t_node_info	*parser(t_prompt_info *info, t_token_info *token);
+//parser_append
+t_token_info	*redirect_node(t_prompt_info *info, t_node_info *node,
+		t_token_info *token);
+t_token_info	*op_node(t_prompt_info *info, t_node_info *node,
+		t_token_info *token);
+void	word_token(t_node_info *node, t_token_info *token);
+void	eof_token(t_node_info *node);
+t_token_info	*append_node(t_prompt_info *info, t_node_info *node,
+		t_token_info *token);
+//parser_append_redirect
+t_token_info	*output_redirect_node(t_prompt_info *info, t_node_info *node,
+		t_token_info *token);
+
+t_token_info	*input_redirect_node(t_prompt_info *info, t_node_info *node,
+		t_token_info *token);
+t_token_info	*append_redirect_node(t_prompt_info *info, t_node_info *node,
+		t_token_info *token);
+//parser_append_utils
+t_token_info	*ft_tokendup(t_token_info *token);
+void	token_append_tail(t_node_info *node, t_token_info *cp_token);
+int	type_redirect_op(t_token_info *token);
+int	is_pipe_op(t_token_info *token);
+void	redirect_append_tail(t_node_info *node, t_node_info *append_redirect);
 
 // pipe
 void							prepare_pipe(t_node_info *node);
@@ -156,19 +218,13 @@ void							info_init(t_prompt_info *info, char **envp);
 // path_finder
 char							*path_get(t_prompt_info *info, char *command);
 
-// tokenizer
-t_token_info					*tokenizer(t_prompt_info *info, char *prompt);
-t_token_info					*make_eof_token(void);
-// token_utils
-char							**token2argv(t_token_info *token);
-
 // expand
 void							expand(t_prompt_info *info, t_node_info *token);
 
-// parser
-t_node_info						*parser(t_prompt_info *info,
-									t_token_info *token);
-
+//// parser
+//t_node_info						*parser(t_prompt_info *info,
+//									t_token_info *token);
+//
 // redirect
 void							do_redirect(t_node_info *node);
 void							prepare_redirect(t_prompt_info *info,
@@ -202,7 +258,7 @@ char							**item2argv(t_item *item);
 void							exec_builtin(t_prompt_info *info,
 									t_node_info *node);
 bool							is_builtin(t_node_info *node);
-int	builtin_cd(t_prompt_info *info, char **argv);
+int								builtin_cd(t_prompt_info *info, char **argv);
 
 // signal
 void							init_signal(void);
