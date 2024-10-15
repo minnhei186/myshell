@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 11:52:26 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/09 17:11:23 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/15 10:00:44 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	info_envp2item(t_prompt_info *info, char **envp)
 void	info_map_init(t_prompt_info *info, char **envp)
 {
 	info->map = minishell_make_map();
-	info_envp2item(info, envp); //フリーせず中断した文字列
+	info_envp2item(info, envp);
 }
 
 void	info_init(t_prompt_info *info, char **envp)

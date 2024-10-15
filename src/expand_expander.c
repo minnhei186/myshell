@@ -6,11 +6,19 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 14:30:17 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/14 16:07:42 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/14 16:38:45 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myshell.h"
+
+static void	check_free_perror(t_prompt_info *info, char *new_word,
+		char *err_msg)
+{
+	if (new_word != NULL)
+		free(new_word);
+	minishell_yourser_perror(info, err_msg);
+}
 
 void	expand_variable(t_prompt_info *info, t_token_info *token)
 {
@@ -26,16 +34,11 @@ void	expand_variable(t_prompt_info *info, t_token_info *token)
 		else if (*word == DOUBLE_QUOTE)
 			new_word = expand_variable_double_quote(info, &word, new_word);
 		else if (is_variable(word))
-			new_word = expand_variable_word(info,&word, new_word);
+			new_word = expand_variable_word(info, &word, new_word);
 		else if (is_special_parameter(word))
 			new_word = expand_special_parameter(info, &word, new_word);
 		else if (variable_error_check(word))
-		{
-			if (new_word != NULL)
-				free(new_word);
-			minishell_yourser_perror(info,
-				"Variable must starts with alpha or underscore");
-		}
+			check_free_perror(info, new_word, "valeable need alpha or under");
 		else
 		{
 			new_word = append_char(new_word, *word);

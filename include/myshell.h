@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/14 16:27:14 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/15 10:52:43 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,8 +247,39 @@ void	quote_remover(t_prompt_info *info,t_node_info *node);
 
 
 
+
+////////////////////////////////////
+//builtin
+///////////////////////////////////
+//main
+bool	is_numeric(char *s);
+bool	is_builtin(t_node_info *node);
+void	exec_builtin(t_prompt_info *info, t_node_info *node);
+//builtin_cd
+bool check_skip_path(char **path_ppt,char *path,char *check_str);
+void delete_last_path_element(char *path);
+void append_path_element(char *new_pwd,char **path_ppt,char *path);
+char	*make_pwd(char *old_pwd, char *path);
+int	builtin_cd(t_prompt_info *info, char **argv);
+//builtin_echo
+int	builtin_echo(t_prompt_info *info, char **argv);
+//builtin_env
+int	builtin_env(t_prompt_info *info);
+//builtin_exit
+int	builtin_exit(t_prompt_info *info, char **argv);
+//builtin_export
+void	print_all_env(t_prompt_info *info);
+int	builtin_export(t_prompt_info *info, char **argv);
+//builtin_pwd
+bool	equal_path(const char *path1, const char *path2);
+int	builtin_pwd(t_prompt_info *info, char **argv);
+//builtin_unset
+int	builtin_unset(t_prompt_info *info, char **argv);
+
+
+
 // pipe
-void							prepare_pipe(t_node_info *node);
+void							prepare_pipe(t_prompt_info *info,t_node_info *node);
 void							prepare_pipe_child(t_node_info *node);
 void							prepare_pipe_parent(t_node_info *node);
 

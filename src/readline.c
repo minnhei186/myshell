@@ -6,16 +6,22 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/14 13:34:23 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/15 10:35:38 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myshell.h"
 
-__attribute__((destructor)) static void destructor()
-{
-	system("leaks -q myshell");
-}
+//__attribute__((destructor)) static void destructor()
+//{
+//	system("leaks -q myshell");
+//}
+
+//	int		i;
+//	i = 0;
+//	while (cmd_prompt[i])
+//		printf("%s\n", cmd_prompt[i++]);
+//	printf("%s \n", cmd_path);
 
 void	child_process(t_prompt_info *info, t_node_info *node)
 {
@@ -23,7 +29,6 @@ void	child_process(t_prompt_info *info, t_node_info *node)
 	char	*cmd_path;
 	char	**cmd_envp;
 
-	//	int		i;
 	prepare_pipe_child(node);
 	if (is_builtin(node))
 	{
@@ -34,12 +39,11 @@ void	child_process(t_prompt_info *info, t_node_info *node)
 	cmd_prompt = token2argv(node->cmd->node_token);
 	cmd_path = path_get(info, cmd_prompt[0]);
 	cmd_envp = item2argv(info->map->item);
-	//	i = 0;
-	//	while (cmd_prompt[i])
-	//		printf("%s\n", cmd_prompt[i++]);
-	//	printf("%s \n", cmd_path);
 	if (cmd_path == NULL)
-		yourser_error_exit("command_not_found");
+	{
+		write(STDOUT_FILENO, "command_not_found\n", 18);
+		exit(127);
+	}
 	if (execve(cmd_path, cmd_prompt, cmd_envp) == -1)
 	{
 		reset_redirect(node); //エラー出力に対するリダイレクトの影響
@@ -56,10 +60,15 @@ int	command_comunication(t_prompt_info *info, t_node_info *node)
 {
 	int	pid;
 
-	prepare_pipe(node);
+	prepare_pipe(info, node);
+	if (info->yourser_err)
+		return (-1);
 	pid = fork();
 	if (pid == -1)
-		fatal_error_exit("faild to fork");
+	{
+		minishell_perror(info, "faild to fork");
+		return (-1);
+	}
 	else if (pid == 0)
 		child_process(info, node);
 	prepare_pipe_parent(node);
@@ -69,13 +78,28 @@ int	command_comunication(t_prompt_info *info, t_node_info *node)
 	return (pid);
 }
 
-int	wait_process(int last_pid)
+int	wait_all_processes(int last_pid)
 {
-	int	status;
+	int		status;
+	int		last_status;
+	pid_t	wpid;
 
-	waitpid(last_pid, &status, 0);
-	return (status);
+	last_status = 0;
+	while ((wpid = waitpid(-1, &status, 0)) > 0)
+	{
+		if (wpid == last_pid)
+			last_status = status;
+	}
+	return (last_status);
 }
+
+// int	wait_process(int last_pid)
+//{
+//	int	status;
+//
+//	waitpid(last_pid, &status, 0);
+//	return (status);
+//}
 
 void	exec(t_prompt_info *info, t_node_info *node)
 {
@@ -86,7 +110,9 @@ void	exec(t_prompt_info *info, t_node_info *node)
 	else
 	{
 		last_pid = command_comunication(info, node);
-		info->last_status = wait_process(last_pid);
+		if (info->yourser_err)
+			return ;
+		info->last_status = wait_all_processes(last_pid);
 	}
 }
 
@@ -101,12 +127,12 @@ void	shell_operation(t_prompt_info *info, t_operation_info *operation)
 	expand(info, operation->node);
 	if (info->yourser_err)
 		return ;
-	//prepare_redirect(info, operation->node);
-	//if (info->yourser_err)
-	//	return ;
-	//exec(info, operation->node);
-	//if (info->yourser_err)
-	//	return ;
+	prepare_redirect(info, operation->node);
+	if (info->yourser_err)
+		return ;
+	exec(info, operation->node);
+	if (info->yourser_err)
+		return ;
 }
 
 void	shell_loop(t_prompt_info *info)
@@ -119,7 +145,7 @@ void	shell_loop(t_prompt_info *info)
 	if (info->str == NULL)
 	{
 		info->shell_finish = 1;
-		write(STDOUT_FILENO,"exit\n",5);
+		write(STDOUT_FILENO, "exit\n", 5);
 	}
 	else
 	{

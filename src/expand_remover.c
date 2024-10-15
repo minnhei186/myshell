@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 14:38:02 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/14 16:28:43 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/14 16:42:50 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ void	token_quote_removal(t_prompt_info *info, t_token_info *token)
 	{
 		if ((token->kind == WORD) && (token->word != NULL))
 		{
-			remove_quote(info,token);
+			remove_quote(info, token);
 			if (info->yourser_err)
 				return ;
 		}
@@ -95,22 +95,22 @@ void	quote_remover(t_prompt_info *info, t_node_info *node)
 {
 	if (node == NULL)
 		return ;
-	token_quote_removal(info,node->node_token);
+	token_quote_removal(info, node->node_token);
 	if (info->yourser_err)
 		return ;
-	token_quote_removal(info,node->filename);
+	token_quote_removal(info, node->filename);
 	if (info->yourser_err)
 		return ;
-	token_quote_removal(info,node->delimiter);
+	token_quote_removal(info, node->delimiter);
 	if (info->yourser_err)
 		return ;
-	quote_remover(info,node->redirects);
+	quote_remover(info, node->redirects);
 	if (info->yourser_err)
 		return ;
-	quote_remover(info,node->cmd);
+	quote_remover(info, node->cmd);
 	if (info->yourser_err)
 		return ;
-	quote_remover(info,node->re_node);
+	quote_remover(info, node->re_node);
 	if (info->yourser_err)
 		return ;
 }
