@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:03:16 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/15 16:45:11 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/16 15:47:50 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,6 @@ void	exec_builtin(t_prompt_info *info, t_node_info *node)
 		info->last_status = status;
 	}
 	free(cmd_argv);
-	reset_redirect(node);
+	do_reset_redirect(node->cmd);
 	return ;
 }

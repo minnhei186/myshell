@@ -6,24 +6,16 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/15 20:10:12 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/16 15:39:52 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myshell.h"
 
-//__attribute__((destructor)) static void destructor()
-//{
-//	system("leaks -q myshell");
-//}
-
-//	int		i;
-//	i = 0;
-//	while (cmd_prompt[i])
-//		printf("%s\n", cmd_prompt[i++]);
-//	printf("%s \n", cmd_path);
-//
-
+__attribute__((destructor)) static void destructor()
+{
+	system("leaks -q myshell");
+}
 void	err_exit(const char *msg, int status)
 {
 	perror_prestr();
@@ -72,7 +64,7 @@ void	child_process(t_prompt_info *info, t_node_info *node)
 	if (execve(cmd_path, cmd_prompt, cmd_envp) == -1)
 	{
 		// free(cmd_prompt);
-		reset_redirect(node); //エラー出力に対するリダイレクトの影響
+		do_reset_redirect(node->cmd); //エラー出力に対するリダイレクトの影響
 		fatal_error_exit("cannot_do_execve");
 	}
 }
@@ -116,23 +108,15 @@ int	wait_all_processes(int last_pid)
 		if (wpid == last_pid)
 		{
 			if (WIFEXITED(status))
-				last_status = WEXITSTATUS(status); // 正しく終了コードを取得
+				last_status = WEXITSTATUS(status); 
 			else if (WIFSIGNALED(status))
-				last_status = 128 + WTERMSIG(status); // シグナルによる終了の場合
+				last_status = 128 + WTERMSIG(status); 
 			else
 				last_status = status; // その他の場合
 		}
 	}
 	return (last_status);
 }
-
-// int	wait_process(int last_pid)
-//{
-//	int	status;
-//
-//	waitpid(last_pid, &status, 0);
-//	return (status);
-//}
 
 void	exec(t_prompt_info *info, t_node_info *node)
 {
@@ -172,6 +156,7 @@ void	shell_loop(t_prompt_info *info)
 {
 	t_operation_info	operation;
 
+	//g_sig_status=IN_CMD;
 	operation.token = NULL;
 	operation.node = NULL;
 	info->str = readline("myshell:");

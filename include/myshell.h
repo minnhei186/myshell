@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/15 20:06:04 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/16 15:54:43 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,6 +255,30 @@ char	*remove_double_quote(t_prompt_info *info,char **word_ppt, char *new_word);
 void	remove_quote(t_prompt_info *info,t_token_info *token);
 void	token_quote_removal(t_prompt_info *info,t_token_info *token);
 void	quote_remover(t_prompt_info *info,t_node_info *node);
+////////////////////////////////////
+//redirect_prepare
+///////////////////////////////////
+//main
+void	redirect_type_init(t_prompt_info *info, t_node_info *redirect);
+void	init_redirect(t_prompt_info *info, t_node_info *cmd_node);
+void	prepare_redirect(t_prompt_info *info, t_node_info *node);
+//element
+void	redirect_out_init(t_prompt_info *info, t_node_info *redirect);
+void	redirect_in_init(t_prompt_info *info, t_node_info *redirect);
+void	redirect_append_init(t_prompt_info *info, t_node_info *redirect);
+//heredoc
+//char	*expand_heredoc_line(t_prompt_info *info, char *word)
+//void	redirect_heredoc_init(t_prompt_info *info, t_node_info *redirect);
+///////////////////////////////////
+//redirect_set_reset
+//////////////////////////////////
+//main
+void	redirect_do_set(t_node_info *redirect);
+void	do_redirect(t_node_info *redirect_node);
+bool	is_redirect(t_node_info *node);
+void	do_reset_redirect(t_node_info *node);
+//////////////////////////////////////////////
+//
 
 
 
@@ -311,7 +335,7 @@ void							expand(t_prompt_info *info, t_node_info *token);
 void							do_redirect(t_node_info *node);
 void							prepare_redirect(t_prompt_info *info,
 									t_node_info *node);
-void							reset_redirect(t_node_info *node);
+void							do_reset_redirect(t_node_info *node);
 
 // is_identifier
 bool							is_alpha_or_under(char c);
