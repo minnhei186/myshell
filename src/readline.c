@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/16 15:39:52 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/16 16:51:26 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,18 +54,21 @@ void	child_process(t_prompt_info *info, t_node_info *node)
 	if (is_builtin(node))
 	{
 		exec_builtin(info, node);
-		exit(info->last_status);
+		exit(info->last_status); //パイプでbuiltinが実行されるならな
 	}
-	do_redirect(node->cmd);
-	cmd_prompt = token2argv(node->cmd->node_token);
-	cmd_path = path_get(info, cmd_prompt[0]);
-	cmd_envp = item2argv(info->map->item);
-	validate_access(cmd_path, cmd_prompt[0]);
-	if (execve(cmd_path, cmd_prompt, cmd_envp) == -1)
+	else
 	{
-		// free(cmd_prompt);
-		do_reset_redirect(node->cmd); //エラー出力に対するリダイレクトの影響
-		fatal_error_exit("cannot_do_execve");
+		do_redirect(node->cmd);
+		cmd_prompt = token2argv(node->cmd->node_token);
+		cmd_path = path_get(info, cmd_prompt[0]);
+		cmd_envp = item2argv(info->map->item);
+		validate_access(cmd_path, cmd_prompt[0]);
+		if (execve(cmd_path, cmd_prompt, cmd_envp) == -1)
+		{
+			// free(cmd_prompt);
+			do_reset_redirect(node->cmd); //エラー出力に対するリダイレクトの影響
+			fatal_error_exit("cannot_do_execve");
+		}
 	}
 }
 
@@ -108,9 +111,9 @@ int	wait_all_processes(int last_pid)
 		if (wpid == last_pid)
 		{
 			if (WIFEXITED(status))
-				last_status = WEXITSTATUS(status); 
+				last_status = WEXITSTATUS(status);
 			else if (WIFSIGNALED(status))
-				last_status = 128 + WTERMSIG(status); 
+				last_status = 128 + WTERMSIG(status);
 			else
 				last_status = status; // その他の場合
 		}
@@ -156,7 +159,7 @@ void	shell_loop(t_prompt_info *info)
 {
 	t_operation_info	operation;
 
-	//g_sig_status=IN_CMD;
+	// g_sig_status=IN_CMD;
 	operation.token = NULL;
 	operation.node = NULL;
 	info->str = readline("myshell:");

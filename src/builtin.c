@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:03:16 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/16 15:47:50 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/16 16:28:24 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ bool	is_builtin(t_node_info *node)
 	i = 0;
 	while (i < sizeof(builtin_commands) / sizeof(*builtin_commands))
 	{
-		if (strcmp(cmd_name, builtin_commands[i]) == 0)
+		if (ft_strncmp(cmd_name, builtin_commands[i],ft_strlen(builtin_commands[i]))==0&&ft_strlen(cmd_name)==ft_strlen(builtin_commands[i]))
 			return (true);
 		i++;
 	}
@@ -88,7 +88,7 @@ void	exec_builtin(t_prompt_info *info, t_node_info *node)
 		status = builtin_cd(info, cmd_argv);
 		info->last_status = status;
 	}
-	free(cmd_argv);
+	ppt_free(cmd_argv);
 	do_reset_redirect(node->cmd);
 	return ;
 }

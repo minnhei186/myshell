@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/16 15:54:43 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/16 16:35:17 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -278,8 +278,26 @@ void	do_redirect(t_node_info *redirect_node);
 bool	is_redirect(t_node_info *node);
 void	do_reset_redirect(t_node_info *node);
 //////////////////////////////////////////////
-//
 
+
+
+
+
+
+
+
+/////////////////////////////////
+//free
+////////////////////////////////
+//free_operation
+void	token_free(t_token_info *token);
+void	node_free(t_node_info *node);
+void	free_operation(t_operation_info operation);
+//free
+void	clear_info(t_prompt_info *info);
+void	map_free(t_map *map);
+void	ppt_free(char **ppt);
+void	item_free(t_item *item);
 
 
 
