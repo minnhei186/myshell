@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/15 10:52:43 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/15 20:06:04 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,13 @@
 # include <termios.h>
 # include <unistd.h>
 
+
+#define HEREDOC 1
+#define HEREDOC_PARENT 2
+#define IN_CMD 3
+#define SIG_INT 4
+
+
 # define FALSE 0
 # define TRUE 1
 
@@ -43,7 +50,7 @@
 	}
 
 extern char						**environ;
-extern volatile sig_atomic_t	sig;
+extern volatile sig_atomic_t	g_sig_status;
 
 typedef struct s_item			t_item;
 
@@ -96,6 +103,7 @@ enum							e_node_kind
 	ND_REDIR_OUT,
 	ND_REDIR_IN,
 	ND_REDIR_APPEND,
+	ND_REDIR_HEREDOC,
 };
 typedef enum e_node_kind		t_node_kind;
 
@@ -121,6 +129,7 @@ struct							s_node
 	t_token_info				*delimiter;
 	int							filefd;
 	int							stashedfd;
+	bool		is_delim_unquoted;
 };
 
 typedef struct s_operation_info
@@ -204,6 +213,8 @@ t_token_info	*output_redirect_node(t_prompt_info *info, t_node_info *node,
 t_token_info	*input_redirect_node(t_prompt_info *info, t_node_info *node,
 		t_token_info *token);
 t_token_info	*append_redirect_node(t_prompt_info *info, t_node_info *node,
+		t_token_info *token);
+t_token_info	*heredoc_redirect_node(t_prompt_info *info, t_node_info *node,
 		t_token_info *token);
 //parser_append_utils
 t_token_info	*ft_tokendup(t_token_info *token);

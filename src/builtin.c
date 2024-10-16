@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:03:16 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/15 10:46:08 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/15 16:45:11 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	exec_builtin(t_prompt_info *info, t_node_info *node)
 	char	**cmd_argv;
 	int		status;
 
-	do_redirect(node);
+	do_redirect(node->cmd);
 	cmd_argv = token2argv(node->cmd->node_token);
 	if (ft_strncmp(cmd_argv[0], "exit", 4) == 0)
 	{

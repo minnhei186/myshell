@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_append_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 13:08:37 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/14 13:11:35 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/15 19:11:31 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,14 @@ void	token_append_tail(t_node_info *node, t_token_info *cp_token)
 
 int	type_redirect_op(t_token_info *token)
 {
-	if (ft_strncmp(token->word, ">", 1) == 0)
+	if (ft_strncmp(token->word, ">>", 2) == 0)
+		return (3);
+	else if (ft_strncmp(token->word, "<<", 2) == 0)
+		return (4);
+	else if (ft_strncmp(token->word, ">", 1) == 0)
 		return (1);
 	else if (ft_strncmp(token->word, "<", 1) == 0)
 		return (2);
-	else if (ft_strncmp(token->word, ">>", 2) == 0)
-		return (3);
 	return (0);
 }
 

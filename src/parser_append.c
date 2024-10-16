@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 13:01:24 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/14 13:21:48 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/15 13:54:08 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@ t_token_info	*redirect_node(t_prompt_info *info, t_node_info *node,
 		now_token = input_redirect_node(info, node, token);
 	else if (type_redirect_op(token) == 3)
 		now_token = append_redirect_node(info, node, token);
+	else if(type_redirect_op(token)==4)
+		now_token = heredoc_redirect_node(info, node, token);
+
 	return (now_token);
 }
 

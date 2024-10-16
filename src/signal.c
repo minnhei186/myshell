@@ -6,22 +6,50 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 12:19:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/09 16:39:51 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/15 20:09:45 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myshell.h"
 
-volatile sig_atomic_t	sig = 0;
+volatile sig_atomic_t g_sig_status = IN_CMD;
 
 void	handler(int signum)
 {
-	if (signum == SIGINT)
+	if (g_sig_status == HEREDOC)
 	{
-		sig = SIGINT;
-		return (ft_printf("\n"), rl_on_new_line(), rl_replace_line("", 0),
-			rl_redisplay());
+		// ヒアドキュメント入力中に Ctrl+C が押された場合
+		g_sig_status= SIG_INT;
+		exit(1);
 	}
+	else if (g_sig_status== HEREDOC_PARENT)
+	{
+		// ヒアドキュメントの親プロセスで Ctrl+C が押された場合
+		ft_printf("\n");
+		g_sig_status= SIG_INT;
+		return ;
+	}
+	//else if (g_sig_status== IN_CMD)
+	//{
+	//	// コマンド入力中に Ctrl+C が押された場合
+	//	ft_printf("\n");
+	//	rl_replace_line("", 0);
+	//	rl_redisplay();
+	//	g_sig_status= SIG_INT;
+	//	return ;
+	//}
+	g_sig_status= SIG_INT;
+	(void)signum;
+	ft_printf("\n");
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+	//	if(signum == SIGINT)
+	//		//g_sig = SIGINT;
+	//		ft_printf("\n");
+	//		rl_on_new_line();
+	//		rl_replace_line("", 0);
+	//		rl_redisplay();
 }
 
 void	ready_signal(void)
