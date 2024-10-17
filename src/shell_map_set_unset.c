@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 10:48:45 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/17 10:55:27 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/17 22:32:52 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	item_set(t_map *map, const char *name, const char *value)
 	new_item = make_unit_item(name, value);
 	while (old_item != NULL)
 	{
-		if (ft_strncmp(name, old_item->name, ft_strlen(old_item->name)) == 0)
+		if (ft_strcmp(name, old_item->name) == 0)
 		{
 			free(old_item->value);
 			old_item->value = NULL;
@@ -49,7 +49,7 @@ int	item_unset(t_map *map, const char *name)
 	prev = NULL;
 	while (item != NULL)
 	{
-		if (ft_strncmp(item->name, name, ft_strlen(name)) == 0)
+		if (ft_strcmp(item->name, name) == 0)
 		{
 			if (prev == NULL)
 			{

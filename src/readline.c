@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/17 15:30:21 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/17 22:23:07 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,15 @@ void	shell_loop(t_prompt_info *info)
 int	main(int argc, char **argv, char **envp)
 {
 	t_prompt_info	info;
+//	int i;
 
+//	i=0;
 	(void)argc;
 	(void)argv;
 	init_signal();
 	info_init(&info, envp);
+//	while(envp[i])
+//		printf("%s\n",envp[i++]);
 	if (info.shell_finish != 1)
 	{
 		while (info.shell_finish != 1)

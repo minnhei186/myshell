@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/17 11:11:42 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/17 22:50:12 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -373,6 +373,8 @@ void							item_free(t_item *item);
 /////////////////////////////////
 // shell_refunc
 /////////////////////////////////
+char *ft_strncpy(char *dest, const char *src, size_t n);
+int ft_strcmp(const char *s1, const char *s2);
 void							*minishell_malloc(size_t size);
 void							*minishell_calloc(size_t count, size_t size);
 char							*minishell_strdup(const char *s1);

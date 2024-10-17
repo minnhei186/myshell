@@ -6,74 +6,97 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:36:52 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/14 11:15:49 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/17 22:06:53 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myshell.h"
 
 
-bool check_skip_path(char **path_ppt,char *path,char *check_str)
+
+
+/////////////////////////////////
+/////////////////////////////////
+
+bool	check_skip_path(char **path_ppt, char *path, char *check_str)
 {
-	size_t check_str_len;
+	size_t	check_str_len;
 
-	check_str_len=ft_strlen(check_str);
-
-	if(ft_strncmp(path,check_str,check_str_len)==0)
+	check_str_len = ft_strlen(check_str);
+	if (ft_strncmp(path, check_str, check_str_len) == 0)
 	{
-		if(path[check_str_len]=='\0'||path[check_str_len]=='/')
+		if (path[check_str_len] == '\0' || path[check_str_len] == '/')
 		{
-			*path_ppt=path+check_str_len;
-			return true;
+			*path_ppt = path + check_str_len;
+			return (true);
 		}
 	}
-	return false;
-	
+	return (false);
 }
 
+//void	delete_last_path_element(char *path)
+//{
+//	int	i;
+//	int	last_slash_position;
+//
+//	i = 0;
+//	while (path[i])
+//	{
+//		if (path[i] == '/')
+//			last_slash_position = i;
+//		i++;
+//	}
+//	if (last_slash_position == 0)
+//	{
+//		while (path[last_slash_position])
+//		{
+//			path[last_slash_position] = '\0';
+//			last_slash_position++;
+//		}
+//	}
+//}
 
-void delete_last_path_element(char *path)
+void	delete_last_path_element(char *path)
 {
-	int i;
-	int last_slash_position;
-	
+	int	i;
+	int	last_slash_position;
 
-	i=0;
-	while(path[i])
+	i = 0;
+	last_slash_position = -1;
+	while (path[i])
 	{
-		if(path[i]=='/')
-			last_slash_position=i;
+		if (path[i] == '/')
+			last_slash_position = i;
 		i++;
 	}
-	if(last_slash_position==0)
+	if (last_slash_position == -1)
 	{
-		while(path[last_slash_position])
-		{
-				path[last_slash_position]='\0';
-				last_slash_position++;
-		}
+		path[0] = '\0';
+	}
+	else if (last_slash_position == 0)
+	{
+		path[1] = '\0';
+	}
+	else
+	{
+		path[last_slash_position] = '\0';
 	}
 }
 
-
-void append_path_element(char *new_pwd,char **path_ppt,char *path)
+void	append_path_element(char *new_pwd, char **path_ppt, char *path)
 {
-	size_t element_len;
+	size_t	element_len;
+	char	element[PATH_MAX];
 
-	element_len=0;
-	while(path[element_len]&&path[element_len]!='/')
+	element_len = 0;
+	while (path[element_len] && path[element_len] != '/')
 		element_len++;
-	if(new_pwd[ft_strlen(new_pwd)-1]!='/')
-		ft_strlcat(new_pwd,"/",PATH_MAX);
-	*path_ppt=path+element_len;
+	if (new_pwd[ft_strlen(new_pwd) - 1] != '/')
+		ft_strlcat(new_pwd, "/", PATH_MAX);
+	ft_strlcpy(element, path, element_len + 1); // パス要素を一時バッファにコピー
+	ft_strlcat(new_pwd, element, PATH_MAX);
+	*path_ppt = path + element_len;
 }
-
-
-
-
-
-
-
 
 char	*make_pwd(char *old_pwd, char *path)
 {
@@ -95,7 +118,7 @@ char	*make_pwd(char *old_pwd, char *path)
 		else if (check_skip_path(&path, path, ".."))
 			delete_last_path_element(new_pwd);
 		else
-			append_path_element(new_pwd,&path,path);
+			append_path_element(new_pwd, &path, path);
 	}
 	dynamic_new_pwd = ft_strdup(new_pwd);
 	return (dynamic_new_pwd);
@@ -106,7 +129,7 @@ int	builtin_cd(t_prompt_info *info, char **argv)
 	char	path[PATH_MAX];
 	char	*old_pwd;
 	char	*home;
-	char *new_pwd;
+	char	*new_pwd;
 
 	old_pwd = item_value_get(info->map, "PWD");
 	item_set(info->map, "OLDPWD", old_pwd);
@@ -127,7 +150,7 @@ int	builtin_cd(t_prompt_info *info, char **argv)
 	if (chdir(path) < 0)
 	{
 		printf("error\n");
-		return 1;
+		return (1);
 	}
 	new_pwd = make_pwd(old_pwd, path);
 	item_set(info->map, "PWD", new_pwd);
