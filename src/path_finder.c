@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:05:38 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/12 14:17:49 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/17 14:35:11 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,15 @@ char	*path_get(t_prompt_info *info,char *command)
 	char	*unit_path;
 	char	*command_path;
 
-	if (strchr(command, '/') != NULL && access(command, F_OK) == 0)
-		return command;
+	//commnadがpathそのものである時（絶対パス）,もしくは相対パス？
+	//新しく別のメモリにする必要があるかも
+	//アクセスなどは全て別の関数でここでは適したpathを送るだけ
+	if (strchr(command, '/') != NULL)
+	{
+		command_path=minishell_strdup(command);
+		return command_path;
+	}
+	//おおここは？PATHが存在しないなら、相対パスは動かないのでok？
 	path_env=item_value_get(info->map,"PATH");
 	if(path_env==NULL)
 		return NULL;
