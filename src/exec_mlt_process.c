@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:07:12 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/17 15:21:49 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/18 18:22:30 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,9 @@ void	err_exit(const char *msg, int status)
 void	validate_access(const char *path, const char *prompt_head)
 {
 	struct stat	st;
+
+	//test
+	printf("erro_eixt\n");
 
 	if (path == NULL)
 		err_exit("command not found", 127);
@@ -86,7 +89,9 @@ int	command_comunication(t_prompt_info *info, t_node_info *node)
 		return (-1);
 	}
 	else if (pid == 0)
+	{
 		child_process(info, node);
+	}
 	prepare_pipe_parent(node);
 	if (node->re_node != NULL)
 		return (command_comunication(info, node->re_node));

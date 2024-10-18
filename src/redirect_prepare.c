@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 14:41:20 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/16 14:42:13 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/18 17:17:25 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ void	redirect_type_init(t_prompt_info *info, t_node_info *redirect)
 		redirect_in_init(info, redirect);
 	else if (redirect->kind == ND_REDIR_APPEND)
 		redirect_append_init(info, redirect);
-//	else if (redirect->kind == ND_REDIR_HEREDOC)
-//		redirect_heredoc_init(info, redirect);
+	else if (redirect->kind == ND_REDIR_HEREDOC)
+		redirect_heredoc_init(info, redirect);
 }
 
 void	init_redirect(t_prompt_info *info, t_node_info *cmd_node)

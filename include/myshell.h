@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/17 22:50:12 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/18 17:19:19 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -274,6 +274,7 @@ void	prepare_redirect(t_prompt_info *info, t_node_info *node);
 void	redirect_out_init(t_prompt_info *info, t_node_info *redirect);
 void	redirect_in_init(t_prompt_info *info, t_node_info *redirect);
 void	redirect_append_init(t_prompt_info *info, t_node_info *redirect);
+void	redirect_heredoc_init(t_prompt_info *info, t_node_info *redirect);
 //heredoc
 //char	*expand_heredoc_line(t_prompt_info *info, char *word)
 //void	redirect_heredoc_init(t_prompt_info *info, t_node_info *redirect);
