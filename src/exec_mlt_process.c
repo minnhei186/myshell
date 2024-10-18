@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:07:12 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/18 18:22:30 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/18 18:58:40 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,6 @@ void	validate_access(const char *path, const char *prompt_head)
 {
 	struct stat	st;
 
-	//test
-	printf("erro_eixt\n");
 
 	if (path == NULL)
 		err_exit("command not found", 127);
