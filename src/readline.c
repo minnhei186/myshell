@@ -6,16 +6,16 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/18 18:51:55 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/20 14:47:13 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myshell.h"
 
-__attribute__((destructor)) static void destructor()
-{
-	system("leaks  myshell");
-}
+//__attribute__((destructor)) static void destructor()
+//{
+//	system("leaks  myshell");
+//}
 
 void	shell_operation(t_prompt_info *info, t_operation_info *operation)
 {
@@ -69,8 +69,13 @@ int	main(int argc, char **argv, char **envp)
 //	i=0;
 	(void)argc;
 	(void)argv;
+	
 	init_signal();
 	info_init(&info, envp);
+//	if(envp==NULL)
+//		printf("envp==NULL\n");
+//	if(envp[0]==NULL)
+//		printf("envp[0]=NULL\n");
 //	while(envp[i])
 //		printf("%s\n",envp[i++]);
 	if (info.shell_finish != 1)

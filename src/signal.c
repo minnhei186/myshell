@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 12:19:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/18 18:11:17 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/20 14:49:16 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,18 @@
 
 volatile sig_atomic_t	g_sig_status = IN_CMD;
 
+int	event(void)
+{
+	return (0);
+}
+
 void	handler(int signum)
 {
 	if (g_sig_status == HEREDOC)
 	{
 		g_sig_status = SIG_INT;
+		rl_replace_line("", 0);
+		rl_redisplay();
 		rl_done = 1; // readlineに終了を指示
 		return ;
 	}
@@ -40,13 +47,11 @@ void	handler(int signum)
 	//	g_sig_status= SIG_INT;
 	//	return ;
 	//}
-	g_sig_status = SIG_INT;
 	(void)signum;
-	ft_printf("\n");
-	rl_on_new_line();
-	rl_clear_visible_line(); // 現在の行を完全にクリア
+	g_sig_status = SIG_INT;
 	rl_replace_line("", 0);
 	rl_redisplay();
+	rl_done = 1;
 }
 
 void	disable_echoctl(void)
@@ -74,8 +79,9 @@ void	ready_signal(void)
 
 void	init_signal(void)
 {
-	rl_outstream = stderr;
+	rl_event_hook = event;
+	//	rl_outstream = stderr;
 	rl_catch_signals = 0;
 	ready_signal();
-	disable_echoctl();
+	//	disable_echoctl();
 }
