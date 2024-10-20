@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/20 14:47:13 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/20 16:52:25 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 
 void	shell_operation(t_prompt_info *info, t_operation_info *operation)
 {
+	g_sig_status=IN_CMD;
+
 	operation->token = tokenizer(info, info->str);
 	if (info->yourser_err)
 		return ;

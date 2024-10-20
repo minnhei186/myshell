@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:07:12 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/18 18:58:40 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/20 16:26:15 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ void	child_process(t_prompt_info *info, t_node_info *node)
 	}
 	else
 	{
+		destroy_signal();
 		do_redirect(node->cmd);
 		cmd_prompt = token2argv(node->cmd->node_token);
 		cmd_path = path_get(info, cmd_prompt[0]);

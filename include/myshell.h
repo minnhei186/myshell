@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/18 17:19:19 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/20 16:17:06 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,8 +144,10 @@ typedef struct s_operation_info
 //signal
 /////////////////////////////////
 void	handler(int signum);
-void	ready_signal(void);
+void	ignore_signal(int signum);
+void	ready_signal(int signum);
 void	init_signal(void);
+void 	destroy_signal(void);
 ///////////////////////////////
 //info_data
 void	info_null_init(t_prompt_info *info);

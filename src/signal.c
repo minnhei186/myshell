@@ -6,13 +6,13 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 12:19:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/20 14:49:16 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/20 16:50:56 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myshell.h"
 
-volatile sig_atomic_t	g_sig_status = IN_CMD;
+volatile sig_atomic_t	g_sig_status = -1;
 
 int	event(void)
 {
@@ -21,51 +21,55 @@ int	event(void)
 
 void	handler(int signum)
 {
+	(void)signum;
 	if (g_sig_status == HEREDOC)
 	{
 		g_sig_status = SIG_INT;
 		rl_replace_line("", 0);
-		rl_redisplay();
-		rl_done = 1; // readlineに終了を指示
-		return ;
+		rl_done = 1;
 	}
-	//	if (g_sig_status == HEREDOC)
-	//	{
-	//		// ヒアドキュメント入力中に Ctrl+C が押された場合
-	//		g_sig_status= SIG_INT;
-	//		//rl_replace_line("", 0);
-	//		rl_done = 1;
-	//		rl_cleanup_after_signal();
-	//		return ;
-	//	}
-	// else if (g_sig_status== IN_CMD)
-	//{
-	//	// コマンド入力中に Ctrl+C が押された場合
-	//	ft_printf("\n");
-	//	rl_replace_line("", 0);
-	//	rl_redisplay();
-	//	g_sig_status= SIG_INT;
-	//	return ;
-	//}
-	(void)signum;
-	g_sig_status = SIG_INT;
-	rl_replace_line("", 0);
-	rl_redisplay();
-	rl_done = 1;
+	else if(g_sig_status==IN_CMD)
+	{
+		g_sig_status=SIG_INT;
+		write(STDOUT_FILENO, "\n", 1);
+		ft_printf("now\n");
+	}
+	else
+	{
+		g_sig_status = SIG_INT;
+		write(STDOUT_FILENO, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
 }
 
-void	disable_echoctl(void)
+void	reset_signal(int signum)
 {
-	struct termios	term;
+	struct sigaction	sa;
 
-	if (tcgetattr(STDIN_FILENO, &term) == -1)
-		perror("tcgetattr");
-	term.c_lflag &= ~ECHOCTL;
-	if (tcsetattr(STDIN_FILENO, TCSANOW, &term) == -1)
-		perror("tcsetattr");
+	if (sigemptyset(&sa.sa_mask) < 0)
+		fatal_error_exit("failed to sigemptyset");
+	sa.sa_flags = 0;
+	sa.sa_handler = SIG_DFL;
+	if (sigaction(signum, &sa, NULL) < 0)
+		fatal_error_exit("failed to sigaciton");
 }
 
-void	ready_signal(void)
+
+void	ignore_signal(int signum)
+{
+	struct sigaction	sa;
+
+	if (sigemptyset(&sa.sa_mask) < 0)
+		fatal_error_exit("failed to sigemptyset");
+	sa.sa_flags = 0;
+	sa.sa_handler = SIG_IGN;
+	if (sigaction(signum, &sa, NULL) < 0)
+		fatal_error_exit("failed to sigaction");
+}
+
+void	ready_signal(int signum)
 {
 	struct sigaction	sa;
 
@@ -73,15 +77,22 @@ void	ready_signal(void)
 		fatal_error_exit("failed to sigemptyset");
 	sa.sa_flags = 0;
 	sa.sa_handler = handler;
-	if (sigaction(SIGINT, &sa, NULL) < 0)
+	if (sigaction(signum, &sa, NULL) < 0)
 		fatal_error_exit("failed to sigaction");
 }
 
 void	init_signal(void)
 {
-	rl_event_hook = event;
-	//	rl_outstream = stderr;
+	if (isatty(STDIN_FILENO))
+		rl_event_hook = event;
 	rl_catch_signals = 0;
-	ready_signal();
-	//	disable_echoctl();
+	ignore_signal(SIGQUIT);
+	ready_signal(SIGINT);
 }
+
+void destroy_signal(void)
+{
+	reset_signal(SIGQUIT);
+	reset_signal(SIGINT);
+}
+

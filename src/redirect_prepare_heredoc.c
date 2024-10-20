@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 14:43:37 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/18 17:50:21 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/20 14:58:58 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ void	redirect_heredoc_init(t_prompt_info *info, t_node_info *redirect)
 	while (1)
 	{
 		line = readline("> ");
-		if (g_sig_status == SIG_INT)//cntl_c
+		if (g_sig_status == SIG_INT)
 		{
-			printf("SIG_INT_COMMIN\n");
+			free(line);
 			info->yourser_err = 1;   // 終了ステータスを130に設定
 			info->last_status = 130; // heredocの中断の終了ステータス
 			close(pipe_fd[0]);
@@ -58,11 +58,16 @@ void	redirect_heredoc_init(t_prompt_info *info, t_node_info *redirect)
 			g_sig_status = IN_CMD; // 状態をリセット
 			return ;
 		}
-		if (line == NULL)//cntl_d
+		if (line == NULL) // cntl_d
 		{
-			break ;
+			info->yourser_err = 1;
+			info->last_status = 130;
+			close(pipe_fd[0]);
+			close(pipe_fd[1]);
+			g_sig_status = IN_CMD;
+			return ;
 		}
-				if (ft_strncmp(line, redirect->delimiter->word,
+		if (ft_strncmp(line, redirect->delimiter->word,
 				ft_strlen(redirect->delimiter->word)) == 0
 			&& ft_strlen(line) == ft_strlen(redirect->delimiter->word))
 		{
@@ -87,8 +92,6 @@ void	redirect_heredoc_init(t_prompt_info *info, t_node_info *redirect)
 	redirect->targetfd = pipe_fd[0];
 	g_sig_status = IN_CMD;
 }
-
-
 
 //	info->yourser_err = 1;   // 終了ステータスを130に設定
 //			info->last_status = 130; // heredocの中断の終了ステータス
