@@ -6,13 +6,14 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 12:19:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/20 16:50:56 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/21 12:40:12 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myshell.h"
 
-volatile sig_atomic_t	g_sig_status = -1;
+//ここら辺考える必要があるな。
+volatile sig_atomic_t	g_sig_status =READLINE;
 
 int	event(void)
 {
@@ -28,11 +29,11 @@ void	handler(int signum)
 		rl_replace_line("", 0);
 		rl_done = 1;
 	}
-	else if(g_sig_status==IN_CMD)
+	else if(g_sig_status==IN_CMD)//親プロセスのコマンドあと
 	{
 		g_sig_status=SIG_INT;
 		write(STDOUT_FILENO, "\n", 1);
-		ft_printf("now\n");
+		ft_printf("command_signal_now\n");
 	}
 	else
 	{

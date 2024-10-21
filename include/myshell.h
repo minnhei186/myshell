@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/20 16:17:06 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/20 17:33:25 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@
 # include <unistd.h>
 
 
-#define HEREDOC 1
-#define HEREDOC_PARENT 2
+#define READLINE 1
+#define HEREDOC 2
 #define IN_CMD 3
 #define SIG_INT 4
 

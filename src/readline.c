@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/20 16:52:25 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/21 12:40:38 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,7 @@ int	main(int argc, char **argv, char **envp)
 	{
 		while (info.shell_finish != 1)
 		{
+			g_sig_status=READLINE;
 			shell_loop(&info);
 			info.yourser_err = 0;
 		}
