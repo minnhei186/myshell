@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 15:51:21 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/16 15:51:40 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/21 15:38:04 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,17 +41,34 @@ bool	is_redirect(t_node_info *node)
 	return (false);
 }
 
-void	do_reset_redirect(t_node_info *node)
+void do_reset_redirect(t_node_info *redirect_node)
 {
-	if (node->redirects == NULL)
-		return ;
-	do_reset_redirect(node->redirects);
-	if (is_redirect(node))
+	if(redirect_node==NULL)
+		return;
+	do_reset_redirect(redirect_node->redirects);
+	if(is_redirect(redirect_node))
 	{
-		close(node->filefd);
-		close(node->targetfd);
-		dup2(node->stashedfd, node->targetfd);
+		close(redirect_node->filefd);
+		close(redirect_node->targetfd);
+		dup2(redirect_node->stashedfd, redirect_node->targetfd);
+		close(redirect_node->stashedfd);//新たに追加
 	}
 	else
-		printf("error\n");
+		printf("reset_error\n");
 }
+
+
+//void	do_reset_redirect(t_node_info *node)
+//{
+//	if (node->redirects == NULL)
+//		return ;
+//	do_reset_redirect(node->redirects);
+//	if (is_redirect(node))
+//	{
+//		close(node->filefd);
+//		close(node->targetfd);
+//		dup2(node->stashedfd, node->targetfd);
+//	}
+//	else
+//		printf("error\n");//こいつだ！！！
+//}

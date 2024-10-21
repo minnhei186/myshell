@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:07:12 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/20 16:26:15 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/21 15:57:52 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,14 +56,14 @@ void	child_process(t_prompt_info *info, t_node_info *node)
 	else
 	{
 		destroy_signal();
-		do_redirect(node->cmd);
+		do_redirect(node->cmd->redirects);
 		cmd_prompt = token2argv(node->cmd->node_token);
 		cmd_path = path_get(info, cmd_prompt[0]);
 		cmd_envp = item2argv(info->map->item);
 		validate_access(cmd_path, cmd_prompt[0]);
 		if (execve(cmd_path, cmd_prompt, cmd_envp) == -1)
 		{
-			do_reset_redirect(node->cmd);
+			do_reset_redirect(node->cmd->redirects);
 			fatal_error_exit("cannot_do_execve");
 		}
 	}

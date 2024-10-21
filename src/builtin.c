@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:03:16 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/16 16:28:24 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/21 15:39:50 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ bool	is_builtin(t_node_info *node)
 	i = 0;
 	while (i < sizeof(builtin_commands) / sizeof(*builtin_commands))
 	{
-		if (ft_strncmp(cmd_name, builtin_commands[i],ft_strlen(builtin_commands[i]))==0&&ft_strlen(cmd_name)==ft_strlen(builtin_commands[i]))
+		if (ft_strcmp(cmd_name, builtin_commands[i])==0)
 			return (true);
 		i++;
 	}
@@ -51,44 +51,44 @@ void	exec_builtin(t_prompt_info *info, t_node_info *node)
 	char	**cmd_argv;
 	int		status;
 
-	do_redirect(node->cmd);
+	do_redirect(node->cmd->redirects);
 	cmd_argv = token2argv(node->cmd->node_token);
-	if (ft_strncmp(cmd_argv[0], "exit", 4) == 0)
+	if (ft_strcmp(cmd_argv[0], "exit") == 0)
 	{
 		status = builtin_exit(info, cmd_argv);
 		info->last_status = status;
 	}
-	else if (ft_strncmp(cmd_argv[0], "env", 3) == 0)
+	else if (ft_strcmp(cmd_argv[0], "env") == 0)
 	{
 		status = builtin_env(info);
 		info->last_status = status;
 	}
-	else if (ft_strncmp(cmd_argv[0], "export", 6) == 0)
+	else if (ft_strcmp(cmd_argv[0], "export") == 0)
 	{
 		status = builtin_export(info, cmd_argv);
 		info->last_status = status;
 	}
-	else if (ft_strncmp(cmd_argv[0], "unset", 5) == 0)
+	else if (ft_strcmp(cmd_argv[0], "unset") == 0)
 	{
 		status = builtin_unset(info, cmd_argv);
 		info->last_status = status;
 	}
-	else if (ft_strncmp(cmd_argv[0], "echo", 5) == 0)
+	else if (ft_strcmp(cmd_argv[0], "echo") == 0)
 	{
 		status = builtin_echo(info, cmd_argv);
 		info->last_status = status;
 	}
-	else if (ft_strncmp(cmd_argv[0], "pwd", 3) == 0)
+	else if (ft_strcmp(cmd_argv[0], "pwd") == 0)
 	{
 		status = builtin_pwd(info, cmd_argv);
 		info->last_status = status;
 	}
-	else if (ft_strncmp(cmd_argv[0], "cd", 2) == 0)
+	else if (ft_strcmp(cmd_argv[0], "cd") == 0)
 	{
 		status = builtin_cd(info, cmd_argv);
 		info->last_status = status;
 	}
 	ppt_free(cmd_argv);
-	do_reset_redirect(node->cmd);
+	do_reset_redirect(node->cmd->redirects);
 	return ;
 }

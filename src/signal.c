@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 12:19:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/21 12:40:12 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/21 14:52:50 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ void	init_signal(void)
 	if (isatty(STDIN_FILENO))
 		rl_event_hook = event;
 	rl_catch_signals = 0;
+	rl_outstream = stderr;
 	ignore_signal(SIGQUIT);
 	ready_signal(SIGINT);
 }

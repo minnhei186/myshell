@@ -6,14 +6,11 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:36:52 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/17 22:06:53 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/21 17:11:52 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myshell.h"
-
-
-
 
 /////////////////////////////////
 /////////////////////////////////
@@ -33,28 +30,6 @@ bool	check_skip_path(char **path_ppt, char *path, char *check_str)
 	}
 	return (false);
 }
-
-//void	delete_last_path_element(char *path)
-//{
-//	int	i;
-//	int	last_slash_position;
-//
-//	i = 0;
-//	while (path[i])
-//	{
-//		if (path[i] == '/')
-//			last_slash_position = i;
-//		i++;
-//	}
-//	if (last_slash_position == 0)
-//	{
-//		while (path[last_slash_position])
-//		{
-//			path[last_slash_position] = '\0';
-//			last_slash_position++;
-//		}
-//	}
-//}
 
 void	delete_last_path_element(char *path)
 {
@@ -93,7 +68,7 @@ void	append_path_element(char *new_pwd, char **path_ppt, char *path)
 		element_len++;
 	if (new_pwd[ft_strlen(new_pwd) - 1] != '/')
 		ft_strlcat(new_pwd, "/", PATH_MAX);
-	ft_strlcpy(element, path, element_len + 1); // パス要素を一時バッファにコピー
+	ft_strlcpy(element, path, element_len + 1);
 	ft_strlcat(new_pwd, element, PATH_MAX);
 	*path_ppt = path + element_len;
 }
@@ -138,10 +113,12 @@ int	builtin_cd(t_prompt_info *info, char **argv)
 		home = item_value_get(info->map, "HOME");
 		if (home == NULL)
 		{
+			free(home);
 			printf("error\n");
 			return (1);
 		}
 		ft_strlcpy(path, home, PATH_MAX);
+		free(home);
 	}
 	else
 	{
@@ -150,10 +127,12 @@ int	builtin_cd(t_prompt_info *info, char **argv)
 	if (chdir(path) < 0)
 	{
 		printf("error\n");
+		free(old_pwd);
 		return (1);
 	}
 	new_pwd = make_pwd(old_pwd, path);
 	item_set(info->map, "PWD", new_pwd);
 	free(old_pwd);
+	free(new_pwd);
 	return (0);
 }
