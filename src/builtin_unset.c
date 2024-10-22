@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:41:28 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/15 10:41:51 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/22 13:33:26 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	builtin_unset(t_prompt_info *info, char **argv)
 	{
 		if (item_unset(info->map, argv[i]) < 0)
 		{
-			printf("error\n");
+			minishell_yourser_perror(info, "faild to unset");
 			status = 1;
 		}
 		else

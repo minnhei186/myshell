@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 10:28:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/20 17:25:56 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/22 13:43:45 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,9 @@ int	wait_all_processes(int last_pid)
 	pid_t	wpid;
 
 	last_status = 0;
-	while ((wpid = waitpid(-1, &status, 0)) > 0)
+	wpid = waitpid(-1, &status, 0);
+	while (wpid > 0)
 	{
-		if(WEXITSTATUS(status)==131)
-		{
-			write(STDOUT_FILENO,"Quit: 3",7);
-			write(STDOUT_FILENO,"\n",1);
-		}
 		if (wpid == last_pid)
 		{
 			if (WIFEXITED(status))
@@ -33,8 +29,9 @@ int	wait_all_processes(int last_pid)
 			else if (WIFSIGNALED(status))
 				last_status = 128 + WTERMSIG(status);
 			else
-				last_status = status; // その他の場合
+				last_status = status;
 		}
+		wpid = waitpid(-1, &status, 0);
 	}
 	return (last_status);
 }

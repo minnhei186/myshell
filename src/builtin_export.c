@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:42:35 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/15 10:43:13 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/22 13:31:49 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	builtin_export(t_prompt_info *info, char **argv)
 		item_put(info, info->map, argv[i], 1);
 		if (info->yourser_err == 1)
 		{
-			printf("error\n");
+			minishell_yourser_perror(info, "faild to export");
 			status = 1;
 		}
 		i++;

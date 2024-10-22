@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:07:12 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/21 15:57:52 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/22 13:47:59 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ void	validate_access(const char *path, const char *prompt_head)
 {
 	struct stat	st;
 
-
 	if (path == NULL)
 		err_exit("command not found", 127);
 	if (strcmp(prompt_head, "") == 0)
@@ -33,8 +32,8 @@ void	validate_access(const char *path, const char *prompt_head)
 		err_exit("command not found", 127);
 	if (access(path, F_OK) < 0)
 		err_exit("command not found", 127);
-	// if (stat(path, &st) < 0)
-	//	fatal_error("fstat");
+	if (stat(path, &st) < 0)
+		fatal_error_exit("fstat");
 	if (S_ISDIR(st.st_mode))
 		err_exit("is a directory", 126);
 	if (access(path, X_OK) < 0)
@@ -51,7 +50,7 @@ void	child_process(t_prompt_info *info, t_node_info *node)
 	if (is_builtin(node))
 	{
 		exec_builtin(info, node);
-		exit(info->last_status); //パイプでbuiltinが実行されるならな
+		exit(info->last_status);
 	}
 	else
 	{
@@ -94,7 +93,6 @@ int	command_comunication(t_prompt_info *info, t_node_info *node)
 	prepare_pipe_parent(node);
 	if (node->re_node != NULL)
 		return (command_comunication(info, node->re_node));
-	close_final_pipe(node); //最後のnode、生かすpipeがないため。
+	close_final_pipe(node);
 	return (pid);
 }
-

@@ -1,28 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_env.c                                      :+:      :+:    :+:   */
+/*   builtin_cd_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/15 10:43:45 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/22 13:23:10 by hosokawa         ###   ########.fr       */
+/*   Created: 2024/10/22 13:18:43 by hosokawa          #+#    #+#             */
+/*   Updated: 2024/10/22 13:19:02 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myshell.h"
 
-int	builtin_env(t_prompt_info *info)
+bool	check_skip_path(char **path_ppt, char *path, char *check_str)
 {
-	t_item	*item;
+	size_t	check_str_len;
 
-	item = info->map->item;
-	while (item != NULL)
+	check_str_len = ft_strlen(check_str);
+	if (ft_strncmp(path, check_str, check_str_len) == 0)
 	{
-		if (item->value)
-			printf("%s=%s\n", item->name, item->value);
-		item = item->next;
+		if (path[check_str_len] == '\0' || path[check_str_len] == '/')
+		{
+			*path_ppt = path + check_str_len;
+			return (true);
+		}
 	}
-	printf("_=/usr/bin/env\n");
-	return (0);
+	return (false);
 }

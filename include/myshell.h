@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/20 17:33:25 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/22 15:10:52 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 # include <sys/stat.h>
 # include <termios.h>
 # include <unistd.h>
+
+#define ERROR_PRESTR "minishell: "
 
 
 #define READLINE 1
@@ -245,13 +247,14 @@ void	expand_variable(t_prompt_info *info, t_token_info *token);
 void	token_variable_expand(t_prompt_info *info, t_token_info *token);
 void	variable_expander(t_prompt_info *info, t_node_info *node);
 //expand_expander_element
-bool	variable_error_check(char *word);
-char	*expand_special_parameter(t_prompt_info *info, char **word,
-		char *new_word);
 char	*expand_variable_word(t_prompt_info *info,char **word, char *new_word);
 char	*expand_variable_single_quote(t_prompt_info *info, char **word,
 		char *new_word);
 char	*expand_variable_double_quote(t_prompt_info *info, char **word,
+		char *new_word);
+//expand_expander_element_utils
+bool	variable_error_check(char *word);
+char	*expand_special_parameter(t_prompt_info *info, char **word,
 		char *new_word);
 //expand_expander_utils
 bool	is_alpha_or_under(char c);
@@ -318,11 +321,13 @@ bool	is_numeric(char *s);
 bool	is_builtin(t_node_info *node);
 void	exec_builtin(t_prompt_info *info, t_node_info *node);
 //builtin_cd
-bool check_skip_path(char **path_ppt,char *path,char *check_str);
 void delete_last_path_element(char *path);
 void append_path_element(char *new_pwd,char **path_ppt,char *path);
 char	*make_pwd(char *old_pwd, char *path);
+void	copy_home_value(t_prompt_info *info, char *path);
 int	builtin_cd(t_prompt_info *info, char **argv);
+//builtin_cd_utils
+bool check_skip_path(char **path_ppt,char *path,char *check_str);
 //builtin_echo
 int	builtin_echo(t_prompt_info *info, char **argv);
 //builtin_env
@@ -351,28 +356,19 @@ void	map_free(t_map *map);
 void	ppt_free(char **ppt);
 void	item_free(t_item *item);
 /////////////////////////////////
-// error_utils
+// error
 /////////////////////////////////
+//main
 void							perror_prestr(void);
 void							fatal_error_exit(char *err_msg);
-void							tokenizer_error(t_prompt_info *info,
-									char *err_msg);
-void							parser_error(t_prompt_info *info,
-									char *token_word);
 void							minishell_perror(t_prompt_info *info,
 									char *err_msg);
 void							minishell_yourser_perror(t_prompt_info *info,
 									char *err_msg);
 void							yourser_error_exit(char *err_msg);
-/////////////////////////////////
-// free_utils
-/////////////////////////////////
-void							token_free(t_token_info *token);
-void							node_free(t_node_info *node);
-void							free_operation(t_operation_info operation);
-void							clear_info(t_prompt_info *info);
-void							item_free(t_item *item);
-
+//token_parse
+void	tokenizer_error(t_prompt_info *info, char *err_msg);
+void	parser_error(t_prompt_info *info, char *token_word);
 /////////////////////////////////
 // shell_refunc
 /////////////////////////////////

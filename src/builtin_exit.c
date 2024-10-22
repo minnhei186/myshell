@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 10:45:14 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/17 16:47:33 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/22 13:24:59 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ long	ft_atol(const char *str, int *error_flag)
 	return (sign * result);
 }
 
-
 int	builtin_exit(t_prompt_info *info, char **argv)
 {
 	long	res;
@@ -79,7 +78,7 @@ int	builtin_exit(t_prompt_info *info, char **argv)
 	if (error_flag)
 	{
 		write(STDERR_FILENO, "bash: exit: ", 12);
-		write(STDERR_FILENO, argv[1], ft_strlen(argv[1]));  // argv[1] の長さを取得して出力
+		write(STDERR_FILENO, argv[1], ft_strlen(argv[1]));
 		write(STDERR_FILENO, ": numeric argument required\n", 28);
 		exit(255);
 	}
@@ -93,51 +92,3 @@ int	builtin_exit(t_prompt_info *info, char **argv)
 }
 
 
-
-//int	builtin_exit(t_prompt_info *info, char **argv)
-//{
-//	long	res;
-//	int		error_flag;
-//
-//	write(STDOUT_FILENO, "exit\n", 5);
-//	if (argv[1] == NULL)
-//		exit(info->last_status);
-//	res = ft_atol(argv[1], &error_flag);
-//	if (error_flag)
-//	{
-//		ft_putstr_fd("bash: exit: ", STDERR_FILENO);
-//		ft_putstr_fd(argv[1], STDERR_FILENO);
-//		ft_putstr_fd(": numeric argument required\n", STDERR_FILENO);
-//		exit(255);
-//	}
-//	if (argv[2])
-//	{
-//		ft_putstr_fd("bash: exit: too many arguments\n", STDERR_FILENO);
-//		info->last_status = 1;
-//		return (1);
-//	}
-//	exit((int)res);
-//}
-
-//int	builtin_exit(t_prompt_info *info, char **argv)
-//{
-//	long	res;
-//	char	*arg;
-//	char	*endptr;
-//
-//	if (argv[1] == NULL)
-//		exit(info->last_status);
-//	if (argv[2])
-//	{
-//		return (1);
-//	}
-//	arg = argv[1];
-//	if (is_numeric(arg))
-//	{
-//		errno = 0;
-//		res = strtol(arg, &endptr, 10);
-//		if (errno == 0 && *endptr == '\0')
-//			exit((int)res);
-//	}
-//	exit(255);
-//}

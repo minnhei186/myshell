@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 11:45:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/14 12:31:21 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/22 13:14:21 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char	**token2argv(t_token_info *token)
 	i = 0;
 	while (token->next != NULL)
 	{
-		tk_str = ft_strdup(token->word);
+		tk_str = minishell_strdup(token->word);
 		tk_argv[i] = tk_str;
 		i++;
 		token = token->next;

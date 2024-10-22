@@ -6,30 +6,11 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:36:52 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/21 17:11:52 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/22 13:20:31 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myshell.h"
-
-/////////////////////////////////
-/////////////////////////////////
-
-bool	check_skip_path(char **path_ppt, char *path, char *check_str)
-{
-	size_t	check_str_len;
-
-	check_str_len = ft_strlen(check_str);
-	if (ft_strncmp(path, check_str, check_str_len) == 0)
-	{
-		if (path[check_str_len] == '\0' || path[check_str_len] == '/')
-		{
-			*path_ppt = path + check_str_len;
-			return (true);
-		}
-	}
-	return (false);
-}
 
 void	delete_last_path_element(char *path)
 {
@@ -99,34 +80,40 @@ char	*make_pwd(char *old_pwd, char *path)
 	return (dynamic_new_pwd);
 }
 
+void	copy_home_value(t_prompt_info *info, char *path)
+{
+	char	*home;
+
+	home = item_value_get(info->map, "HOME");
+	if (home == NULL)
+	{
+		free(home);
+		minishell_yourser_perror(info, "fild to get home value");
+		return ;
+	}
+	ft_strlcpy(path, home, PATH_MAX);
+	free(home);
+}
+
 int	builtin_cd(t_prompt_info *info, char **argv)
 {
 	char	path[PATH_MAX];
 	char	*old_pwd;
-	char	*home;
 	char	*new_pwd;
 
 	old_pwd = item_value_get(info->map, "PWD");
 	item_set(info->map, "OLDPWD", old_pwd);
 	if (argv[1] == NULL)
 	{
-		home = item_value_get(info->map, "HOME");
-		if (home == NULL)
-		{
-			free(home);
-			printf("error\n");
+		copy_home_value(info, path);
+		if (info->yourser_err == 1)
 			return (1);
-		}
-		ft_strlcpy(path, home, PATH_MAX);
-		free(home);
 	}
 	else
-	{
 		ft_strlcpy(path, argv[1], PATH_MAX);
-	}
 	if (chdir(path) < 0)
 	{
-		printf("error\n");
+		minishell_yourser_perror(info, "faild to chdir");
 		free(old_pwd);
 		return (1);
 	}

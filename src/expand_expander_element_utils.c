@@ -1,28 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtin_env.c                                      :+:      :+:    :+:   */
+/*   expand_expander_element_utils.c                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/15 10:43:45 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/22 13:23:10 by hosokawa         ###   ########.fr       */
+/*   Created: 2024/10/22 15:04:33 by hosokawa          #+#    #+#             */
+/*   Updated: 2024/10/22 15:05:16 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myshell.h"
 
-int	builtin_env(t_prompt_info *info)
+bool	variable_error_check(char *word)
 {
-	t_item	*item;
-
-	item = info->map->item;
-	while (item != NULL)
+	if (*word == '$')
 	{
-		if (item->value)
-			printf("%s=%s\n", item->name, item->value);
-		item = item->next;
+		if (is_variable(word) == false && is_special_parameter(word) == false)
+			return (true);
 	}
-	printf("_=/usr/bin/env\n");
-	return (0);
+	return (false);
+}
+
+char	*expand_special_parameter(t_prompt_info *info, char **word,
+		char *new_word)
+{
+	*word = *word + 2;
+	new_word = append_num(new_word, info->last_status);
+	return (new_word);
 }
