@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   readline.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: geonwkim <geonwkim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/23 18:27:49 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/24 00:25:30 by geonwkim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ volatile sig_atomic_t	g_sig_status = READLINE;
 void	shell_operation(t_prompt_info *info, t_operation_info *operation)
 {
 	g_sig_status = IN_CMD;
+	if (!info || !operation)
+		return ;
 	operation->token = tokenizer(info, info->str);
 	if (info->yourser_err)
 		return ;
