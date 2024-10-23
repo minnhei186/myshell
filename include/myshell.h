@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/23 13:34:39 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/23 15:27:56 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -308,8 +308,17 @@ void							redirect_append_init(t_prompt_info *info,
 void							redirect_heredoc_init(t_prompt_info *info,
 									t_node_info *redirect);
 // heredoc
-// char	*expand_heredoc_line(t_prompt_info *info, char *word)
-// void	redirect_heredoc_init(t_prompt_info *info, t_node_info *redirect);
+// main
+char	*expand_heredoc_line(t_prompt_info *info, char *word);
+char	*read_heredoc_line(t_prompt_info *info, int *pipe_fd);
+char	*process_line(t_prompt_info *info, t_node_info *redirect, char *line);
+void	process_heredoc_lines(t_prompt_info *info, t_node_info *redirect,
+		int *pipe_fd);
+void	redirect_heredoc_init(t_prompt_info *info, t_node_info *redirect);
+//utils
+void	handle_heredoc_interrupt(t_prompt_info *info, char *line, int *pipe_fd);
+void	write_line_to_pipe(int fd, char *line);
+char	*process_word_char(t_prompt_info *info, char **word_ptr, char *new_word);
 // rediredt_do_and_reset
 void							redirect_do_set(t_node_info *redirect);
 void							do_redirect(t_node_info *redirect_node);
