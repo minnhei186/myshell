@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_cd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 13:36:52 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/22 13:20:31 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/23 18:51:20 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ char	*make_pwd(char *old_pwd, char *path)
 		else
 			append_path_element(new_pwd, &path, path);
 	}
-	dynamic_new_pwd = ft_strdup(new_pwd);
+	dynamic_new_pwd = minishell_strdup(new_pwd);
 	return (dynamic_new_pwd);
 }
 

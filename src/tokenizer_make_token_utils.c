@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_make_token_utils.c                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 11:56:22 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/14 12:27:55 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/23 18:52:00 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ char	*malloc_op(char *prompt)
 			break ;
 		i++;
 	}
-	op_str = ft_strdup(operators[i]);
+	op_str = minishell_strdup(operators[i]);
 	return (op_str);
 }
 

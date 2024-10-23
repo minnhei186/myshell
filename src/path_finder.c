@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:05:38 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/23 13:22:12 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/23 18:45:17 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char	*cut_and_move_env(char **path_env)
 		return (unit_path);
 	}
 	len = tail_p - (*path_env);
-	unit_path = (char *)malloc(sizeof(char) * (len + 1));
+	unit_path = (char *)minishell_malloc(sizeof(char) * (len + 1));
 	ft_strncpy(unit_path, (*path_env), len);
 	unit_path[len] = '\0';
 	*path_env = *path_env + len + 1;

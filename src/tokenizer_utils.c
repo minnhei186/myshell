@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 11:45:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/22 13:14:21 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/23 18:48:19 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ char	**token2argv(t_token_info *token)
 	char	*tk_str;
 	int		i;
 
-	tk_argv = malloc(sizeof(char *) * token_size(token) + 1);
+	tk_argv = minishell_malloc(sizeof(char *) * token_size(token) + 1);
 	i = 0;
 	while (token->next != NULL)
 	{

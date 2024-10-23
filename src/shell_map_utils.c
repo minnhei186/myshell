@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_map_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/12 13:00:35 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/22 15:39:09 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/23 18:45:33 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ char	**item2argv(t_item *item)
 	char	**argv;
 
 	item_count = item_len(item, false);
-	argv = (char **)malloc(sizeof(char *) * (item_count + 1));
+	argv = (char **)minishell_malloc(sizeof(char *) * (item_count + 1));
 	i = 0;
 	while (i < item_count)
 	{

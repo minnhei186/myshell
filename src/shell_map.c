@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 11:19:34 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/17 10:57:46 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/23 18:51:46 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ char	*search_value(t_item *item, const char *find_name)
 
 	if (ft_strncmp(item->name, find_name, ft_strlen(find_name)) == 0)
 	{
-		new_value = ft_strdup(item->value);
+		new_value = minishell_strdup(item->value);
 		return (new_value);
 	}
 	return (NULL);
