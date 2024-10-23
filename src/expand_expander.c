@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_expander.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: geonwkim <geonwkim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 14:30:17 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/23 18:04:57 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/24 01:33:05 by geonwkim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static char	*expand_variable_step(t_prompt_info *info, char **word_ptr,
 	else if (is_special_parameter(word))
 		new_word = expand_special_parameter(info, word_ptr, new_word);
 	else if (variable_error_check(word))
-		check_free_perror(info, new_word, "valeable need alpha or under");
+		check_free_perror(info, new_word, "valuable need alpha or under");
 	else
 	{
 		new_word = append_char(new_word, *word);
