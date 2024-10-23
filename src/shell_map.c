@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_map.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: geonwkim <geonwkim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 11:19:34 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/23 18:51:46 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/24 01:12:15 by geonwkim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ char	*search_value(t_item *item, const char *find_name)
 {
 	char	*new_value;
 
+	if (!item || !find_name)
+		return (NULL);
 	if (ft_strncmp(item->name, find_name, ft_strlen(find_name)) == 0)
 	{
 		new_value = minishell_strdup(item->value);
@@ -69,7 +71,7 @@ char	*item_value_get(t_map *map, const char *find_name)
 	while (item != NULL)
 	{
 		get_value = search_value(item, find_name);
-		if (get_value != NULL)
+		if (get_value == NULL)
 			break ;
 		item = item->next;
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path_finder.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: geonwkim <geonwkim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:05:38 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/23 18:45:17 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/24 01:10:02 by geonwkim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ char	*make_command_path(char *command, char *unit_path)
 	char	*path_slash;
 	char	*command_path;
 
+	if (!command || !unit_path)
+		return (NULL);
 	path_slash = ft_strjoin(unit_path, "/");
 	command_path = ft_strjoin(path_slash, command);
 	free(path_slash);

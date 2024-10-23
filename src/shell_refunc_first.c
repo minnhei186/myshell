@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_refunc_first.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: geonwkim <geonwkim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 15:47:39 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/22 15:48:28 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/24 01:11:49 by geonwkim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ char	*minishell_strdup(const char *s1)
 		return (NULL);
 	len = ft_strlen(s1);
 	p = (char *)minishell_malloc(sizeof(char) * len + 1);
+	if (!p)
+		return (NULL);
 	phead = p;
 	while (i < len)
 	{
