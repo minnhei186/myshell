@@ -1,23 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand.c                                           :+:      :+:    :+:   */
+/*   builtin_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/25 17:36:42 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/22 13:48:10 by hosokawa         ###   ########.fr       */
+/*   Created: 2024/10/22 16:16:13 by hosokawa          #+#    #+#             */
+/*   Updated: 2024/10/23 18:09:05 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myshell.h"
 
-void	expand(t_prompt_info *info, t_node_info *node)
+bool	is_numeric(char *s)
 {
-	variable_expander(info, node);
-	if (info->yourser_err)
-		return ;
-	quote_remover(info, node);
-	if (info->yourser_err)
-		return ;
+	if (!ft_isdigit(*s))
+		return (false);
+	while (*s)
+	{
+		if (!ft_isdigit(*s))
+			return (false);
+		s++;
+	}
+	return (true);
+}
+
+void	s_b_c(char *builtin_commands[BUILTIN_SIZE])
+{
+	builtin_commands[0] = "exit";
+	builtin_commands[1] = "env";
+	builtin_commands[2] = "export";
+	builtin_commands[3] = "unset";
+	builtin_commands[4] = "echo";
+	builtin_commands[5] = "pwd";
+	builtin_commands[6] = "cd";
 }

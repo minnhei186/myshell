@@ -7,7 +7,7 @@
       "request": "launch",
       "args": [],
       "cwd": "/Users/hosokawa/42tokyo/level03/myshell/src",
-      "program": "/Users/hosokawa/42tokyo/level03/myshell/src/build/Debug/outDebug"
+      "program": "/Users/hosokawa/42tokyo/level03/myshell/myshell"
     }
   ]
 }

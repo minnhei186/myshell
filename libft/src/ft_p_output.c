@@ -6,13 +6,13 @@
 /*   By: dhosokaw <dhosokaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 14:55:43 by dhosokaw          #+#    #+#             */
-/*   Updated: 2024/06/03 12:54:41 by dhosokaw         ###   ########.fr       */
+/*   Updated: 2024/10/23 19:26:34 by dhosokaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static int	ft_p_count(uintptr_t p)
+static int	ft_p_count(intptr_t p)
 {
 	int	count;
 
@@ -25,7 +25,7 @@ static int	ft_p_count(uintptr_t p)
 	return (count);
 }
 
-static void	ft_p_put(uintptr_t p)
+static void	ft_p_put(intptr_t p)
 {
 	if (p >= 16)
 	{
@@ -43,10 +43,10 @@ static void	ft_p_put(uintptr_t p)
 
 int	ft_p_output(va_list *args)
 {
-	uintptr_t	p;
+	intptr_t	p;
 	int			count;
 
-	p = (uintptr_t)(va_arg(*args, void *));
+	p = (intptr_t)(va_arg(*args, void *));
 	count = write(STDOUT_FILENO, "0x", 2);
 	if (p == 0)
 		count += 1;
