@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: geonwkim <geonwkim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 10:28:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/22 13:43:45 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/24 00:50:02 by geonwkim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ void	exec(t_prompt_info *info, t_node_info *node)
 {
 	int	last_pid;
 
+	if (!info || !node)
+		return ;
 	if (node->re_node == NULL && is_builtin(node))
 		exec_builtin(info, node);
 	else
