@@ -6,7 +6,7 @@
 /*   By: geonwkim <geonwkim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:05:38 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/24 01:10:02 by geonwkim         ###   ########.fr       */
+/*   Updated: 2024/10/24 01:18:34 by geonwkim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ char	*path_get(t_prompt_info *info, char *command)
 	char	*unit_path;
 	char	*command_path;
 
+	if (!info || !command)
+		return (NULL);
 	if (ft_strchr(command, '/') != NULL)
 	{
 		command_path = minishell_strdup(command);
