@@ -6,17 +6,17 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 15:51:21 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/23 16:45:55 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/23 17:15:09 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myshell.h"
 
-void	redirect_do_set(t_prompt_info *info, t_node_info *redirect)
+int	stash_fd(t_prompt_info *info, t_node_info *redirect)
 {
-	int	newfd;
-	int	attempts;
 	int	max_attempts;
+	int	attempts;
+	int	newfd;
 
 	max_attempts = 1024;
 	attempts = 0;
@@ -26,24 +26,24 @@ void	redirect_do_set(t_prompt_info *info, t_node_info *redirect)
 		if (newfd < 0)
 		{
 			minishell_perror(info, "failed to dup");
-			return ;
+			return (-1);
 		}
 		if (newfd != 0 && newfd != 1 && newfd != 2)
 		{
 			redirect->stashedfd = newfd;
-			break ;
+			return (0);
 		}
-		else
-		{
-			close(newfd);
-			attempts++;
-		}
+		close(newfd);
+		attempts++;
 	}
-	if (attempts == max_attempts)
-	{
-		minishell_perror(info, "failed to make_new_stashfed");
+	minishell_perror(info, "failed to make_new_stashedfd");
+	return (-1);
+}
+
+void	redirect_do_set(t_prompt_info *info, t_node_info *redirect)
+{
+	if (stash_fd(info, redirect) < 0)
 		return ;
-	}
 	dup2(redirect->filefd, redirect->targetfd);
 	close(redirect->filefd);
 }

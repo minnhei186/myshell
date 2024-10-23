@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:03:16 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/23 16:34:14 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/23 18:09:16 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ bool	is_builtin(t_node_info *node)
 	char			*builtin_commands[BUILTIN_SIZE];
 	unsigned int	i;
 
-	set_builtin_commands(builtin_commands);
+	s_b_c(builtin_commands);
 	if (node == NULL || node->cmd == NULL | node->cmd->node_token == NULL
 		|| node->cmd->node_token->word == NULL)
 		return (false);

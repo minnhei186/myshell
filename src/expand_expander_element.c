@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_expander_element.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 14:31:54 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/22 15:07:17 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/23 18:07:09 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ char	*expand_variable_word(t_prompt_info *info, char **word, char *new_word)
 	return (new_word);
 }
 
-char	*expand_variable_single_quote(t_prompt_info *info, char **word,
+char	*e_v_s_q(t_prompt_info *info, char **word,
 		char *new_word)
 {
 	new_word = append_char(new_word, **word);
@@ -67,7 +67,7 @@ char	*expand_variable_single_quote(t_prompt_info *info, char **word,
 	return (new_word);
 }
 
-char	*expand_variable_double_quote(t_prompt_info *info, char **word,
+char	*e_v_d_q(t_prompt_info *info, char **word,
 		char *new_word)
 {
 	new_word = append_char(new_word, **word);

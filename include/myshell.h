@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/23 16:33:52 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/23 18:08:37 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,17 +39,6 @@
 # define SINGLE_QUOTE '\''
 # define DOUBLE_QUOTE '\"'
 
-# define OPERATORS                                                             \
-	{                                                                         \
-		"||", "&&", "&", ";;", ";", "(", ")", "|", "\n", "<<", ">>", "<", ">" \
-	}
-
-# define BUILTIN_CMD                                           \
-	{                                                         \
-		"exit", "env", "export", "unset", "echo", "pwd", "cd" \
-	}
-
-extern char						**environ;
 extern volatile sig_atomic_t	g_sig_status;
 
 typedef struct s_item			t_item;
@@ -85,14 +74,14 @@ enum							e_token_kind
 	ROF,
 };
 
-typedef enum e_token_kind		e_kind;
+typedef enum e_token_kind		t_kind;
 
 typedef struct s_token			t_token_info;
 
 struct							s_token
 {
 	char						*word;
-	e_kind						kind;
+	t_kind						kind;
 	t_token_info				*next;
 };
 
@@ -263,10 +252,12 @@ void							variable_expander(t_prompt_info *info,
 // expand_expander_element
 char							*expand_variable_word(t_prompt_info *info,
 									char **word, char *new_word);
-char							*expand_variable_single_quote(t_prompt_info *info,
-									char **word, char *new_word);
-char							*expand_variable_double_quote(t_prompt_info *info,
-									char **word, char *new_word);
+// expand_variable_single_quote
+char							*e_v_s_q(t_prompt_info *info, char **word,
+									char *new_word);
+// expand_variable_single_double
+char							*e_v_d_q(t_prompt_info *info, char **word,
+									char *new_word);
 // expand_expander_element_utils
 bool							variable_error_check(char *word);
 char							*expand_special_parameter(t_prompt_info *info,
@@ -309,19 +300,27 @@ void							redirect_heredoc_init(t_prompt_info *info,
 									t_node_info *redirect);
 // heredoc
 // main
-char	*expand_heredoc_line(t_prompt_info *info, char *word);
-char	*read_heredoc_line(t_prompt_info *info, int *pipe_fd);
-char	*process_line(t_prompt_info *info, t_node_info *redirect, char *line);
-void	process_heredoc_lines(t_prompt_info *info, t_node_info *redirect,
-		int *pipe_fd);
-void	redirect_heredoc_init(t_prompt_info *info, t_node_info *redirect);
-//utils
-void	handle_heredoc_interrupt(t_prompt_info *info, char *line, int *pipe_fd);
-void	write_line_to_pipe(int fd, char *line);
-char	*process_word_char(t_prompt_info *info, char **word_ptr, char *new_word);
+char							*expand_heredoc_line(t_prompt_info *info,
+									char *word);
+char							*read_heredoc_line(t_prompt_info *info,
+									int *pipe_fd);
+char							*process_line(t_prompt_info *info,
+									t_node_info *redirect, char *line);
+void							process_heredoc_lines(t_prompt_info *info,
+									t_node_info *redirect, int *pipe_fd);
+void							redirect_heredoc_init(t_prompt_info *info,
+									t_node_info *redirect);
+// utils
+void							handle_heredoc_interrupt(t_prompt_info *info,
+									char *line, int *pipe_fd);
+void							write_line_to_pipe(int fd, char *line);
+char							*process_word_char(t_prompt_info *info,
+									char **word_ptr, char *new_word);
 // rediredt_do_and_reset
-void							redirect_do_set(t_prompt_info *info,t_node_info *redirect);
-void							do_redirect(t_prompt_info *info,t_node_info *redirect_node);
+void							redirect_do_set(t_prompt_info *info,
+									t_node_info *redirect);
+void							do_redirect(t_prompt_info *info,
+									t_node_info *redirect_node);
 bool							is_redirect(t_node_info *node);
 void							do_reset_redirect(t_node_info *node);
 //////////////////////////////////////////////
@@ -363,7 +362,8 @@ void							exec_builtin(t_prompt_info *info,
 									t_node_info *node);
 // utils
 bool							is_numeric(char *s);
-void							set_builtin_commands(char *builtin_commands[BUILTIN_SIZE]);
+// set_builtin_commands
+void							s_b_c(char *builtin_commands[BUILTIN_SIZE]);
 // builtin_cd
 void							delete_last_path_element(char *path);
 void							append_path_element(char *new_pwd,

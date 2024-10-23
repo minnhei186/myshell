@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 16:16:13 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/23 13:20:11 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/23 18:09:05 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ bool	is_numeric(char *s)
 	return (true);
 }
 
-void	set_builtin_commands(char *builtin_commands[BUILTIN_SIZE])
+void	s_b_c(char *builtin_commands[BUILTIN_SIZE])
 {
 	builtin_commands[0] = "exit";
 	builtin_commands[1] = "env";

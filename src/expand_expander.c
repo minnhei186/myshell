@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 14:30:17 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/22 14:49:44 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/23 18:04:57 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ static char	*expand_variable_step(t_prompt_info *info, char **word_ptr,
 
 	word = *word_ptr;
 	if (*word == SINGLE_QUOTE)
-		new_word = expand_variable_single_quote(info, word_ptr, new_word);
+		new_word = e_v_s_q(info, word_ptr, new_word);
 	else if (*word == DOUBLE_QUOTE)
-		new_word = expand_variable_double_quote(info, word_ptr, new_word);
+		new_word = e_v_d_q(info, word_ptr, new_word);
 	else if (is_variable(word))
 		new_word = expand_variable_word(info, word_ptr, new_word);
 	else if (is_special_parameter(word))
