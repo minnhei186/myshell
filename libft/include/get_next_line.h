@@ -6,7 +6,7 @@
 /*   By: dhosokaw <dhosokaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 11:23:24 by dhosokaw          #+#    #+#             */
-/*   Updated: 2024/06/03 13:01:21 by dhosokaw         ###   ########.fr       */
+/*   Updated: 2024/10/23 19:33:05 by dhosokaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <string.h>
 # include <sys/select.h>
 # include <unistd.h>
+# include <stdint.h>
 
 char	*get_next_line(int fd);
 

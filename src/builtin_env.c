@@ -1,23 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand.c                                           :+:      :+:    :+:   */
+/*   builtin_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/25 17:36:42 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/22 13:48:10 by hosokawa         ###   ########.fr       */
+/*   Created: 2024/10/15 10:43:45 by hosokawa          #+#    #+#             */
+/*   Updated: 2024/10/22 13:23:10 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myshell.h"
 
-void	expand(t_prompt_info *info, t_node_info *node)
+int	builtin_env(t_prompt_info *info)
 {
-	variable_expander(info, node);
-	if (info->yourser_err)
-		return ;
-	quote_remover(info, node);
-	if (info->yourser_err)
-		return ;
+	t_item	*item;
+
+	item = info->map->item;
+	while (item != NULL)
+	{
+		if (item->value)
+			printf("%s=%s\n", item->name, item->value);
+		item = item->next;
+	}
+	printf("_=/usr/bin/env\n");
+	return (0);
 }
