@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:03:16 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/22 16:23:47 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/23 16:34:14 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,13 @@ void	exec_builtin(t_prompt_info *info, t_node_info *node)
 	int		builtin_flag;
 
 	builtin_flag = 0;
-	do_redirect(node->cmd->redirects);
+	do_redirect(info, node->cmd->redirects);
+	if (info->yourser_err)
+	{
+		do_reset_redirect(node->cmd->redirects);
+		info->last_status = EXIT_FAILURE;
+		return ;
+	}
 	cmd_argv = token2argv(node->cmd->node_token);
 	if (builtin_flag == 0)
 		builtin_flag = exec_first_builtin(info, cmd_argv);

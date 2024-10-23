@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 15:51:21 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/23 16:13:22 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/23 16:45:55 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	redirect_do_set(t_prompt_info *info, t_node_info *redirect)
 {
 	int	newfd;
 	int	attempts;
-	int	max_attemts;
+	int	max_attempts;
 
 	max_attempts = 1024;
 	attempts = 0;
@@ -48,18 +48,13 @@ void	redirect_do_set(t_prompt_info *info, t_node_info *redirect)
 	close(redirect->filefd);
 }
 
-void	redirect_do_set(t_node_info *redirect)
-{
-	redirect->stashedfd = fcntl(redirect->targetfd, F_DUPFD, 10);
-	dup2(redirect->filefd, redirect->targetfd);
-	close(redirect->filefd);
-}
-
-void	do_redirect(t_node_info *redirect_node)
+void	do_redirect(t_prompt_info *info, t_node_info *redirect_node)
 {
 	while (redirect_node != NULL)
 	{
-		redirect_do_set(redirect_node);
+		redirect_do_set(info, redirect_node);
+		if (info->yourser_err)
+			return ;
 		redirect_node = redirect_node->redirects;
 	}
 }
@@ -82,7 +77,7 @@ void	do_reset_redirect(t_node_info *redirect_node)
 	if (redirect_node == NULL)
 		return ;
 	do_reset_redirect(redirect_node->redirects);
-	if (is_redirect(redirect_node))
+	if (is_redirect(redirect_node) && redirect_node->stashedfd != -1)
 	{
 		close(redirect_node->filefd);
 		close(redirect_node->targetfd);

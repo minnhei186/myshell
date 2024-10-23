@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:07:12 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/23 13:23:15 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/23 16:54:02 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,16 @@ void	validate_access(const char *path, const char *prompt_head)
 		err_exit("Permission denied", 126);
 }
 
+int	mlt_builtin_exec(t_prompt_info *info, t_node_info *node)
+{
+	if (is_builtin(node))
+	{
+		exec_builtin(info, node);
+		exit(info->last_status);
+	}
+	return (0);
+}
+
 void	child_process(t_prompt_info *info, t_node_info *node)
 {
 	char	**cmd_prompt;
@@ -47,15 +57,15 @@ void	child_process(t_prompt_info *info, t_node_info *node)
 	char	**cmd_envp;
 
 	prepare_pipe_child(node);
-	if (is_builtin(node))
-	{
-		exec_builtin(info, node);
-		exit(info->last_status);
-	}
-	else
+	if (mlt_builtin_exec(info, node) == 0)
 	{
 		destroy_signal();
-		do_redirect(node->cmd->redirects);
+		do_redirect(info, node->cmd->redirects);
+		if (info->yourser_err)
+		{
+			do_reset_redirect(node->cmd->redirects);
+			exit(EXIT_FAILURE);
+		}
 		cmd_prompt = token2argv(node->cmd->node_token);
 		cmd_path = path_get(info, cmd_prompt[0]);
 		cmd_envp = item2argv(info->map->item);
