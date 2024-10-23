@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/23 18:08:37 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/23 19:34:30 by dhosokaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 # include <sys/stat.h>
 # include <termios.h>
 # include <unistd.h>
+# include <limits.h>
+# include <sys/wait.h>
 
 # define ERROR_PRESTR "minishell: "
 # define BUILTIN_SIZE 7
@@ -102,16 +104,13 @@ struct							s_node
 {
 	t_node_kind					kind;
 
-	// pipe_node
 	t_node_info					*re_node;
 	int							inpipe[2];
 	int							outpipe[2];
 
-	// cmd_node
 	t_node_info					*cmd;
 	t_token_info				*node_token;
 
-	// redirects_node
 	t_node_info					*redirects;
 	int							targetfd;
 	t_token_info				*filename;
