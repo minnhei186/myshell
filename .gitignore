@@ -1,0 +1,12 @@
+# debug
+*.DS_Store
+*.vscode/
+*.dSTM/
+
+# output
+*.out
+minishell
+
+# object
+*.o
+*.a
