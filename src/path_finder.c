@@ -6,66 +6,37 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/14 16:05:38 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/17 22:49:32 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/23 13:22:12 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myshell.h"
 
-//char	*cut_and_move_env(char **path_env)
-//{
-//	int		len;
-//	char	*tail_p;
-//	char	*unit_path;
-//
-//	tail_p = ft_strchr(*path_env, ':');
-//	if (tail_p == NULL)
-//	{
-//		// コロンがない場合、残りのパスを処理する
-//		len = ft_strlen(*path_env);
-//		unit_path = (char *)minishell_malloc(sizeof(char) * (len + 1));
-//		ft_strncpy(unit_path, *path_env, len);
-//		unit_path[len] = '\0';
-//		*path_env = NULL; // 残りのパスがないことを示す
-//		return (unit_path);
-//	}
-//	len = tail_p - (*path_env);
-//	unit_path = (char *)malloc(sizeof(char) * len + 1);
-//	strncpy(unit_path, (*path_env), len);
-//	unit_path[len] = '\0';
-//	*path_env = *path_env + len + 1;
-//	return (unit_path);
-//}
-
-
-char    *cut_and_move_env(char **path_env)
+char	*cut_and_move_env(char **path_env)
 {
-    int     len;
-    char    *tail_p;
-    char    *unit_path;
+	int		len;
+	char	*tail_p;
+	char	*unit_path;
 
-    if (*path_env == NULL || **path_env == '\0')
-        return NULL;
-
-    tail_p = ft_strchr(*path_env, ':');
-    if (tail_p == NULL)
-    {
-        // コロンがない場合、残りのパスを処理する
-        len = ft_strlen(*path_env);
-        unit_path = (char *)minishell_malloc(sizeof(char) * (len + 1));
-        ft_strncpy(unit_path, *path_env, len);
-        unit_path[len] = '\0';
-        *path_env = NULL; // 残りのパスがないことを示す
-        return (unit_path);
-    }
-    len = tail_p - (*path_env);
-    unit_path = (char *)malloc(sizeof(char) * (len + 1));
-    ft_strncpy(unit_path, (*path_env), len);
-    unit_path[len] = '\0';
-    *path_env = *path_env + len + 1;
-    return (unit_path);
+	if (*path_env == NULL || **path_env == '\0')
+		return (NULL);
+	tail_p = ft_strchr(*path_env, ':');
+	if (tail_p == NULL)
+	{
+		len = ft_strlen(*path_env);
+		unit_path = (char *)minishell_malloc(sizeof(char) * (len + 1));
+		ft_strncpy(unit_path, *path_env, len);
+		unit_path[len] = '\0';
+		*path_env = NULL;
+		return (unit_path);
+	}
+	len = tail_p - (*path_env);
+	unit_path = (char *)malloc(sizeof(char) * (len + 1));
+	ft_strncpy(unit_path, (*path_env), len);
+	unit_path[len] = '\0';
+	*path_env = *path_env + len + 1;
+	return (unit_path);
 }
-
 
 char	*make_command_path(char *command, char *unit_path)
 {
@@ -77,21 +48,18 @@ char	*make_command_path(char *command, char *unit_path)
 	free(path_slash);
 	return (command_path);
 }
+
 char	*path_get(t_prompt_info *info, char *command)
 {
 	char	*path_env;
 	char	*unit_path;
 	char	*command_path;
 
-	// commnadがpathそのものである時（絶対パス）,もしくは相対パス？
-	//新しく別のメモリにする必要があるかも
-	//アクセスなどは全て別の関数でここでは適したpathを送るだけ
-	if (strchr(command, '/') != NULL)
+	if (ft_strchr(command, '/') != NULL)
 	{
 		command_path = minishell_strdup(command);
 		return (command_path);
 	}
-	//おおここは？PATHが存在しないなら、相対パスは動かないのでok？
 	path_env = item_value_get(info->map, "PATH");
 	if (path_env == NULL)
 		return (NULL);

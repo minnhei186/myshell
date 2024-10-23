@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_mlt_process.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:07:12 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/22 13:47:59 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/23 13:23:15 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ void	validate_access(const char *path, const char *prompt_head)
 
 	if (path == NULL)
 		err_exit("command not found", 127);
-	if (strcmp(prompt_head, "") == 0)
+	if (ft_strcmp(prompt_head, "") == 0)
 		err_exit("command not found", 127);
-	if (strcmp(prompt_head, "..") == 0)
+	if (ft_strcmp(prompt_head, "..") == 0)
 		err_exit("command not found", 127);
 	if (access(path, F_OK) < 0)
 		err_exit("command not found", 127);

@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 10:48:45 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/17 22:32:52 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/22 15:34:28 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,13 @@ void	item_set(t_map *map, const char *name, const char *value)
 		last_item->next = new_item;
 }
 
+static void	unit_item_free(t_item *item)
+{
+	free(item->name);
+	free(item->value);
+	free(item);
+}
+
 int	item_unset(t_map *map, const char *name)
 {
 	t_item	*item;
@@ -53,17 +60,13 @@ int	item_unset(t_map *map, const char *name)
 		{
 			if (prev == NULL)
 			{
-				free(item->name);
-				free(item->value);
-				free(item);
+				unit_item_free(item);
 				item = NULL;
 			}
 			else
 			{
 				prev->next = item->next;
-				free(item->name);
-				free(item->value);
-				free(item);
+				unit_item_free(item);
 			}
 			return (1);
 		}
@@ -71,6 +74,13 @@ int	item_unset(t_map *map, const char *name)
 		item = item->next;
 	}
 	return (1);
+}
+
+static void	item_set_free(t_map *map, char *name, char *value)
+{
+	item_set(map, name, value);
+	free(name);
+	free(value);
 }
 
 void	item_put(t_prompt_info *info, t_map *map, const char *string,
@@ -99,7 +109,5 @@ void	item_put(t_prompt_info *info, t_map *map, const char *string,
 		name = minishell_strndup(string, middle_qual - string);
 		value = minishell_strdup(middle_qual + 1);
 	}
-	item_set(map, name, value);
-	free(name);
-	free(value);
+	item_set_free(map, name, value);
 }

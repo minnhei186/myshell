@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 12:45:31 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/15 14:18:10 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/22 15:12:43 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ t_node_info	*make_node(void)
 	node->delimiter = NULL;
 	node->filefd = -1;
 	node->stashedfd = -1;
-	node->is_delim_unquoted=false;//ここを新たに追加
+	node->is_delim_unquoted = false;
 	return (node);
 }
 

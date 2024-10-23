@@ -6,21 +6,17 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/21 16:49:25 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/23 13:32:44 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myshell.h"
 
-//__attribute__((destructor)) static void destructor()
-//{
-//	system("leaks  myshell");
-//}
+volatile sig_atomic_t	g_sig_status = READLINE;
 
 void	shell_operation(t_prompt_info *info, t_operation_info *operation)
 {
-	g_sig_status=IN_CMD;
-
+	g_sig_status = IN_CMD;
 	operation->token = tokenizer(info, info->str);
 	if (info->yourser_err)
 		return ;
@@ -63,28 +59,29 @@ void	shell_loop(t_prompt_info *info)
 	}
 }
 
-int	main(int argc, char **argv, char **envp)
-{
-	t_prompt_info	info;
 //	int i;
 
 //	i=0;
-	(void)argc;
-	(void)argv;
-	
-	init_signal();
-	info_init(&info, envp);
 //	if(envp==NULL)
 //		printf("envp==NULL\n");
 //	if(envp[0]==NULL)
 //		printf("envp[0]=NULL\n");
 //	while(envp[i])
 //		printf("%s\n",envp[i++]);
+
+int	main(int argc, char **argv, char **envp)
+{
+	t_prompt_info	info;
+
+	(void)argc;
+	(void)argv;
+	init_signal();
+	info_init(&info, envp);
 	if (info.shell_finish != 1)
 	{
 		while (info.shell_finish != 1)
 		{
-			g_sig_status=READLINE;
+			g_sig_status = READLINE;
 			shell_loop(&info);
 			info.yourser_err = 0;
 		}

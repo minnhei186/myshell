@@ -6,32 +6,19 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:03:16 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/22 13:09:39 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/22 16:23:47 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myshell.h"
 
-bool	is_numeric(char *s)
-{
-	if (!isdigit(*s))
-		return (false);
-	while (*s)
-	{
-		if (!isdigit(*s))
-			return (false);
-		s++;
-	}
-	return (true);
-}
-
 bool	is_builtin(t_node_info *node)
 {
 	const char		*cmd_name;
-	char			*builtin_commands[] = {"exit", "env", "export", "unset",
-					"echo", "pwd", "cd"};
+	char			*builtin_commands[BUILTIN_SIZE];
 	unsigned int	i;
 
+	set_builtin_commands(builtin_commands);
 	if (node == NULL || node->cmd == NULL | node->cmd->node_token == NULL
 		|| node->cmd->node_token->word == NULL)
 		return (false);
@@ -50,12 +37,6 @@ int	exec_first_builtin(t_prompt_info *info, char **cmd_argv)
 {
 	int	status;
 
-	if (ft_strcmp(cmd_argv[0], "exit") == 0)
-	{
-		status = builtin_exit(info, cmd_argv);
-		info->last_status = status;
-		return (1);
-	}
 	if (ft_strcmp(cmd_argv[0], "env") == 0)
 	{
 		status = builtin_env(info);
@@ -79,7 +60,7 @@ int	exec_first_builtin(t_prompt_info *info, char **cmd_argv)
 
 int	exec_second_builtin(t_prompt_info *info, char **cmd_argv)
 {
-	int status;
+	int	status;
 
 	if (ft_strcmp(cmd_argv[0], "echo") == 0)
 	{
@@ -102,6 +83,19 @@ int	exec_second_builtin(t_prompt_info *info, char **cmd_argv)
 	return (0);
 }
 
+int	exec_third_builtin(t_prompt_info *info, char **cmd_argv)
+{
+	int	status;
+
+	if (ft_strcmp(cmd_argv[0], "exit") == 0)
+	{
+		status = builtin_exit(info, cmd_argv);
+		info->last_status = status;
+		return (1);
+	}
+	return (0);
+}
+
 void	exec_builtin(t_prompt_info *info, t_node_info *node)
 {
 	char	**cmd_argv;
@@ -114,6 +108,8 @@ void	exec_builtin(t_prompt_info *info, t_node_info *node)
 		builtin_flag = exec_first_builtin(info, cmd_argv);
 	if (builtin_flag == 0)
 		builtin_flag = exec_second_builtin(info, cmd_argv);
+	if (builtin_flag == 0)
+		builtin_flag = exec_third_builtin(info, cmd_argv);
 	ppt_free(cmd_argv);
 	do_reset_redirect(node->cmd->redirects);
 	return ;

@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 14:42:41 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/16 14:43:19 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/22 15:18:18 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,3 @@ void	redirect_append_init(t_prompt_info *info, t_node_info *redirect)
 	if (redirect->filefd < 0)
 		minishell_perror(info, redirect->filename->word);
 }
-
