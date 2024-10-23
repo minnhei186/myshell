@@ -10,10 +10,11 @@
 #                                                                              #
 # **************************************************************************** #
 
-CC=cc
-CFLAGS=-Wall -Wextra -Werror
-#INCDIR=-Iinclude 
-INCDIR=-Iinclude -I/opt/homebrew/opt/readline/include  
+CC=gcc
+CFLAGS=-Wall -Wextra -Werror -g
+# CFLAGS+=-fsanitize=address,undefined
+#INCDIR=-Iinclude
+INCDIR=-Iinclude -I/opt/homebrew/opt/readline/include
 LIBDIR=libft
 #LIBS=-lreadline
 LIBS=-L/opt/homebrew/opt/readline/lib -lreadline -L$(LIBDIR) -lft
@@ -75,7 +76,7 @@ LIB_NAME=libft.a
 NAME=minishell
 
 
-all:$(LIB_NAME) $(NAME) 
+all:$(LIB_NAME) $(NAME)
 
 $(NAME):$(OBJS)
 	$(CC)  $(CFLAGS) -L$(LIBDIR) -lft $(OBJS) -o $(NAME) $(LIBS)
