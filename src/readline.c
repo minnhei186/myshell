@@ -6,7 +6,7 @@
 /*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/23 13:32:44 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/23 18:27:49 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	shell_loop(t_prompt_info *info)
 
 	operation.token = NULL;
 	operation.node = NULL;
-	info->str = readline("myshell:");
+	info->str = readline("minishell:");
 	if (info->str == NULL)
 	{
 		info->shell_finish = 1;
@@ -59,22 +59,17 @@ void	shell_loop(t_prompt_info *info)
 	}
 }
 
-//	int i;
-
-//	i=0;
-//	if(envp==NULL)
-//		printf("envp==NULL\n");
-//	if(envp[0]==NULL)
-//		printf("envp[0]=NULL\n");
-//	while(envp[i])
-//		printf("%s\n",envp[i++]);
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_prompt_info	info;
 
 	(void)argc;
 	(void)argv;
+	if (envp == NULL || envp[0] == NULL)
+	{
+		write(STDERR_FILENO, "need environ\n", 14);
+		return (1);
+	}
 	init_signal();
 	info_init(&info, envp);
 	if (info.shell_finish != 1)
