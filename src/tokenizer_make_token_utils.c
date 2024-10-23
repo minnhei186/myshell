@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer_make_token_utils.c                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: geonwkim <geonwkim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/14 11:56:22 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/23 18:52:00 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/24 01:24:47 by geonwkim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	recive_single_qout(t_prompt_info *info, char *prompt, int i)
 		{
 			if (prompt[i] == '\0')
 			{
-				tokenizer_error(info, "not_close_single_qouat");
+				tokenizer_error(info, "not_close_single_quote");
 				return (-1);
 			}
 			i++;
@@ -87,7 +87,7 @@ int	recive_double_qout(t_prompt_info *info, char *prompt, int i)
 		{
 			if (prompt[i] == '\0')
 			{
-				tokenizer_error(info, "not_close_double_qouat");
+				tokenizer_error(info, "not_close_single_quote");
 				return (-1);
 			}
 			i++;
