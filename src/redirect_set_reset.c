@@ -6,11 +6,47 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 15:51:21 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/22 15:20:51 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/23 16:13:22 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "myshell.h"
+
+void	redirect_do_set(t_prompt_info *info, t_node_info *redirect)
+{
+	int	newfd;
+	int	attempts;
+	int	max_attemts;
+
+	max_attempts = 1024;
+	attempts = 0;
+	while (attempts < max_attempts)
+	{
+		newfd = dup(redirect->targetfd);
+		if (newfd < 0)
+		{
+			minishell_perror(info, "failed to dup");
+			return ;
+		}
+		if (newfd != 0 && newfd != 1 && newfd != 2)
+		{
+			redirect->stashedfd = newfd;
+			break ;
+		}
+		else
+		{
+			close(newfd);
+			attempts++;
+		}
+	}
+	if (attempts == max_attempts)
+	{
+		minishell_perror(info, "failed to make_new_stashfed");
+		return ;
+	}
+	dup2(redirect->filefd, redirect->targetfd);
+	close(redirect->filefd);
+}
 
 void	redirect_do_set(t_node_info *redirect)
 {
