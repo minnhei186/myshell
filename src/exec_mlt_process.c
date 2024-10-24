@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_mlt_process.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: geonwkim <geonwkim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 11:07:12 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/23 17:03:02 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/24 00:50:22 by geonwkim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,15 @@ void	child_process(t_prompt_info *info, t_node_info *node)
 
 void	close_final_pipe(t_node_info *node)
 {
-	close(node->outpipe[0]);
+	close_safely(node->outpipe[0]);
 }
 
 int	command_comunication(t_prompt_info *info, t_node_info *node)
 {
 	int	pid;
 
+	if (!info || !node)
+		return (0);
 	prepare_pipe(info, node);
 	if (info->yourser_err)
 		return (-1);

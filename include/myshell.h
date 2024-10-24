@@ -6,7 +6,7 @@
 /*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 12:33:43 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/23 18:08:37 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/23 19:34:30 by dhosokaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 # include <sys/stat.h>
 # include <termios.h>
 # include <unistd.h>
+# include <limits.h>
+# include <sys/wait.h>
 
 # define ERROR_PRESTR "minishell: "
 # define BUILTIN_SIZE 7
@@ -102,16 +104,13 @@ struct							s_node
 {
 	t_node_kind					kind;
 
-	// pipe_node
 	t_node_info					*re_node;
 	int							inpipe[2];
 	int							outpipe[2];
 
-	// cmd_node
 	t_node_info					*cmd;
 	t_token_info				*node_token;
 
-	// redirects_node
 	t_node_info					*redirects;
 	int							targetfd;
 	t_token_info				*filename;
@@ -342,10 +341,16 @@ int								command_comunication(t_prompt_info *info,
 ////////////////////////////////////
 // path_finder
 ////////////////////////////////////
+// main
 char							*cut_and_move_env(char **path_env);
 char							*make_command_path(char *command,
 									char *unit_path);
 char							*path_get(t_prompt_info *info, char *command);
+// utils
+size_t							ft_strspn(const char *s, const char *accept);
+size_t							ft_strcspn(const char *s, const char *reject);
+char							*ft_strtok_r(char *str, const char *delim,
+									char **saveptr);
 ////////////////////////////////////
 /// pipe
 ////////////////////////////////////
@@ -425,6 +430,8 @@ void							parser_error(t_prompt_info *info,
 /////////////////////////////////
 // ft_atol
 long							ft_atol(const char *str, int *error_flag);
+// close_safely
+int								close_safely(int fd);
 // first
 void							*minishell_malloc(size_t size);
 void							*minishell_calloc(size_t count, size_t size);

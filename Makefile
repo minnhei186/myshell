@@ -10,10 +10,11 @@
 #                                                                              #
 # **************************************************************************** #
 
-CC=cc
-CFLAGS=-Wall -Wextra -Werror
-#INCDIR=-Iinclude 
-INCDIR=-Iinclude -I/opt/homebrew/opt/readline/include  
+CC=gcc
+CFLAGS=-Wall -Wextra -Werror -g
+# CFLAGS+=-fsanitize=address,undefined
+#INCDIR=-Iinclude
+INCDIR=-Iinclude -I/opt/homebrew/opt/readline/include
 LIBDIR=libft
 #LIBS=-lreadline
 LIBS=-L/opt/homebrew/opt/readline/lib -lreadline -L$(LIBDIR) -lft
@@ -44,6 +45,7 @@ SRCS=src/builtin.c \
 	src/error_token_parse.c \
 	src/redirect_set_reset.c \
 	src/exec.c \
+	src/ft_strutils.c \
 	src/shell_map.c \
 	src/exec_mlt_process.c \
 	src/shell_map_set_unset.c \
@@ -67,7 +69,8 @@ SRCS=src/builtin.c \
 	src/tokenizer_make_token_utils.c \
 	src/free_operation.c \
 	src/tokenizer_utils.c \
-	src/info_data.c
+	src/info_data.c \
+	src/close_safely.c
 
 OBJS=$(SRCS:.c=.o)
 
@@ -75,7 +78,7 @@ LIB_NAME=libft.a
 NAME=minishell
 
 
-all:$(LIB_NAME) $(NAME) 
+all:$(LIB_NAME) $(NAME)
 
 $(NAME):$(OBJS)
 	$(CC)  $(CFLAGS) -L$(LIBDIR) -lft $(OBJS) -o $(NAME) $(LIBS)

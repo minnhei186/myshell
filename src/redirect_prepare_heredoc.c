@@ -94,7 +94,8 @@ void	redirect_heredoc_init(t_prompt_info *info, t_node_info *redirect)
 	}
 	g_sig_status = HEREDOC;
 	process_heredoc_lines(info, redirect, pipe_fd);
-	close(pipe_fd[1]);
-	redirect->targetfd = pipe_fd[0];
+	close_safely(pipe_fd[1]);
+	redirect->filefd = pipe_fd[0];
+	redirect->targetfd = STDIN_FILENO;
 	g_sig_status = IN_CMD;
 }

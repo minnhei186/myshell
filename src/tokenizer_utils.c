@@ -32,7 +32,7 @@ char	**token2argv(t_token_info *token)
 	char	*tk_str;
 	int		i;
 
-	tk_argv = minishell_malloc(sizeof(char *) * token_size(token) + 1);
+	tk_argv = minishell_malloc(sizeof(char *) * (token_size(token) + 1));
 	i = 0;
 	while (token->next != NULL)
 	{

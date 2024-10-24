@@ -52,10 +52,11 @@ char	*make_command_path(char *command, char *unit_path)
 char	*path_get(t_prompt_info *info, char *command)
 {
 	char	*path_env;
-	char	*unit_path;
 	char	*command_path;
+	char	*sep;
+	char	*word;
 
-	if (ft_strchr(command, '/') != NULL)
+	if (!command || ft_strchr(command, '/') != NULL)
 	{
 		command_path = minishell_strdup(command);
 		return (command_path);
@@ -63,15 +64,16 @@ char	*path_get(t_prompt_info *info, char *command)
 	path_env = item_value_get(info->map, "PATH");
 	if (path_env == NULL)
 		return (NULL);
-	while (1)
+	word = ft_strtok_r(path_env, ":", &sep);
+	while (word)
 	{
-		unit_path = cut_and_move_env(&path_env);
-		if (unit_path == NULL)
-			return (NULL);
-		command_path = make_command_path(command, unit_path);
-		free(unit_path);
+		command_path = make_command_path(command, word);
+		if (!command_path)
+			return (free(path_env), NULL);
 		if (access(command_path, F_OK) == 0)
-			return (command_path);
+			return (free(path_env), command_path);
+		free(command_path);
+		word = ft_strtok_r(NULL, ":", &sep);
 	}
-	return (NULL);
+	return (free(path_env), NULL);
 }

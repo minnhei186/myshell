@@ -69,7 +69,7 @@ int	recive_single_qout(t_prompt_info *info, char *prompt, int i)
 		{
 			if (prompt[i] == '\0')
 			{
-				tokenizer_error(info, "not_close_single_qouat");
+				tokenizer_error(info, "not_close_single_quote");
 				return (-1);
 			}
 			i++;
@@ -87,7 +87,7 @@ int	recive_double_qout(t_prompt_info *info, char *prompt, int i)
 		{
 			if (prompt[i] == '\0')
 			{
-				tokenizer_error(info, "not_close_double_qouat");
+				tokenizer_error(info, "not_close_double_quote");
 				return (-1);
 			}
 			i++;

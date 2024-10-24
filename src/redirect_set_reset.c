@@ -33,7 +33,7 @@ int	stash_fd(t_prompt_info *info, t_node_info *redirect)
 			redirect->stashedfd = newfd;
 			return (0);
 		}
-		close(newfd);
+		close_safely(newfd);
 		attempts++;
 	}
 	minishell_perror(info, "failed to make_new_stashedfd");
@@ -45,7 +45,7 @@ void	redirect_do_set(t_prompt_info *info, t_node_info *redirect)
 	if (stash_fd(info, redirect) < 0)
 		return ;
 	dup2(redirect->filefd, redirect->targetfd);
-	close(redirect->filefd);
+	close_safely(redirect->filefd);
 }
 
 void	do_redirect(t_prompt_info *info, t_node_info *redirect_node)
@@ -79,9 +79,9 @@ void	do_reset_redirect(t_node_info *redirect_node)
 	do_reset_redirect(redirect_node->redirects);
 	if (is_redirect(redirect_node) && redirect_node->stashedfd != -1)
 	{
-		close(redirect_node->filefd);
-		close(redirect_node->targetfd);
+		close_safely(redirect_node->filefd);
+		close_safely(redirect_node->targetfd);
 		dup2(redirect_node->stashedfd, redirect_node->targetfd);
-		close(redirect_node->stashedfd);
+		close_safely(redirect_node->stashedfd);
 	}
 }

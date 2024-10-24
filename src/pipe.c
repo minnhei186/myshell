@@ -33,21 +33,21 @@ void	prepare_pipe(t_prompt_info *info, t_node_info *node)
 
 void	prepare_pipe_child(t_node_info *node)
 {
-	close(node->outpipe[0]);
+	close_safely(node->outpipe[0]);
 	if (dup2(node->inpipe[0], STDIN_FILENO) == -1)
 		fatal_error_exit("failed to dup2 a pipe");
 	if (node->inpipe[0] != STDIN_FILENO)
-		close(node->inpipe[0]);
+		close_safely(node->inpipe[0]);
 	if (dup2(node->outpipe[1], STDOUT_FILENO) == -1)
 		fatal_error_exit("failed to dup2 a pipe");
 	if (node->outpipe[1] != STDOUT_FILENO)
-		close(node->outpipe[1]);
+		close_safely(node->outpipe[1]);
 }
 
 void	prepare_pipe_parent(t_node_info *node)
 {
 	if (node->inpipe[0] != STDIN_FILENO)
-		close(node->inpipe[0]);
+		close_safely(node->inpipe[0]);
 	if (node->re_node)
-		close(node->outpipe[1]);
+		close_safely(node->outpipe[1]);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hosokawa <hosokawa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: geonwkim <geonwkim@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/07 16:03:16 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/23 18:09:16 by hosokawa         ###   ########.fr       */
+/*   Updated: 2024/10/24 00:52:46 by geonwkim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,9 @@ bool	is_builtin(t_node_info *node)
 	unsigned int	i;
 
 	s_b_c(builtin_commands);
-	if (node == NULL || node->cmd == NULL | node->cmd->node_token == NULL
-		|| node->cmd->node_token->word == NULL)
+	if (node == NULL || node->cmd == NULL || \
+		node->cmd->node_token == NULL || \
+		node->cmd->node_token->word == NULL)
 		return (false);
 	cmd_name = node->cmd->node_token->word;
 	i = 0;
