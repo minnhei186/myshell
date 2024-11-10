@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   exec_mlt_process.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: geonwkim <geonwkim@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/17 11:07:12 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/24 00:50:22 by geonwkim         ###   ########.fr       */
+/*   Created: 2024/11/10 11:36:40 by hosokawa          #+#    #+#             */
+/*   Updated: 2024/11/10 11:36:42 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "myshell.h"
 

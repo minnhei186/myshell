@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   readline.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: geonwkim <geonwkim@student.42.fr>          +#+  +:+       +#+        */
+/*   By: hosokawa <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/12 12:34:01 by hosokawa          #+#    #+#             */
-/*   Updated: 2024/10/24 00:25:30 by geonwkim         ###   ########.fr       */
+/*   Created: 2024/11/10 11:35:21 by hosokawa          #+#    #+#             */
+/*   Updated: 2024/11/10 11:35:24 by hosokawa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,3 +87,4 @@ int	main(int argc, char **argv, char **envp)
 	clear_info(&info);
 	return (info.last_status);
 }
+//
